@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ApPiero V5 - Potatura Ulivi</title>
+  <title>ApPiero V6 - Potatura Ulivi</title>
 
   <meta name="theme-color" content="#18230f" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -45,17 +45,13 @@
     .logo-box{display:flex;align-items:center;gap:12px}
 
     .logo{
-      width:52px;
-      height:52px;
-      border-radius:18px;
+      width:52px;height:52px;border-radius:18px;
       background:
         radial-gradient(circle at 35% 25%,#dfffb1,transparent 25%),
         linear-gradient(145deg,#6b8f33,#263d18 52%,#111d0d);
       border:1px solid rgba(255,255,255,.18);
       box-shadow:inset 0 0 18px rgba(255,255,255,.08),0 12px 25px rgba(0,0,0,.45);
-      display:grid;
-      place-items:center;
-      font-size:25px;
+      display:grid;place-items:center;font-size:25px;
     }
 
     .brand-title{line-height:1.05}
@@ -259,13 +255,46 @@
       .mini-grid{grid-template-columns:1fr}
     }
 
+    .photo-card{
+      background:rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:18px;
+      padding:8px;
+    }
+
     .photo-thumb{
       width:100%;
-      height:110px;
+      height:120px;
       object-fit:cover;
-      border-radius:16px;
+      border-radius:14px;
       border:1px solid rgba(255,255,255,.16);
       background:rgba(0,0,0,.25);
+      display:block;
+      margin-bottom:8px;
+    }
+
+    .preview-box{
+      margin:8px 0 14px;
+      display:none;
+      border:1px solid rgba(164,214,94,.35);
+      border-radius:18px;
+      padding:10px;
+      background:rgba(0,0,0,.24);
+    }
+
+    .preview-box img{
+      width:100%;
+      max-height:280px;
+      object-fit:contain;
+      border-radius:14px;
+      background:#071004;
+    }
+
+    .preview-box p{
+      margin:8px 0 0;
+      color:var(--green2);
+      font-weight:800;
+      font-size:13px;
     }
 
     .bottom-nav{
@@ -456,6 +485,63 @@
       font-weight:800;
       color:#ffe08a;
     }
+
+    .photo-viewer{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.94);
+      z-index:300;
+      display:none;
+      flex-direction:column;
+      padding:12px;
+    }
+
+    .photo-viewer.active{display:flex}
+
+    .photo-viewer-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:4px 0 10px;
+    }
+
+    .photo-viewer-title{
+      color:white;
+      font-weight:900;
+      font-size:16px;
+    }
+
+    .photo-viewer img{
+      width:100%;
+      height:calc(100vh - 90px);
+      object-fit:contain;
+      border-radius:14px;
+      background:#000;
+    }
+
+    .saving-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.75);
+      z-index:260;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      text-align:center;
+    }
+
+    .saving-overlay.active{display:flex}
+
+    .saving-box{
+      background:#f4ffe9;
+      color:#111d0d;
+      border-radius:22px;
+      padding:20px;
+      font-weight:900;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
+    }
   </style>
 </head>
 
@@ -467,7 +553,7 @@
       <div class="brand-title">
         <h1>ApPiero</h1>
         <p>Gestione potatura ulivi</p>
-        <div class="version">V5 · analisi guidata salute olivo</div>
+        <div class="version">V6 · fix foto salute + foto grande</div>
       </div>
     </div>
     <div class="today-pill" id="todayText">Oggi</div>
@@ -656,7 +742,9 @@
           </select>
         </label>
 
-        <label><span>Foto del terreno / sopralluogo</span><input id="fPhoto" type="file" accept="image/*" /></label>
+        <label><span>Foto del terreno / sopralluogo</span><input id="fPhoto" type="file" accept="image/*" onchange="previewFile(this,'fPhotoPreview')" /></label>
+        <div id="fPhotoPreview" class="preview-box"></div>
+
         <label><span>Note</span><textarea id="fNotes" placeholder="Es. terreno scosceso, alberi molto alti, serve motosega..."></textarea></label>
 
         <button class="btn-main btn-full" onclick="createJob()">Salva lavoro</button>
@@ -744,6 +832,21 @@
   </div>
 </div>
 
+<div id="photoViewer" class="photo-viewer">
+  <div class="photo-viewer-head">
+    <div class="photo-viewer-title" id="photoViewerTitle">Foto</div>
+    <button class="btn-red" onclick="closePhotoViewer()">Chiudi foto</button>
+  </div>
+  <img id="photoViewerImg" src="" alt="Foto ingrandita" />
+</div>
+
+<div id="savingOverlay" class="saving-overlay">
+  <div class="saving-box">
+    Sto salvando e comprimendo la foto...<br>
+    Attendi qualche secondo.
+  </div>
+</div>
+
 <nav class="bottom-nav">
   <button class="nav-btn active" id="nav-home" onclick="showScreen('home')"><span class="nav-icon">🏠</span>Home</button>
   <button class="nav-btn" id="nav-new" onclick="showScreen('new')"><span class="nav-icon">➕</span>Nuovo</button>
@@ -755,8 +858,8 @@
 <div id="toast" class="toast"></div>
 
 <script>
-const STORAGE_KEY="appiero_v5_jobs";
-const OLD_STORAGE_KEYS=["appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
+const STORAGE_KEY="appiero_v6_jobs";
+const OLD_STORAGE_KEYS=["appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
 
 let jobs=[];
 let currentFilter="all";
@@ -764,9 +867,7 @@ let openedJobId=null;
 
 const euro=new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"});
 
-function todayISO(){
-  return new Date().toISOString().slice(0,10);
-}
+function todayISO(){return new Date().toISOString().slice(0,10)}
 
 function formatDate(iso){
   if(!iso)return"Senza data";
@@ -774,13 +875,8 @@ function formatDate(iso){
   return d.toLocaleDateString("it-IT",{weekday:"short",day:"2-digit",month:"2-digit",year:"numeric"});
 }
 
-function uid(){
-  return Date.now().toString(36)+Math.random().toString(36).slice(2);
-}
-
-function money(n){
-  return euro.format(Number(n||0));
-}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
+function money(n){return euro.format(Number(n||0))}
 
 function toast(msg){
   const t=document.getElementById("toast");
@@ -798,23 +894,105 @@ function escapeHtml(str){
     .replaceAll("'","&#039;");
 }
 
-function escapeAttr(str){
-  return escapeHtml(str).replaceAll("\n"," ");
-}
+function escapeAttr(str){return escapeHtml(str).replaceAll("\n"," ")}
 
-function fileToDataURL(file){
-  return new Promise((resolve,reject)=>{
-    if(!file)return resolve("");
-    const r=new FileReader();
-    r.onload=()=>resolve(r.result);
-    r.onerror=reject;
-    r.readAsDataURL(file);
-  });
+function showSaving(show){
+  document.getElementById("savingOverlay").classList.toggle("active",!!show);
 }
 
 function save(){
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(jobs));
-  renderAll();
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(jobs));
+    renderAll();
+  }catch(e){
+    toast("Memoria piena: esporta backup o usa foto più leggere");
+    console.error(e);
+  }
+}
+
+function previewFile(input, boxId){
+  const box=document.getElementById(boxId);
+  if(!box)return;
+
+  const file=input.files&&input.files[0];
+
+  if(!file){
+    box.style.display="none";
+    box.innerHTML="";
+    return;
+  }
+
+  const url=URL.createObjectURL(file);
+  box.innerHTML=`
+    <img src="${url}" alt="Anteprima foto">
+    <p>Foto caricata. Verrà compressa automaticamente quando salvi.</p>
+  `;
+  box.style.display="block";
+}
+
+function compressImage(file,maxWidth=1200,quality=0.75){
+  return new Promise((resolve,reject)=>{
+    if(!file)return resolve("");
+
+    const img=new Image();
+    const url=URL.createObjectURL(file);
+
+    img.onload=()=>{
+      try{
+        let width=img.width;
+        let height=img.height;
+
+        if(width>maxWidth){
+          height=Math.round(height*(maxWidth/width));
+          width=maxWidth;
+        }
+
+        const canvas=document.createElement("canvas");
+        canvas.width=width;
+        canvas.height=height;
+
+        const ctx=canvas.getContext("2d");
+        ctx.drawImage(img,0,0,width,height);
+
+        const dataUrl=canvas.toDataURL("image/jpeg",quality);
+
+        URL.revokeObjectURL(url);
+        resolve(dataUrl);
+      }catch(e){
+        URL.revokeObjectURL(url);
+        reject(e);
+      }
+    };
+
+    img.onerror=()=>{
+      URL.revokeObjectURL(url);
+      reject(new Error("Impossibile leggere la foto"));
+    };
+
+    img.src=url;
+  });
+}
+
+async function fileToCompressedDataURL(file){
+  if(!file)return "";
+  try{
+    return await compressImage(file,1200,0.75);
+  }catch(e){
+    toast("Errore caricamento foto");
+    return "";
+  }
+}
+
+function openPhotoViewer(src,title){
+  if(!src)return;
+  document.getElementById("photoViewerImg").src=src;
+  document.getElementById("photoViewerTitle").textContent=title||"Foto";
+  document.getElementById("photoViewer").classList.add("active");
+}
+
+function closePhotoViewer(){
+  document.getElementById("photoViewer").classList.remove("active");
+  document.getElementById("photoViewerImg").src="";
 }
 
 function normalizeJob(job){
@@ -918,8 +1096,10 @@ async function createJob(){
     return;
   }
 
+  showSaving(true);
+
   const photoFile=document.getElementById("fPhoto").files[0];
-  const photo=await fileToDataURL(photoFile);
+  const photo=await fileToCompressedDataURL(photoFile);
   const photoType=document.getElementById("fPhotoType").value;
 
   const job={
@@ -955,6 +1135,7 @@ async function createJob(){
   jobs.unshift(job);
   clearForm();
   save();
+  showSaving(false);
   toast("Lavoro salvato");
   showScreen("jobs");
 }
@@ -973,12 +1154,12 @@ function clearForm(){
   document.getElementById("fStatus").value="preventivo";
   document.getElementById("fPhotoType").value="sopralluogo";
   document.getElementById("fPhoto").value="";
+  document.getElementById("fPhotoPreview").style.display="none";
+  document.getElementById("fPhotoPreview").innerHTML="";
   updatePriceLabels();
 }
 
-function jobDoneTrees(job){
-  return job.days.reduce((s,d)=>s+Number(d.trees||0),0);
-}
+function jobDoneTrees(job){return job.days.reduce((s,d)=>s+Number(d.trees||0),0)}
 
 function dayExpenses(day){
   return Number(day.expenseFuel||0)+
@@ -987,9 +1168,7 @@ function dayExpenses(day){
          Number(day.expenseOther||0);
 }
 
-function jobExpenses(job){
-  return job.days.reduce((s,d)=>s+dayExpenses(d),0);
-}
+function jobExpenses(job){return job.days.reduce((s,d)=>s+dayExpenses(d),0)}
 
 function jobDayGross(job,day){
   const trees=Number(day.trees||0);
@@ -1005,17 +1184,9 @@ function jobDayGross(job,day){
   return 0;
 }
 
-function jobDayNet(job,day){
-  return jobDayGross(job,day)-dayExpenses(day);
-}
-
-function jobGross(job){
-  return job.days.reduce((s,d)=>s+jobDayGross(job,d),0);
-}
-
-function jobNet(job){
-  return job.days.reduce((s,d)=>s+jobDayNet(job,d),0);
-}
+function jobDayNet(job,day){return jobDayGross(job,day)-dayExpenses(day)}
+function jobGross(job){return job.days.reduce((s,d)=>s+jobDayGross(job,d),0)}
+function jobNet(job){return job.days.reduce((s,d)=>s+jobDayNet(job,d),0)}
 
 function jobEstimate(job){
   if(job.priceMode==="tree")return Number(job.totalTrees||0)*Number(job.priceValue||0);
@@ -1024,13 +1195,8 @@ function jobEstimate(job){
   return 0;
 }
 
-function jobBalance(job){
-  return Math.max(0,jobEstimate(job)-Number(job.deposit||0));
-}
-
-function jobRemaining(job){
-  return Math.max(0,Number(job.totalTrees||0)-jobDoneTrees(job));
-}
+function jobBalance(job){return Math.max(0,jobEstimate(job)-Number(job.deposit||0))}
+function jobRemaining(job){return Math.max(0,Number(job.totalTrees||0)-jobDoneTrees(job))}
 
 function jobProgress(job){
   if(!job.totalTrees)return 0;
@@ -1113,16 +1279,8 @@ function renderJobs(){
 
   const filtered=jobs.filter(job=>{
     const text=[
-      job.client,
-      job.place,
-      job.phone,
-      job.notes,
-      job.workType,
-      job.status,
-      job.cultivar,
-      job.age,
-      job.vigor,
-      job.shape
+      job.client,job.place,job.phone,job.notes,job.workType,job.status,
+      job.cultivar,job.age,job.vigor,job.shape
     ].join(" ").toLowerCase();
 
     return (!q||text.includes(q))&&(currentFilter==="all"||job.status===currentFilter);
@@ -1277,7 +1435,12 @@ function renderPhotos(job){
     return `<div class="photo-section">
       <h3>${label}</h3>
       <div class="photo-grid">
-        ${list.map(p=>`<img class="photo-thumb" src="${p.src}">`).join("")}
+        ${list.map(p=>`
+          <div class="photo-card">
+            <img class="photo-thumb" src="${p.src}" onclick="openPhotoViewer('${p.src}','${escapeAttr(label)}')">
+            <button class="btn-blue btn-full" onclick="openPhotoViewer('${p.src}','${escapeAttr(label)}')">Apri foto</button>
+          </div>
+        `).join("")}
       </div>
     </div>`;
   }).join("")||`<div class="empty">Nessuna foto salvata.</div>`;
@@ -1298,14 +1461,22 @@ function renderHealthChecks(job){
       Foto: <strong>${escapeHtml(h.photoPart||"non indicata")}</strong> · Priorità: <strong>${escapeHtml(h.priority)}</strong><br>
       Sintomi: <span class="muted small">${escapeHtml((h.symptoms||[]).join(", ")||"nessuno")}</span><br>
       Problemi selezionati: <span class="muted small">${escapeHtml((h.diseases||[]).join(", ")||"nessuno")}</span><br>
+
       <div class="advice-box">
         <h3>Analisi guidata</h3>
         <div>${suggested||"<span class='muted small'>Nessun sospetto calcolato.</span>"}</div>
         <p class="muted small"><strong>Livello:</strong> ${escapeHtml(h.guideLevel||"Non indicato")}</p>
         <p class="muted small">${escapeHtml(h.guideAdvice||"")}</p>
       </div>
+
       <span class="muted small">${escapeHtml(h.note||"")}</span>
-      ${h.photo?`<div class="photo-grid"><img class="photo-thumb" src="${h.photo}"></div>`:""}
+
+      ${h.photo?`
+        <div class="photo-card" style="margin-top:10px;">
+          <img class="photo-thumb" src="${h.photo}" onclick="openPhotoViewer('${h.photo}','Foto salute olivo')">
+          <button class="btn-blue btn-full" onclick="openPhotoViewer('${h.photo}','Foto salute olivo')">Apri foto salute grande</button>
+        </div>
+      `:""}
     </div>`;
   }).join("");
 }
@@ -1514,6 +1685,12 @@ function openJob(id){
         Netto: <span class="netto">${money(jobDayNet(job,d))}</span><br>
         <span class="muted small">Carburante ${money(d.expenseFuel)} · Pranzo ${money(d.expenseFood)} · Attrezzi ${money(d.expenseTools)} · Altro ${money(d.expenseOther)}</span><br>
         <span class="muted small">${escapeHtml(d.notes||"")}</span>
+        ${d.photo?`
+          <div class="photo-card" style="margin-top:10px;">
+            <img class="photo-thumb" src="${d.photo}" onclick="openPhotoViewer('${d.photo}','Foto giornata')">
+            <button class="btn-blue btn-full" onclick="openPhotoViewer('${d.photo}','Foto giornata')">Apri foto giornata</button>
+          </div>
+        `:""}
       </div>`).join("")
     : `<div class="empty">Ancora nessuna giornata registrata.</div>`;
 
@@ -1645,7 +1822,9 @@ function showAddDayForm(id){
       </select>
     </label>
 
-    <label><span>Foto giornata</span><input id="dPhoto" type="file" accept="image/*"></label>
+    <label><span>Foto giornata</span><input id="dPhoto" type="file" accept="image/*" onchange="previewFile(this,'dPhotoPreview')"></label>
+    <div id="dPhotoPreview" class="preview-box"></div>
+
     <label><span>Note giornata</span><textarea id="dNotes" placeholder="Es. parte alta finita, restano alberi vicino strada..."></textarea></label>
 
     <div class="btn-row">
@@ -1666,8 +1845,10 @@ async function addDay(id){
     return;
   }
 
+  showSaving(true);
+
   const photoFile=document.getElementById("dPhoto").files[0];
-  const photo=await fileToDataURL(photoFile);
+  const photo=await fileToCompressedDataURL(photoFile);
   const photoType=document.getElementById("dPhotoType").value;
 
   const day={
@@ -1699,6 +1880,7 @@ async function addDay(id){
   if(job.status==="preventivo")job.status="attivo";
 
   save();
+  showSaving(false);
   toast("Giornata salvata");
   openJob(id);
 }
@@ -1731,8 +1913,8 @@ function showHealthForm(id){
   <div class="card">
     <h3>Salute olivo / analisi guidata</h3>
     <p class="muted small">
-      Carica la foto e rispondi alle domande. L’app non fa diagnosi medica/agronomica automatica,
-      ma propone sospetti in base ai sintomi selezionati.
+      Carica la foto: ora compare subito l’anteprima e viene compressa automaticamente quando salvi.
+      L’analisi è guidata dai sintomi, non è una diagnosi automatica da foto.
     </p>
 
     <div class="grid grid-2">
@@ -1824,7 +2006,9 @@ function showHealthForm(id){
       ${checkItem("Altro")}
     </div>
 
-    <label><span>Foto salute olivo</span><input id="hPhoto" type="file" accept="image/*"></label>
+    <label><span>Foto salute olivo</span><input id="hPhoto" type="file" accept="image/*" onchange="previewFile(this,'hPhotoPreview')"></label>
+    <div id="hPhotoPreview" class="preview-box"></div>
+
     <label><span>Note del potatore</span><textarea id="hNote" placeholder="Es. foglie con macchie tonde, ramo secco lato nord, controllare tra 15 giorni..."></textarea></label>
 
     <div class="btn-row">
@@ -1848,102 +2032,69 @@ function calculateGuidedDiagnosis(symptoms,answers,condition,priority){
     if(!problems.includes(problem))problems.push(problem);
   }
 
-  if(
-    s.has("Macchie tonde scure sulle foglie") ||
-    s.has("Foglie macchiate") ||
-    answers.qRoundSpots==="yes"
-  ){
+  if(s.has("Macchie tonde scure sulle foglie")||s.has("Foglie macchiate")||answers.qRoundSpots==="yes"){
     add("Sospetto occhio di pavone");
     advice.push("Fotografare bene foglie sopra e sotto. Segnare la zona e ricontrollare caduta foglie.");
   }
 
-  if(
-    answers.qRoundSpots==="yes" &&
-    (answers.qLeafFall==="yes" || s.has("Caduta foglie"))
-  ){
+  if(answers.qRoundSpots==="yes"&&(answers.qLeafFall==="yes"||s.has("Caduta foglie"))){
     add("Occhio di pavone più probabile");
     level="Medio";
   }
 
-  if(
-    s.has("Noduli / tumori su rami") ||
-    answers.qNodules==="yes"
-  ){
+  if(s.has("Noduli / tumori su rami")||answers.qNodules==="yes"){
     add("Sospetta rogna dell’olivo");
     advice.push("Controllare noduli su rami giovani e ferite. Disinfettare attrezzi e valutare tecnico.");
     level="Medio";
   }
 
-  if(
-    s.has("Presenza insetti") ||
-    s.has("Patina bianca / scudetti su rami") ||
-    answers.qInsects==="yes"
-  ){
+  if(s.has("Presenza insetti")||s.has("Patina bianca / scudetti su rami")||answers.qInsects==="yes"){
     add("Possibile cocciniglia o insetti parassiti");
     advice.push("Fotografare da vicino rami e pagina inferiore delle foglie.");
     level=level==="Basso"?"Medio":level;
   }
 
-  if(
-    s.has("Frutti rovinati") ||
-    answers.qFruitDamage==="yes"
-  ){
+  if(s.has("Frutti rovinati")||answers.qFruitDamage==="yes"){
     add("Possibile mosca dell’olivo o danno su frutto");
     advice.push("Controllare punture, gallerie o olive cadute.");
     level=level==="Basso"?"Medio":level;
   }
 
-  if(
-    s.has("Disseccamento da un solo lato") ||
-    answers.qOneSideDry==="yes"
-  ){
+  if(s.has("Disseccamento da un solo lato")||answers.qOneSideDry==="yes"){
     add("Possibile verticilliosi / problema radicale");
     advice.push("Segnare la pianta e verificare se il disseccamento resta localizzato a branche o lato pianta.");
     level=level==="Basso"?"Medio":level;
   }
 
-  if(
-    s.has("Stress idrico") ||
-    answers.qWaterStress==="yes"
-  ){
+  if(s.has("Stress idrico")||answers.qWaterStress==="yes"){
     add("Possibile stress idrico");
     advice.push("Controllare terreno, esposizione, periodo siccitoso e vigoria generale.");
   }
 
-  if(
-    s.has("Foglie gialle") &&
-    !s.has("Macchie tonde scure sulle foglie")
-  ){
+  if(s.has("Foglie gialle")&&!s.has("Macchie tonde scure sulle foglie")){
     add("Possibile carenza nutrizionale o stress");
     advice.push("Osservare se l’ingiallimento è diffuso o solo su alcune branche.");
   }
 
-  if(
-    s.has("Marciume / carie del legno")
-  ){
+  if(s.has("Marciume / carie del legno")){
     add("Possibile carie del legno");
     advice.push("Controllare cavità, legno spugnoso e stabilità della branca.");
     level=level==="Basso"?"Medio":level;
   }
 
-  if(
-    s.has("Ferite da potatura")
-  ){
+  if(s.has("Ferite da potatura")){
     add("Danno da potatura / ferite da monitorare");
     advice.push("Controllare cicatrizzazione e ingresso di patogeni su tagli grandi.");
   }
 
-  if(
-    s.has("Disseccamento rapido sospetto") ||
-    answers.qFastDry==="yes"
-  ){
+  if(s.has("Disseccamento rapido sospetto")||answers.qFastDry==="yes"){
     add("Disseccamento grave da verificare");
     add("Xylella / disseccamento sospetto da escludere con tecnico");
     advice.push("In caso di disseccamento rapido, non concludere da solo: fare foto complete e chiedere verifica tecnica/agronomica.");
     level="Alto";
   }
 
-  if(condition==="Grave" || priority==="Urgente"){
+  if(condition==="Grave"||priority==="Urgente"){
     level="Alto";
     advice.push("Priorità alta: documentare con foto chiare e valutare intervento tecnico.");
   }
@@ -1964,8 +2115,10 @@ async function addHealthCheck(id){
   const job=jobs.find(j=>j.id===id);
   if(!job)return;
 
+  showSaving(true);
+
   const file=document.getElementById("hPhoto").files[0];
-  const photo=await fileToDataURL(file);
+  const photo=await fileToCompressedDataURL(file);
 
   const symptoms=checkedValues("symptomsBox");
   const diseases=checkedValues("diseasesBox");
@@ -2016,6 +2169,7 @@ async function addHealthCheck(id){
   }
 
   save();
+  showSaving(false);
   toast("Analisi salute salvata");
   openJob(id);
 }
@@ -2042,7 +2196,8 @@ function showAddPhotoForm(id){
       </select>
     </label>
 
-    <label><span>Foto lavoro / terreno / ulivi</span><input id="extraPhoto" type="file" accept="image/*"></label>
+    <label><span>Foto lavoro / terreno / ulivi</span><input id="extraPhoto" type="file" accept="image/*" onchange="previewFile(this,'extraPhotoPreview')"></label>
+    <div id="extraPhotoPreview" class="preview-box"></div>
 
     <div class="btn-row">
       <button class="btn-main" onclick="addPhoto('${id}')">Salva foto</button>
@@ -2063,7 +2218,9 @@ async function addPhoto(id){
     return;
   }
 
-  const photo=await fileToDataURL(file);
+  showSaving(true);
+
+  const photo=await fileToCompressedDataURL(file);
 
   job.photos.push(photo);
   job.photoItems.push({
@@ -2074,6 +2231,7 @@ async function addPhoto(id){
   });
 
   save();
+  showSaving(false);
   toast("Foto salvata");
   openJob(id);
 }
@@ -2199,7 +2357,7 @@ function renderAll(){
 function exportBackup(){
   const data={
     app:"ApPiero",
-    version:"5.0",
+    version:"6.0",
     exportedAt:new Date().toISOString(),
     jobs
   };
@@ -2209,7 +2367,7 @@ function exportBackup(){
   const a=document.createElement("a");
 
   a.href=url;
-  a.download="appiero-v5-backup-"+todayISO()+".json";
+  a.download="appiero-v6-backup-"+todayISO()+".json";
   a.click();
 
   URL.revokeObjectURL(url);
