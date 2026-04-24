@@ -3,14 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ApPiero V8 - Potatura Ulivi</title>
+  <title>ApPiero V9 - Potatura Ulivi</title>
 
-  <meta name="theme-color" content="#18230f" />
+  <meta name="theme-color" content="#55c8f2" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="ApPiero" />
 
   <style>
     :root{
+      --napoli:#55c8f2;
+      --napoli-dark:#0879b9;
       --bg:#0b1208;
       --bg2:#111d0d;
       --panel:#18230f;
@@ -19,11 +21,16 @@
       --gold:#d6a642;
       --red:#d84b3a;
       --blue:#4aa3df;
+      --violet:#8b5cf6;
+      --orange:#f97316;
+      --aqua:#4ade80;
       --text:#f3f7ef;
       --muted:#aeb8a6;
       --line:rgba(255,255,255,.14);
       --shadow:0 18px 45px rgba(0,0,0,.42);
       --radius:22px;
+      --page-accent:var(--napoli);
+      --page-accent-2:var(--napoli-dark);
     }
 
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -32,12 +39,82 @@
       margin:0;
       font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at top left,rgba(164,214,94,.18),transparent 32%),
-        radial-gradient(circle at top right,rgba(214,166,66,.12),transparent 32%),
-        linear-gradient(180deg,#050804,var(--bg));
+        radial-gradient(circle at top left,rgba(85,200,242,.30),transparent 34%),
+        radial-gradient(circle at top right,rgba(255,255,255,.13),transparent 28%),
+        linear-gradient(180deg,#04131d,#07141b 34%,#071107);
       color:var(--text);
       min-height:100vh;
       padding-bottom:96px;
+      transition:background .25s ease;
+    }
+
+    body.theme-home{
+      --page-accent:#55c8f2;
+      --page-accent-2:#0879b9;
+      background:
+        radial-gradient(circle at top left,rgba(85,200,242,.55),transparent 34%),
+        radial-gradient(circle at top right,rgba(255,255,255,.18),transparent 30%),
+        linear-gradient(180deg,#052b44,#07486f 34%,#07141b);
+    }
+
+    body.theme-new{
+      --page-accent:#38bdf8;
+      --page-accent-2:#1d4ed8;
+      background:
+        radial-gradient(circle at top left,rgba(56,189,248,.32),transparent 34%),
+        linear-gradient(180deg,#061526,#08111f 42%,#071107);
+    }
+
+    body.theme-jobs{
+      --page-accent:#d6a642;
+      --page-accent-2:#7a4d10;
+      background:
+        radial-gradient(circle at top left,rgba(214,166,66,.30),transparent 34%),
+        linear-gradient(180deg,#211706,#10160b 46%,#071107);
+    }
+
+    body.theme-calendar{
+      --page-accent:#8b5cf6;
+      --page-accent-2:#312e81;
+      background:
+        radial-gradient(circle at top left,rgba(139,92,246,.32),transparent 34%),
+        linear-gradient(180deg,#160d2e,#090f1f 45%,#071107);
+    }
+
+    body.theme-stats{
+      --page-accent:#f97316;
+      --page-accent-2:#9a3412;
+      background:
+        radial-gradient(circle at top left,rgba(249,115,22,.30),transparent 34%),
+        linear-gradient(180deg,#251006,#11100b 46%,#071107);
+    }
+
+    body.theme-backup{
+      --page-accent:#ef4444;
+      --page-accent-2:#7f1d1d;
+      background:
+        radial-gradient(circle at top left,rgba(239,68,68,.28),transparent 34%),
+        linear-gradient(180deg,#270707,#120b0b 46%,#071107);
+    }
+
+    body.theme-health{
+      --page-accent:#34d399;
+      --page-accent-2:#047857;
+    }
+
+    body.theme-oil{
+      --page-accent:#f0c66a;
+      --page-accent-2:#a77320;
+    }
+
+    body.theme-day{
+      --page-accent:#a4d65e;
+      --page-accent-2:#4f7d24;
+    }
+
+    body.theme-photo{
+      --page-accent:#60a5fa;
+      --page-accent-2:#1d4ed8;
     }
 
     header{
@@ -45,9 +122,10 @@
       top:0;
       z-index:50;
       padding:18px 16px 14px;
-      background:rgba(8,14,6,.9);
+      background:linear-gradient(135deg,rgba(4,19,29,.94),rgba(8,14,6,.88));
       backdrop-filter:blur(14px);
-      border-bottom:1px solid var(--line);
+      border-bottom:1px solid rgba(255,255,255,.18);
+      box-shadow:0 12px 30px rgba(0,0,0,.25);
     }
 
     .brand{display:flex;justify-content:space-between;align-items:center;gap:12px}
@@ -56,24 +134,24 @@
     .logo{
       width:52px;height:52px;border-radius:18px;
       background:
-        radial-gradient(circle at 35% 25%,#dfffb1,transparent 25%),
-        linear-gradient(145deg,#6b8f33,#263d18 52%,#111d0d);
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow:inset 0 0 18px rgba(255,255,255,.08),0 12px 25px rgba(0,0,0,.45);
+        radial-gradient(circle at 35% 25%,#ffffff,transparent 24%),
+        linear-gradient(145deg,var(--page-accent),var(--page-accent-2) 58%,#071107);
+      border:1px solid rgba(255,255,255,.24);
+      box-shadow:inset 0 0 18px rgba(255,255,255,.10),0 12px 25px rgba(0,0,0,.45);
       display:grid;place-items:center;font-size:25px;
     }
 
     .brand-title h1{margin:0;font-size:27px;letter-spacing:-.8px}
     .brand-title p{margin:5px 0 0;color:var(--muted);font-size:13px}
-    .version{font-size:11px;color:var(--gold);margin-top:3px;font-weight:800}
+    .version{font-size:11px;color:var(--page-accent);margin-top:3px;font-weight:900}
 
     .today-pill{
-      background:rgba(255,255,255,.08);
-      border:1px solid var(--line);
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.18);
       border-radius:999px;
       padding:8px 11px;
       font-size:12px;
-      color:var(--green2);
+      color:#fff;
       white-space:nowrap;
     }
 
@@ -85,6 +163,21 @@
       from{opacity:0;transform:translateY(8px)}
       to{opacity:1;transform:translateY(0)}
     }
+
+    .page-banner{
+      border-radius:24px;
+      padding:14px 15px;
+      margin-bottom:14px;
+      background:
+        radial-gradient(circle at top right,rgba(255,255,255,.22),transparent 32%),
+        linear-gradient(135deg,var(--page-accent),var(--page-accent-2));
+      color:white;
+      border:1px solid rgba(255,255,255,.20);
+      box-shadow:0 14px 34px rgba(0,0,0,.28);
+    }
+
+    .page-banner h2{margin:0;font-size:22px}
+    .page-banner p{margin:5px 0 0;font-size:13px;color:rgba(255,255,255,.86)}
 
     .grid{display:grid;gap:12px}
     .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -98,7 +191,8 @@
       background:
         linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.025)),
         linear-gradient(180deg,var(--panel),var(--bg2));
-      border:1px solid var(--line);
+      border:1px solid rgba(255,255,255,.14);
+      border-left:4px solid var(--page-accent);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       padding:16px;
@@ -126,7 +220,7 @@
     .kpi{min-height:105px}
     .kpi-label{color:var(--muted);font-size:13px;margin-bottom:8px}
     .kpi-value{font-size:34px;font-weight:900;letter-spacing:-1px}
-    .kpi-small{font-size:13px;color:var(--green2);margin-top:7px}
+    .kpi-small{font-size:13px;color:var(--page-accent);margin-top:7px;font-weight:800}
 
     .section-title{
       display:flex;
@@ -153,7 +247,7 @@
     }
 
     button:active{transform:scale(.98)}
-    .btn-main{background:linear-gradient(145deg,#a4d65e,#4f7d24);color:#101908}
+    .btn-main{background:linear-gradient(145deg,var(--page-accent),var(--page-accent-2));color:white}
     .btn-gold{background:linear-gradient(145deg,#f0c66a,#a77320);color:#1d1204}
     .btn-blue{background:linear-gradient(145deg,#56c1ff,#176799)}
     .btn-red{background:linear-gradient(145deg,#ff7b64,#9d2b1e)}
@@ -188,9 +282,10 @@
 
     .job-card{
       border-radius:22px;
-      border:1px solid var(--line);
+      border:1px solid rgba(255,255,255,.14);
+      border-left:4px solid var(--page-accent);
       background:
-        radial-gradient(circle at top right,rgba(164,214,94,.12),transparent 30%),
+        radial-gradient(circle at top right,rgba(255,255,255,.12),transparent 30%),
         linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
       padding:14px;
       box-shadow:0 12px 28px rgba(0,0,0,.22);
@@ -231,7 +326,7 @@
     .progress-bar{
       height:100%;
       width:0%;
-      background:linear-gradient(90deg,var(--green2),var(--gold));
+      background:linear-gradient(90deg,var(--page-accent),var(--gold));
       border-radius:999px;
       transition:.25s ease;
     }
@@ -340,8 +435,8 @@
     }
 
     .nav-btn.active{
-      background:linear-gradient(145deg,#a4d65e,#4f7d24);
-      color:#101908;
+      background:linear-gradient(145deg,var(--page-accent),var(--page-accent-2));
+      color:white;
     }
 
     .nav-icon{display:block;font-size:20px;margin-bottom:2px}
@@ -365,9 +460,10 @@
       max-height:92vh;
       overflow:auto;
       background:
-        radial-gradient(circle at top left,rgba(164,214,94,.12),transparent 28%),
+        radial-gradient(circle at top left,rgba(255,255,255,.10),transparent 28%),
         linear-gradient(180deg,#1a2711,#0d1509);
       border:1px solid rgba(255,255,255,.16);
+      border-top:4px solid var(--page-accent);
       border-radius:28px;
       box-shadow:0 30px 80px rgba(0,0,0,.55);
       padding:16px;
@@ -386,6 +482,7 @@
 
     .day-row,.health-row,.oil-row{
       border:1px solid rgba(255,255,255,.10);
+      border-left:4px solid var(--page-accent);
       border-radius:18px;
       padding:12px;
       background:rgba(0,0,0,.18);
@@ -395,7 +492,7 @@
     .day-row b,.health-row b,.oil-row b{color:var(--green2)}
 
     .calendar-day{
-      border-left:4px solid var(--green);
+      border-left:4px solid var(--page-accent);
       padding:12px;
       border-radius:16px;
       background:rgba(255,255,255,.06);
@@ -413,6 +510,7 @@
 
     .danger-zone{
       border-color:rgba(216,75,58,.45);
+      border-left-color:#ef4444;
       background:linear-gradient(145deg,rgba(216,75,58,.12),rgba(255,255,255,.03));
     }
 
@@ -552,7 +650,7 @@
   </style>
 </head>
 
-<body>
+<body class="theme-home">
 <header>
   <div class="brand">
     <div class="logo-box">
@@ -560,7 +658,7 @@
       <div class="brand-title">
         <h1>ApPiero</h1>
         <p>Gestione potatura ulivi</p>
-        <div class="version">V8 · cliente rapido WhatsApp</div>
+        <div class="version">V9 · Home Napoli + pagine colorate</div>
       </div>
     </div>
     <div class="today-pill" id="todayText">Oggi</div>
@@ -569,6 +667,11 @@
 
 <main>
   <section id="screen-home" class="screen active">
+    <div class="page-banner">
+      <h2>Home ApPiero</h2>
+      <p>Prima pagina in celeste Napoli per Piero.</p>
+    </div>
+
     <div class="grid grid-3">
       <div class="card kpi">
         <div class="kpi-label">Ulivi potati oggi</div>
@@ -625,6 +728,11 @@
   </section>
 
   <section id="screen-new" class="screen">
+    <div class="page-banner">
+      <h2>Nuovo lavoro</h2>
+      <p>Pagina blu: inserimento cliente, oliveto e preventivo.</p>
+    </div>
+
     <div class="card">
       <h2>Nuovo lavoro / preventivo</h2>
 
@@ -760,6 +868,11 @@
   </section>
 
   <section id="screen-jobs" class="screen">
+    <div class="page-banner">
+      <h2>Lavori</h2>
+      <p>Pagina oro/olivo: elenco clienti e lavori salvati.</p>
+    </div>
+
     <div class="section-title">
       <h2>Lavori</h2>
       <button class="btn-main" onclick="showScreen('new')">➕ Nuovo</button>
@@ -779,13 +892,20 @@
   </section>
 
   <section id="screen-calendar" class="screen">
-    <div class="section-title"><h2>Calendario lavori</h2></div>
+    <div class="page-banner">
+      <h2>Agenda</h2>
+      <p>Pagina viola/blu notte: calendario lavori, salute e olio.</p>
+    </div>
+
     <div class="card"><p class="muted small">Qui vedi lavori, giornate, controlli salute e annate olio.</p></div>
     <div id="calendarList" class="list" style="margin-top:12px;"></div>
   </section>
 
   <section id="screen-stats" class="screen">
-    <div class="section-title"><h2>Statistiche</h2></div>
+    <div class="page-banner">
+      <h2>Statistiche</h2>
+      <p>Pagina arancio: numeri generali, resa e guadagni.</p>
+    </div>
 
     <div class="grid grid-3">
       <div class="card kpi"><div class="kpi-label">Ulivi totali registrati</div><div class="kpi-value" id="statTotalTrees">0</div></div>
@@ -806,7 +926,10 @@
   </section>
 
   <section id="screen-backup" class="screen">
-    <div class="section-title"><h2>Backup dati</h2></div>
+    <div class="page-banner">
+      <h2>Backup</h2>
+      <p>Pagina rossa: salvataggio, importazione e sicurezza dati.</p>
+    </div>
 
     <div class="card">
       <h3>Esporta backup</h3>
@@ -865,8 +988,8 @@
 <div id="toast" class="toast"></div>
 
 <script>
-const STORAGE_KEY="appiero_v8_jobs";
-const OLD_STORAGE_KEYS=["appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
+const STORAGE_KEY="appiero_v9_jobs";
+const OLD_STORAGE_KEYS=["appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
 
 let jobs=[];
 let currentFilter="all";
@@ -885,6 +1008,11 @@ function formatDate(iso){
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
 function money(n){return euro.format(Number(n||0))}
 function num(n){return Number(n||0)}
+
+function setTheme(name){
+  document.body.className="";
+  document.body.classList.add("theme-"+name);
+}
 
 function toast(msg){
   const t=document.getElementById("toast");
@@ -1135,6 +1263,9 @@ function showScreen(name){
   document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
   const nav=document.getElementById("nav-"+name);
   if(nav)nav.classList.add("active");
+
+  const map={home:"home",new:"new",jobs:"jobs",calendar:"calendar",stats:"stats",backup:"backup"};
+  setTheme(map[name]||"home");
 
   renderAll();
   window.scrollTo({top:0,behavior:"smooth"});
@@ -1709,6 +1840,11 @@ function showPreview(id,type){
   if(type==="oil"){title="Produzione olio";text=buildOilText(job);msg="Registro olio copiato"}
 
   document.getElementById("modalContent").innerHTML=`
+    <div class="page-banner">
+      <h2>${title}</h2>
+      <p>Anteprima testo prima dell’invio.</p>
+    </div>
+
     <div class="card">
       <h3>${title}</h3>
       <div class="quote-box">${escapeHtml(text)}</div>
@@ -1721,6 +1857,7 @@ function showPreview(id,type){
 }
 
 function openJob(id){
+  setTheme("jobs");
   openedJobId=id;
   const job=jobs.find(j=>j.id===id);
   if(!job)return;
@@ -1756,6 +1893,11 @@ function openJob(id){
     : `<div class="empty">Ancora nessuna giornata registrata.</div>`;
 
   document.getElementById("modalContent").innerHTML=`
+    <div class="page-banner">
+      <h2>Dettaglio lavoro</h2>
+      <p>Area oro/olivo: gestione completa del cliente.</p>
+    </div>
+
     <div class="card">
       <div class="job-top">
         <div>
@@ -1851,13 +1993,24 @@ function openJob(id){
   document.getElementById("jobModal").classList.add("active");
 }
 
-function closeModal(){document.getElementById("jobModal").classList.remove("active");openedJobId=null}
+function closeModal(){
+  document.getElementById("jobModal").classList.remove("active");
+  openedJobId=null;
+  const active=document.querySelector(".screen.active")?.id?.replace("screen-","");
+  setTheme(active||"home");
+}
 
 function showAddDayForm(id){
+  setTheme("day");
   const job=jobs.find(j=>j.id===id);
   if(!job)return;
 
   document.getElementById("modalContent").innerHTML=`
+  <div class="page-banner">
+    <h2>Giornata di lavoro</h2>
+    <p>Pagina verde lavoro: ulivi potati, ore, spese e foto.</p>
+  </div>
+
   <div class="card">
     <h3>Aggiungi giornata</h3>
 
@@ -1967,7 +2120,13 @@ function yesNoQuestion(id,label){
 }
 
 function showHealthForm(id){
+  setTheme("health");
   document.getElementById("modalContent").innerHTML=`
+  <div class="page-banner">
+    <h2>Salute olivo</h2>
+    <p>Pagina verde acqua: foto, sintomi e analisi guidata.</p>
+  </div>
+
   <div class="card">
     <h3>Salute olivo / analisi guidata</h3>
     <p class="muted small">
@@ -2221,12 +2380,18 @@ async function addHealthCheck(id){
 function quickHealth(id){openJob(id);setTimeout(()=>showHealthForm(id),50)}
 
 function showOilForm(id){
+  setTheme("oil");
   const job=jobs.find(j=>j.id===id);
   if(!job)return;
 
   const currentYear=new Date().getFullYear();
 
   document.getElementById("modalContent").innerHTML=`
+  <div class="page-banner">
+    <h2>Produzione olio</h2>
+    <p>Pagina oro caldo: resa annuale dell’uliveto.</p>
+  </div>
+
   <div class="card">
     <h3>Produzione olio annuale</h3>
     <p class="muted small">
@@ -2306,7 +2471,13 @@ function addOilRecord(id){
 function quickOil(id){openJob(id);setTimeout(()=>showOilForm(id),50)}
 
 function showAddPhotoForm(id){
+  setTheme("photo");
   document.getElementById("modalContent").innerHTML=`
+  <div class="page-banner">
+    <h2>Foto</h2>
+    <p>Pagina blu fotografico: aggiunta immagini al lavoro.</p>
+  </div>
+
   <div class="card">
     <h3>Aggiungi foto</h3>
 
@@ -2357,10 +2528,16 @@ async function addPhoto(id){
 }
 
 function showEditJobForm(id){
+  setTheme("new");
   const job=jobs.find(j=>j.id===id);
   if(!job)return;
 
   document.getElementById("modalContent").innerHTML=`
+  <div class="page-banner">
+    <h2>Modifica lavoro</h2>
+    <p>Pagina blu: correzione dati cliente e preventivo.</p>
+  </div>
+
   <div class="card">
     <h3>Modifica lavoro</h3>
 
@@ -2473,13 +2650,13 @@ function renderAll(){
 }
 
 function exportBackup(){
-  const data={app:"ApPiero",version:"8.0",exportedAt:new Date().toISOString(),jobs};
+  const data={app:"ApPiero",version:"9.0",exportedAt:new Date().toISOString(),jobs};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");
 
   a.href=url;
-  a.download="appiero-v8-backup-"+todayISO()+".json";
+  a.download="appiero-v9-backup-"+todayISO()+".json";
   a.click();
 
   URL.revokeObjectURL(url);
