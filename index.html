@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ApPiero V6.1 - Potatura Ulivi</title>
+  <title>ApPiero V7 - Potatura Ulivi</title>
 
   <meta name="theme-color" content="#18230f" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -26,10 +26,7 @@
       --radius:22px;
     }
 
-    *{
-      box-sizing:border-box;
-      -webkit-tap-highlight-color:transparent;
-    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 
     body{
       margin:0;
@@ -53,51 +50,22 @@
       border-bottom:1px solid var(--line);
     }
 
-    .brand{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-    }
-
-    .logo-box{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
+    .brand{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .logo-box{display:flex;align-items:center;gap:12px}
 
     .logo{
-      width:52px;
-      height:52px;
-      border-radius:18px;
+      width:52px;height:52px;border-radius:18px;
       background:
         radial-gradient(circle at 35% 25%,#dfffb1,transparent 25%),
         linear-gradient(145deg,#6b8f33,#263d18 52%,#111d0d);
       border:1px solid rgba(255,255,255,.18);
       box-shadow:inset 0 0 18px rgba(255,255,255,.08),0 12px 25px rgba(0,0,0,.45);
-      display:grid;
-      place-items:center;
-      font-size:25px;
+      display:grid;place-items:center;font-size:25px;
     }
 
-    .brand-title h1{
-      margin:0;
-      font-size:27px;
-      letter-spacing:-.8px;
-    }
-
-    .brand-title p{
-      margin:5px 0 0;
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .version{
-      font-size:11px;
-      color:var(--gold);
-      margin-top:3px;
-      font-weight:800;
-    }
+    .brand-title h1{margin:0;font-size:27px;letter-spacing:-.8px}
+    .brand-title p{margin:5px 0 0;color:var(--muted);font-size:13px}
+    .version{font-size:11px;color:var(--gold);margin-top:3px;font-weight:800}
 
     .today-pill{
       background:rgba(255,255,255,.08);
@@ -109,43 +77,21 @@
       white-space:nowrap;
     }
 
-    main{
-      padding:16px;
-      max-width:980px;
-      margin:0 auto;
-    }
-
-    .screen{
-      display:none;
-      animation:fadeIn .2s ease-out;
-    }
-
-    .screen.active{
-      display:block;
-    }
+    main{padding:16px;max-width:980px;margin:0 auto}
+    .screen{display:none;animation:fadeIn .2s ease-out}
+    .screen.active{display:block}
 
     @keyframes fadeIn{
       from{opacity:0;transform:translateY(8px)}
       to{opacity:1;transform:translateY(0)}
     }
 
-    .grid{
-      display:grid;
-      gap:12px;
-    }
-
-    .grid-2{
-      grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-
-    .grid-3{
-      grid-template-columns:repeat(3,minmax(0,1fr));
-    }
+    .grid{display:grid;gap:12px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
 
     @media(max-width:720px){
-      .grid-2,.grid-3{
-        grid-template-columns:1fr;
-      }
+      .grid-2,.grid-3{grid-template-columns:1fr}
     }
 
     .card{
@@ -169,51 +115,18 @@
       opacity:.55;
     }
 
-    .card>*{
-      position:relative;
-      z-index:1;
-    }
+    .card>*{position:relative;z-index:1}
 
-    h2{
-      margin:5px 0 14px;
-      font-size:23px;
-      letter-spacing:-.4px;
-    }
+    h2{margin:5px 0 14px;font-size:23px;letter-spacing:-.4px}
+    h3{margin:0 0 10px;font-size:18px}
 
-    h3{
-      margin:0 0 10px;
-      font-size:18px;
-    }
+    .muted{color:var(--muted)}
+    .small{font-size:13px}
 
-    .muted{
-      color:var(--muted);
-    }
-
-    .small{
-      font-size:13px;
-    }
-
-    .kpi{
-      min-height:105px;
-    }
-
-    .kpi-label{
-      color:var(--muted);
-      font-size:13px;
-      margin-bottom:8px;
-    }
-
-    .kpi-value{
-      font-size:34px;
-      font-weight:900;
-      letter-spacing:-1px;
-    }
-
-    .kpi-small{
-      font-size:13px;
-      color:var(--green2);
-      margin-top:7px;
-    }
+    .kpi{min-height:105px}
+    .kpi-label{color:var(--muted);font-size:13px;margin-bottom:8px}
+    .kpi-value{font-size:34px;font-weight:900;letter-spacing:-1px}
+    .kpi-small{font-size:13px;color:var(--green2);margin-top:7px}
 
     .section-title{
       display:flex;
@@ -223,15 +136,8 @@
       margin:18px 0 10px;
     }
 
-    .section-title h2{
-      margin:0;
-    }
-
-    .btn-row{
-      display:flex;
-      gap:9px;
-      flex-wrap:wrap;
-    }
+    .section-title h2{margin:0}
+    .btn-row{display:flex;gap:9px;flex-wrap:wrap}
 
     button,.btn{
       border:none;
@@ -246,36 +152,13 @@
       font-size:14px;
     }
 
-    button:active{
-      transform:scale(.98);
-    }
-
-    .btn-main{
-      background:linear-gradient(145deg,#a4d65e,#4f7d24);
-      color:#101908;
-    }
-
-    .btn-gold{
-      background:linear-gradient(145deg,#f0c66a,#a77320);
-      color:#1d1204;
-    }
-
-    .btn-blue{
-      background:linear-gradient(145deg,#56c1ff,#176799);
-    }
-
-    .btn-red{
-      background:linear-gradient(145deg,#ff7b64,#9d2b1e);
-    }
-
-    .btn-soft{
-      background:rgba(255,255,255,.08);
-      color:var(--text);
-    }
-
-    .btn-full{
-      width:100%;
-    }
+    button:active{transform:scale(.98)}
+    .btn-main{background:linear-gradient(145deg,#a4d65e,#4f7d24);color:#101908}
+    .btn-gold{background:linear-gradient(145deg,#f0c66a,#a77320);color:#1d1204}
+    .btn-blue{background:linear-gradient(145deg,#56c1ff,#176799)}
+    .btn-red{background:linear-gradient(145deg,#ff7b64,#9d2b1e)}
+    .btn-soft{background:rgba(255,255,255,.08);color:var(--text)}
+    .btn-full{width:100%}
 
     input,select,textarea{
       width:100%;
@@ -288,10 +171,7 @@
       font-size:16px;
     }
 
-    textarea{
-      min-height:95px;
-      resize:vertical;
-    }
+    textarea{min-height:95px;resize:vertical}
 
     label{
       display:block;
@@ -301,20 +181,9 @@
       font-weight:700;
     }
 
-    label span{
-      display:block;
-      margin-bottom:6px;
-    }
-
-    .form-grid{
-      display:grid;
-      gap:10px;
-    }
-
-    .list{
-      display:grid;
-      gap:12px;
-    }
+    label span{display:block;margin-bottom:6px}
+    .form-grid{display:grid;gap:10px}
+    .list{display:grid;gap:12px}
 
     .job-card{
       border-radius:22px;
@@ -326,18 +195,8 @@
       box-shadow:0 12px 28px rgba(0,0,0,.22);
     }
 
-    .job-top{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:flex-start;
-    }
-
-    .job-title{
-      font-size:18px;
-      font-weight:900;
-      margin-bottom:4px;
-    }
+    .job-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .job-title{font-size:18px;font-weight:900;margin-bottom:4px}
 
     .badge{
       display:inline-flex;
@@ -357,6 +216,7 @@
     .badge-done{color:#7bd7ff}
     .badge-paid{color:#d6b2ff}
     .badge-health{color:#ffca8a}
+    .badge-oil{color:#f0c66a}
 
     .progress-wrap{
       margin:12px 0 8px;
@@ -383,9 +243,7 @@
     }
 
     @media(max-width:600px){
-      .mini-grid{
-        grid-template-columns:1fr;
-      }
+      .mini-grid{grid-template-columns:1fr}
     }
 
     .mini-box{
@@ -395,16 +253,8 @@
       border-radius:15px;
     }
 
-    .mini-box b{
-      display:block;
-      font-size:19px;
-      margin-bottom:2px;
-    }
-
-    .mini-box span{
-      color:var(--muted);
-      font-size:12px;
-    }
+    .mini-box b{display:block;font-size:19px;margin-bottom:2px}
+    .mini-box span{color:var(--muted);font-size:12px}
 
     .money{color:var(--gold);font-weight:950}
     .netto{color:var(--green2);font-weight:950}
@@ -418,9 +268,7 @@
     }
 
     @media(min-width:760px){
-      .photo-grid{
-        grid-template-columns:repeat(3,1fr);
-      }
+      .photo-grid{grid-template-columns:repeat(3,1fr)}
     }
 
     .photo-card{
@@ -495,11 +343,7 @@
       color:#101908;
     }
 
-    .nav-icon{
-      display:block;
-      font-size:20px;
-      margin-bottom:2px;
-    }
+    .nav-icon{display:block;font-size:20px;margin-bottom:2px}
 
     .modal{
       position:fixed;
@@ -512,9 +356,7 @@
       padding:12px;
     }
 
-    .modal.active{
-      display:flex;
-    }
+    .modal.active{display:flex}
 
     .modal-box{
       width:100%;
@@ -538,19 +380,10 @@
       margin-bottom:14px;
     }
 
-    .modal-head h2{
-      margin:0;
-    }
+    .modal-head h2{margin:0}
+    .close-btn{width:44px;height:44px;border-radius:50%;padding:0;background:rgba(255,255,255,.10)}
 
-    .close-btn{
-      width:44px;
-      height:44px;
-      border-radius:50%;
-      padding:0;
-      background:rgba(255,255,255,.10);
-    }
-
-    .day-row,.health-row{
+    .day-row,.health-row,.oil-row{
       border:1px solid rgba(255,255,255,.10);
       border-radius:18px;
       padding:12px;
@@ -558,9 +391,7 @@
       margin-bottom:8px;
     }
 
-    .day-row b,.health-row b{
-      color:var(--green2);
-    }
+    .day-row b,.health-row b,.oil-row b{color:var(--green2)}
 
     .calendar-day{
       border-left:4px solid var(--green);
@@ -603,14 +434,8 @@
       text-align:center;
     }
 
-    .toast.show{
-      opacity:1;
-      bottom:105px;
-    }
-
-    .search{
-      margin-bottom:12px;
-    }
+    .toast.show{opacity:1;bottom:105px}
+    .search{margin-bottom:12px}
 
     .check-grid{
       display:grid;
@@ -620,9 +445,7 @@
     }
 
     @media(min-width:760px){
-      .check-grid{
-        grid-template-columns:repeat(2,1fr);
-      }
+      .check-grid{grid-template-columns:repeat(2,1fr)}
     }
 
     .check-item{
@@ -637,9 +460,7 @@
       font-size:13px;
     }
 
-    .check-item input{
-      width:auto;
-    }
+    .check-item input{width:auto}
 
     .advice-box{
       background:linear-gradient(145deg,rgba(214,166,66,.18),rgba(255,255,255,.04));
@@ -649,10 +470,7 @@
       margin:12px 0;
     }
 
-    .advice-box h3{
-      color:var(--gold);
-      margin-bottom:8px;
-    }
+    .advice-box h3{color:var(--gold);margin-bottom:8px}
 
     .diagnosis-tag{
       display:inline-block;
@@ -688,9 +506,7 @@
       padding:12px;
     }
 
-    .photo-viewer.active{
-      display:flex;
-    }
+    .photo-viewer.active{display:flex}
 
     .photo-viewer-head{
       display:flex;
@@ -700,11 +516,7 @@
       padding:4px 0 10px;
     }
 
-    .photo-viewer-title{
-      color:white;
-      font-weight:900;
-      font-size:16px;
-    }
+    .photo-viewer-title{color:white;font-weight:900;font-size:16px}
 
     .photo-viewer img{
       width:100%;
@@ -726,9 +538,7 @@
       text-align:center;
     }
 
-    .saving-overlay.active{
-      display:flex;
-    }
+    .saving-overlay.active{display:flex}
 
     .saving-box{
       background:#f4ffe9;
@@ -749,7 +559,7 @@
       <div class="brand-title">
         <h1>ApPiero</h1>
         <p>Gestione potatura ulivi</p>
-        <div class="version">V6.1 · foto salute corretta</div>
+        <div class="version">V7 · resa olio annuale</div>
       </div>
     </div>
     <div class="today-pill" id="todayText">Oggi</div>
@@ -766,15 +576,15 @@
       </div>
 
       <div class="card kpi">
-        <div class="kpi-label">Lordo oggi</div>
-        <div class="kpi-value money" id="kpiTodayGross">0 €</div>
-        <div class="kpi-small">prima delle spese</div>
-      </div>
-
-      <div class="card kpi">
         <div class="kpi-label">Netto oggi</div>
         <div class="kpi-value netto" id="kpiTodayNet">0 €</div>
         <div class="kpi-small" id="kpiTodayExpenses">spese: 0 €</div>
+      </div>
+
+      <div class="card kpi">
+        <div class="kpi-label">Annate olio</div>
+        <div class="kpi-value money" id="kpiOilYears">0</div>
+        <div class="kpi-small">registri produzione</div>
       </div>
     </div>
 
@@ -783,7 +593,7 @@
     <div class="grid grid-2">
       <button class="btn-main btn-full" onclick="showScreen('new')">➕ Nuovo lavoro</button>
       <button class="btn-gold btn-full" onclick="showScreen('calendar')">📅 Calendario</button>
-      <button class="btn-blue btn-full" onclick="showScreen('jobs')">🌳 Lavori attivi</button>
+      <button class="btn-blue btn-full" onclick="showScreen('jobs')">🌳 Lavori</button>
       <button class="btn-soft btn-full" onclick="showScreen('stats')">📊 Statistiche</button>
     </div>
 
@@ -805,7 +615,7 @@
       <div class="card kpi">
         <div class="kpi-label">Controlli salute</div>
         <div class="kpi-value" id="kpiHealthChecks">0</div>
-        <div class="kpi-small">schede olivo salvate</div>
+        <div class="kpi-small">schede olivo</div>
       </div>
     </div>
 
@@ -969,7 +779,7 @@
 
   <section id="screen-calendar" class="screen">
     <div class="section-title"><h2>Calendario lavori</h2></div>
-    <div class="card"><p class="muted small">Qui vedi i lavori ordinati per data prevista, giornate registrate e controlli salute.</p></div>
+    <div class="card"><p class="muted small">Qui vedi lavori, giornate, controlli salute e annate olio.</p></div>
     <div id="calendarList" class="list" style="margin-top:12px;"></div>
   </section>
 
@@ -979,17 +789,17 @@
     <div class="grid grid-3">
       <div class="card kpi"><div class="kpi-label">Ulivi totali registrati</div><div class="kpi-value" id="statTotalTrees">0</div></div>
       <div class="card kpi"><div class="kpi-label">Ulivi già potati</div><div class="kpi-value" id="statDoneTrees">0</div></div>
-      <div class="card kpi"><div class="kpi-label">Lordo registrato</div><div class="kpi-value money" id="statGross">0 €</div></div>
+      <div class="card kpi"><div class="kpi-label">Netto registrato</div><div class="kpi-value netto" id="statNet">0 €</div></div>
     </div>
 
     <div class="grid grid-3" style="margin-top:12px;">
-      <div class="card kpi"><div class="kpi-label">Spese registrate</div><div class="kpi-value expense" id="statExpenses">0 €</div></div>
-      <div class="card kpi"><div class="kpi-label">Netto registrato</div><div class="kpi-value netto" id="statNet">0 €</div></div>
       <div class="card kpi"><div class="kpi-label">Schede salute</div><div class="kpi-value" id="statHealth">0</div></div>
+      <div class="card kpi"><div class="kpi-label">Annate olio</div><div class="kpi-value money" id="statOilYears">0</div></div>
+      <div class="card kpi"><div class="kpi-label">Olio registrato</div><div class="kpi-value money" id="statOilLiters">0 L</div></div>
     </div>
 
     <div class="card" style="margin-top:12px;">
-      <h3>Riepilogo lavori</h3>
+      <h3>Riepilogo generale</h3>
       <div id="statsDetails"></div>
     </div>
   </section>
@@ -1054,8 +864,8 @@
 <div id="toast" class="toast"></div>
 
 <script>
-const STORAGE_KEY="appiero_v61_jobs";
-const OLD_STORAGE_KEYS=["appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
+const STORAGE_KEY="appiero_v7_jobs";
+const OLD_STORAGE_KEYS=["appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
 
 let jobs=[];
 let currentFilter="all";
@@ -1063,9 +873,7 @@ let openedJobId=null;
 
 const euro=new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"});
 
-function todayISO(){
-  return new Date().toISOString().slice(0,10);
-}
+function todayISO(){return new Date().toISOString().slice(0,10)}
 
 function formatDate(iso){
   if(!iso)return"Senza data";
@@ -1073,13 +881,9 @@ function formatDate(iso){
   return d.toLocaleDateString("it-IT",{weekday:"short",day:"2-digit",month:"2-digit",year:"numeric"});
 }
 
-function uid(){
-  return Date.now().toString(36)+Math.random().toString(36).slice(2);
-}
-
-function money(n){
-  return euro.format(Number(n||0));
-}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
+function money(n){return euro.format(Number(n||0))}
+function num(n){return Number(n||0)}
 
 function toast(msg){
   const t=document.getElementById("toast");
@@ -1097,23 +901,12 @@ function escapeHtml(str){
     .replaceAll("'","&#039;");
 }
 
-function escapeAttr(str){
-  return escapeHtml(str).replaceAll("\n"," ");
-}
-
-function showSaving(show){
-  document.getElementById("savingOverlay").classList.toggle("active",!!show);
-}
+function escapeAttr(str){return escapeHtml(str).replaceAll("\n"," ")}
+function showSaving(show){document.getElementById("savingOverlay").classList.toggle("active",!!show)}
 
 function safeSetStorage(key,value){
-  try{
-    localStorage.setItem(key,value);
-    return true;
-  }catch(e){
-    console.error(e);
-    toast("Memoria piena: fai backup o usa meno foto");
-    return false;
-  }
+  try{localStorage.setItem(key,value);return true}
+  catch(e){console.error(e);toast("Memoria piena: fai backup o usa meno foto");return false}
 }
 
 function save(){
@@ -1181,43 +974,26 @@ function compressImage(file,maxWidth=900,quality=0.68){
 
           const dataUrl=canvas.toDataURL("image/jpeg",quality);
           resolve(dataUrl);
-        }catch(err){
-          reject(err);
-        }
+        }catch(err){reject(err)}
       };
 
-      img.onerror=function(){
-        reject(new Error("Impossibile leggere immagine"));
-      };
-
+      img.onerror=function(){reject(new Error("Impossibile leggere immagine"))};
       img.src=e.target.result;
     };
 
-    reader.onerror=function(){
-      reject(new Error("Impossibile leggere file"));
-    };
-
+    reader.onerror=function(){reject(new Error("Impossibile leggere file"))};
     reader.readAsDataURL(file);
   });
 }
 
 async function fileToCompressedDataURL(file){
   if(!file)return "";
-  try{
-    const compressed=await compressImage(file,900,0.68);
-    return compressed;
-  }catch(e){
-    console.error(e);
-    toast("Errore foto: prova a sceglierne un'altra");
-    return "";
-  }
+  try{return await compressImage(file,900,0.68)}
+  catch(e){console.error(e);toast("Errore foto: prova a sceglierne un'altra");return ""}
 }
 
 function openPhotoViewer(src,title){
-  if(!src){
-    toast("Foto non disponibile");
-    return;
-  }
+  if(!src){toast("Foto non disponibile");return}
   document.getElementById("photoViewerImg").src=src;
   document.getElementById("photoViewerTitle").textContent=title||"Foto";
   document.getElementById("photoViewer").classList.add("active");
@@ -1238,26 +1014,22 @@ function normalizeJob(job){
   if(!Array.isArray(job.photoItems))job.photoItems=[];
   if(!Array.isArray(job.healthChecks))job.healthChecks=[];
   if(!Array.isArray(job.days))job.days=[];
+  if(!Array.isArray(job.oilRecords))job.oilRecords=[];
 
   if(job.photos.length&&job.photoItems.length===0){
-    job.photoItems=job.photos.map(src=>({
-      id:uid(),
-      type:"altro",
-      src,
-      createdAt:new Date().toISOString()
-    }));
+    job.photoItems=job.photos.map(src=>({id:uid(),type:"altro",src,createdAt:new Date().toISOString()}));
   }
 
   job.days=job.days.map(d=>({
     id:d.id||uid(),
     date:d.date||todayISO(),
-    trees:Number(d.trees||0),
-    hours:Number(d.hours||0),
-    dayMoney:Number(d.dayMoney||0),
-    expenseFuel:Number(d.expenseFuel||0),
-    expenseFood:Number(d.expenseFood||0),
-    expenseTools:Number(d.expenseTools||0),
-    expenseOther:Number(d.expenseOther||0),
+    trees:num(d.trees),
+    hours:num(d.hours),
+    dayMoney:num(d.dayMoney),
+    expenseFuel:num(d.expenseFuel),
+    expenseFood:num(d.expenseFood),
+    expenseTools:num(d.expenseTools),
+    expenseOther:num(d.expenseOther),
     notes:d.notes||"",
     photo:d.photo||""
   }));
@@ -1277,6 +1049,20 @@ function normalizeJob(job){
     guideAdvice:h.guideAdvice||"",
     note:h.note||"",
     photo:h.photo||""
+  }));
+
+  job.oilRecords=job.oilRecords.map(o=>({
+    id:o.id||uid(),
+    year:o.year||new Date().getFullYear(),
+    productiveTrees:num(o.productiveTrees),
+    oliveKg:num(o.oliveKg),
+    yieldPercent:num(o.yieldPercent),
+    oilLiters:num(o.oilLiters),
+    mill:o.mill||"",
+    harvestPeriod:o.harvestPeriod||"",
+    oliveQuality:o.oliveQuality||"",
+    notes:o.notes||"",
+    createdAt:o.createdAt||new Date().toISOString()
   }));
 
   return job;
@@ -1325,10 +1111,7 @@ function updatePriceLabels(){
 async function createJob(){
   const client=document.getElementById("fClient").value.trim();
 
-  if(!client){
-    toast("Inserisci il cliente");
-    return;
-  }
+  if(!client){toast("Inserisci il cliente");return}
 
   showSaving(true);
 
@@ -1343,27 +1126,23 @@ async function createJob(){
     phone:document.getElementById("fPhone").value.trim(),
     place:document.getElementById("fPlace").value.trim(),
     startDate:document.getElementById("fDate").value||todayISO(),
-    totalTrees:Number(document.getElementById("fTotalTrees").value||0),
+    totalTrees:num(document.getElementById("fTotalTrees").value),
     cultivar:document.getElementById("fCultivar").value,
     age:document.getElementById("fAge").value,
     vigor:document.getElementById("fVigor").value,
     shape:document.getElementById("fShape").value,
     priceMode:document.getElementById("fPriceMode").value,
-    priceValue:Number(document.getElementById("fPriceValue").value||0),
-    estimatedDays:Number(document.getElementById("fEstimatedDays").value||0),
-    deposit:Number(document.getElementById("fDeposit").value||0),
+    priceValue:num(document.getElementById("fPriceValue").value),
+    estimatedDays:num(document.getElementById("fEstimatedDays").value),
+    deposit:num(document.getElementById("fDeposit").value),
     workType:document.getElementById("fWorkType").value,
     status:document.getElementById("fStatus").value,
     notes:document.getElementById("fNotes").value.trim(),
     photos:photo?[photo]:[],
-    photoItems:photo?[{
-      id:uid(),
-      type:photoType,
-      src:photo,
-      createdAt:new Date().toISOString()
-    }]:[],
+    photoItems:photo?[{id:uid(),type:photoType,src:photo,createdAt:new Date().toISOString()}]:[],
     days:[],
-    healthChecks:[]
+    healthChecks:[],
+    oilRecords:[]
   };
 
   jobs.unshift(job);
@@ -1393,85 +1172,51 @@ function clearForm(){
   updatePriceLabels();
 }
 
-function jobDoneTrees(job){
-  return job.days.reduce((s,d)=>s+Number(d.trees||0),0);
-}
-
-function dayExpenses(day){
-  return Number(day.expenseFuel||0)+
-         Number(day.expenseFood||0)+
-         Number(day.expenseTools||0)+
-         Number(day.expenseOther||0);
-}
-
-function jobExpenses(job){
-  return job.days.reduce((s,d)=>s+dayExpenses(d),0);
-}
+function jobDoneTrees(job){return job.days.reduce((s,d)=>s+num(d.trees),0)}
+function dayExpenses(day){return num(day.expenseFuel)+num(day.expenseFood)+num(day.expenseTools)+num(day.expenseOther)}
+function jobExpenses(job){return job.days.reduce((s,d)=>s+dayExpenses(d),0)}
 
 function jobDayGross(job,day){
-  const trees=Number(day.trees||0);
-
-  if(job.priceMode==="tree")return trees*Number(job.priceValue||0);
-  if(job.priceMode==="day")return Number(day.dayMoney||job.priceValue||0);
-
+  const trees=num(day.trees);
+  if(job.priceMode==="tree")return trees*num(job.priceValue);
+  if(job.priceMode==="day")return num(day.dayMoney||job.priceValue);
   if(job.priceMode==="fixed"){
     if(!job.totalTrees)return 0;
-    return trees*(Number(job.priceValue||0)/Number(job.totalTrees||1));
+    return trees*(num(job.priceValue)/num(job.totalTrees||1));
   }
-
   return 0;
 }
 
-function jobDayNet(job,day){
-  return jobDayGross(job,day)-dayExpenses(day);
-}
-
-function jobGross(job){
-  return job.days.reduce((s,d)=>s+jobDayGross(job,d),0);
-}
-
-function jobNet(job){
-  return job.days.reduce((s,d)=>s+jobDayNet(job,d),0);
-}
+function jobDayNet(job,day){return jobDayGross(job,day)-dayExpenses(day)}
+function jobGross(job){return job.days.reduce((s,d)=>s+jobDayGross(job,d),0)}
+function jobNet(job){return job.days.reduce((s,d)=>s+jobDayNet(job,d),0)}
 
 function jobEstimate(job){
-  if(job.priceMode==="tree")return Number(job.totalTrees||0)*Number(job.priceValue||0);
-  if(job.priceMode==="day")return Number(job.estimatedDays||0)*Number(job.priceValue||0);
-  if(job.priceMode==="fixed")return Number(job.priceValue||0);
+  if(job.priceMode==="tree")return num(job.totalTrees)*num(job.priceValue);
+  if(job.priceMode==="day")return num(job.estimatedDays)*num(job.priceValue);
+  if(job.priceMode==="fixed")return num(job.priceValue);
   return 0;
 }
 
-function jobBalance(job){
-  return Math.max(0,jobEstimate(job)-Number(job.deposit||0));
-}
-
-function jobRemaining(job){
-  return Math.max(0,Number(job.totalTrees||0)-jobDoneTrees(job));
-}
-
-function jobProgress(job){
-  if(!job.totalTrees)return 0;
-  return Math.min(100,Math.round((jobDoneTrees(job)/job.totalTrees)*100));
-}
+function jobBalance(job){return Math.max(0,jobEstimate(job)-num(job.deposit))}
+function jobRemaining(job){return Math.max(0,num(job.totalTrees)-jobDoneTrees(job))}
+function jobProgress(job){if(!job.totalTrees)return 0;return Math.min(100,Math.round((jobDoneTrees(job)/job.totalTrees)*100))}
 
 function statusLabel(s){
-  return s==="preventivo"?"Preventivo":
-         s==="attivo"?"Attivo":
-         s==="finito"?"Finito":
-         s==="pagato"?"Pagato":s;
+  return s==="preventivo"?"Preventivo":s==="attivo"?"Attivo":s==="finito"?"Finito":s==="pagato"?"Pagato":s;
 }
 
 function statusClass(s){
-  return s==="preventivo"?"badge-open":
-         s==="attivo"?"badge-work":
-         s==="finito"?"badge-done":
-         s==="pagato"?"badge-paid":"";
+  return s==="preventivo"?"badge-open":s==="attivo"?"badge-work":s==="finito"?"badge-done":s==="pagato"?"badge-paid":"";
 }
 
 function priceModeLabel(job){
-  return job.priceMode==="tree"?"Prezzo a ulivo":
-         job.priceMode==="day"?"Prezzo a giornata":
-         job.priceMode==="fixed"?"Prezzo a corpo":"Prezzo";
+  return job.priceMode==="tree"?"Prezzo a ulivo":job.priceMode==="day"?"Prezzo a giornata":job.priceMode==="fixed"?"Prezzo a corpo":"Prezzo";
+}
+
+function oilEstimatedLiters(o){
+  if(!o.oliveKg || !o.yieldPercent)return 0;
+  return num(o.oliveKg) * num(o.yieldPercent) / 100;
 }
 
 function renderJobCard(job){
@@ -1484,6 +1229,7 @@ function renderJobCard(job){
   const estimate=jobEstimate(job);
   const balance=jobBalance(job);
   const healthCount=(job.healthChecks||[]).length;
+  const oilCount=(job.oilRecords||[]).length;
 
   return `
   <div class="job-card">
@@ -1492,7 +1238,7 @@ function renderJobCard(job){
         <div class="job-title">${escapeHtml(job.client)}</div>
         <div class="muted small">${escapeHtml(job.place||"Luogo non indicato")}</div>
         <div class="muted small">${formatDate(job.startDate)} · ${escapeHtml(job.workType||"")}</div>
-        <div class="muted small">Cultivar: ${escapeHtml(job.cultivar||"non indicata")} · Salute: ${healthCount} schede</div>
+        <div class="muted small">Cultivar: ${escapeHtml(job.cultivar||"non indicata")} · Salute: ${healthCount} · Olio: ${oilCount}</div>
       </div>
       <span class="badge ${statusClass(job.status)}">${statusLabel(job.status)}</span>
     </div>
@@ -1521,6 +1267,7 @@ function renderJobCard(job){
       <button class="btn-main" onclick="openJob('${job.id}')">Apri</button>
       <button class="btn-gold" onclick="quickAddDay('${job.id}')">+ Giornata</button>
       <button class="btn-blue" onclick="quickHealth('${job.id}')">Salute</button>
+      <button class="btn-gold" onclick="quickOil('${job.id}')">Olio</button>
     </div>
   </div>`;
 }
@@ -1547,25 +1294,17 @@ function renderJobs(){
   box.innerHTML=filtered.map(renderJobCard).join("");
 }
 
-function setJobFilter(f){
-  currentFilter=f;
-  renderJobs();
-}
+function setJobFilter(f){currentFilter=f;renderJobs()}
 
 function renderHome(){
   const today=todayISO();
-  let todayTrees=0;
-  let todayGross=0;
-  let todayNet=0;
-  let todayExpenses=0;
-  let todayRows=0;
+  let todayTrees=0,todayNet=0,todayExpenses=0,todayRows=0;
 
   jobs.forEach(job=>{
     job.days.forEach(d=>{
       if(d.date===today){
         todayRows++;
-        todayTrees+=Number(d.trees||0);
-        todayGross+=jobDayGross(job,d);
+        todayTrees+=num(d.trees);
         todayNet+=jobDayNet(job,d);
         todayExpenses+=dayExpenses(d);
       }
@@ -1573,13 +1312,13 @@ function renderHome(){
   });
 
   document.getElementById("kpiTodayTrees").textContent=todayTrees;
-  document.getElementById("kpiTodayGross").textContent=money(todayGross);
   document.getElementById("kpiTodayNet").textContent=money(todayNet);
   document.getElementById("kpiTodayExpenses").textContent="spese: "+money(todayExpenses);
   document.getElementById("kpiTodayJobs").textContent=todayRows+" giornate registrate";
   document.getElementById("kpiActiveJobs").textContent=jobs.filter(j=>j.status==="attivo").length;
   document.getElementById("kpiOpenEstimates").textContent=jobs.filter(j=>j.status==="preventivo").length;
   document.getElementById("kpiHealthChecks").textContent=jobs.reduce((s,j)=>s+(j.healthChecks||[]).length,0);
+  document.getElementById("kpiOilYears").textContent=jobs.reduce((s,j)=>s+(j.oilRecords||[]).length,0);
 
   const recent=jobs.slice(0,4);
   const box=document.getElementById("homeRecentJobs");
@@ -1609,7 +1348,7 @@ function renderCalendar(){
         html:`<div class="calendar-day">
           <b>${formatDate(d.date)}</b><br>
           <strong>${escapeHtml(job.client)}</strong> — giornata registrata<br>
-          <span class="muted small">${Number(d.trees||0)} ulivi · lordo ${money(jobDayGross(job,d))} · spese ${money(dayExpenses(d))} · netto ${money(jobDayNet(job,d))}</span>
+          <span class="muted small">${num(d.trees)} ulivi · netto ${money(jobDayNet(job,d))}</span>
         </div>`
       });
     });
@@ -1620,7 +1359,18 @@ function renderCalendar(){
         html:`<div class="calendar-day">
           <b>${formatDate(h.date)}</b><br>
           <strong>${escapeHtml(job.client)}</strong> — controllo salute olivo<br>
-          <span class="muted small">${escapeHtml(h.condition)} · priorità ${escapeHtml(h.priority)} · sospetti: ${escapeHtml((h.suggestedProblems||[]).join(", ")||"nessun risultato guidato")}</span>
+          <span class="muted small">${escapeHtml(h.condition)} · priorità ${escapeHtml(h.priority)}</span>
+        </div>`
+      });
+    });
+
+    (job.oilRecords||[]).forEach(o=>{
+      events.push({
+        date:String(o.year)+"-12-31",
+        html:`<div class="calendar-day">
+          <b>Anno ${escapeHtml(o.year)}</b><br>
+          <strong>${escapeHtml(job.client)}</strong> — produzione olio<br>
+          <span class="muted small">${num(o.productiveTrees)} piante · resa ${num(o.yieldPercent)}% · olio ${num(o.oilLiters)} L</span>
         </div>`
       });
     });
@@ -1634,23 +1384,22 @@ function renderCalendar(){
 }
 
 function renderStats(){
-  const totalTrees=jobs.reduce((s,j)=>s+Number(j.totalTrees||0),0);
+  const totalTrees=jobs.reduce((s,j)=>s+num(j.totalTrees),0);
   const doneTrees=jobs.reduce((s,j)=>s+jobDoneTrees(j),0);
-  const gross=jobs.reduce((s,j)=>s+jobGross(j),0);
-  const expenses=jobs.reduce((s,j)=>s+jobExpenses(j),0);
   const net=jobs.reduce((s,j)=>s+jobNet(j),0);
   const health=jobs.reduce((s,j)=>s+(j.healthChecks||[]).length,0);
+  const oilYears=jobs.reduce((s,j)=>s+(j.oilRecords||[]).length,0);
+  const oilLiters=jobs.reduce((s,j)=>s+(j.oilRecords||[]).reduce((x,o)=>x+num(o.oilLiters),0),0);
 
   document.getElementById("statTotalTrees").textContent=totalTrees;
   document.getElementById("statDoneTrees").textContent=doneTrees;
-  document.getElementById("statGross").textContent=money(gross);
-  document.getElementById("statExpenses").textContent=money(expenses);
   document.getElementById("statNet").textContent=money(net);
   document.getElementById("statHealth").textContent=health;
+  document.getElementById("statOilYears").textContent=oilYears;
+  document.getElementById("statOilLiters").textContent=oilLiters.toFixed(1)+" L";
 
   const active=jobs.filter(j=>j.status==="attivo").length;
   const estimates=jobs.filter(j=>j.status==="preventivo").length;
-  const finished=jobs.filter(j=>j.status==="finito").length;
   const paid=jobs.filter(j=>j.status==="pagato").length;
   const balanceDue=jobs.filter(j=>j.status!=="pagato").reduce((s,j)=>s+jobBalance(j),0);
 
@@ -1658,11 +1407,11 @@ function renderStats(){
     <div class="mini-box"><b>${jobs.length}</b><span>lavori totali</span></div>
     <div class="mini-box"><b>${active}</b><span>attivi</span></div>
     <div class="mini-box"><b>${estimates}</b><span>preventivi</span></div>
-    <div class="mini-box"><b>${finished}</b><span>finiti</span></div>
     <div class="mini-box"><b>${paid}</b><span>pagati</span></div>
-    <div class="mini-box"><b>${doneTrees?money(net/doneTrees):money(0)}</b><span>netto medio per ulivo</span></div>
     <div class="mini-box"><b>${money(balanceDue)}</b><span>saldo da incassare</span></div>
-    <div class="mini-box"><b>${health}</b><span>controlli salute</span></div>
+    <div class="mini-box"><b>${doneTrees?money(net/doneTrees):money(0)}</b><span>netto medio per ulivo</span></div>
+    <div class="mini-box"><b>${oilYears}</b><span>annate olio</span></div>
+    <div class="mini-box"><b>${oilLiters.toFixed(1)} L</b><span>olio totale registrato</span></div>
   </div>`;
 }
 
@@ -1699,7 +1448,6 @@ function renderPhotos(job){
 
 function renderHealthChecks(job){
   const list=job.healthChecks||[];
-
   if(!list.length)return`<div class="empty">Nessuna scheda salute salvata.</div>`;
 
   return list.slice().reverse().map(h=>{
@@ -1732,12 +1480,35 @@ function renderHealthChecks(job){
   }).join("");
 }
 
+function renderOilRecords(job){
+  const list=job.oilRecords||[];
+  if(!list.length)return`<div class="empty">Nessuna annata olio salvata.</div>`;
+
+  const sorted=list.slice().sort((a,b)=>num(b.year)-num(a.year));
+
+  return sorted.map(o=>{
+    const estimated=oilEstimatedLiters(o);
+    return `
+      <div class="oil-row">
+        <b>Anno ${escapeHtml(o.year)}</b> <span class="badge badge-oil">Resa ${num(o.yieldPercent)}%</span><br>
+        Piante produttive: <strong>${num(o.productiveTrees)}</strong><br>
+        Olive raccolte: <strong>${num(o.oliveKg)} kg</strong><br>
+        Olio prodotto reale: <strong class="money">${num(o.oilLiters)} L</strong><br>
+        Olio stimato da resa: <strong>${estimated.toFixed(1)} L</strong><br>
+        Frantoio: <span class="muted small">${escapeHtml(o.mill||"non indicato")}</span><br>
+        Raccolta: <span class="muted small">${escapeHtml(o.harvestPeriod||"non indicata")}</span><br>
+        Qualità olive: <span class="muted small">${escapeHtml(o.oliveQuality||"non indicata")}</span><br>
+        Note: <span class="muted small">${escapeHtml(o.notes||"nessuna nota")}</span>
+      </div>
+    `;
+  }).join("");
+}
+
 function buildEstimateText(job){
   const estimate=jobEstimate(job);
   const balance=jobBalance(job);
 
   let priceLine="";
-
   if(job.priceMode==="tree"){
     priceLine=`Prezzo a ulivo: ${money(job.priceValue)}\nTotale preventivo: ${money(estimate)}`;
   }else if(job.priceMode==="day"){
@@ -1774,14 +1545,12 @@ function buildSummaryText(job){
   const done=jobDoneTrees(job);
   const remaining=jobRemaining(job);
   const progress=jobProgress(job);
-  const gross=jobGross(job);
-  const expenses=jobExpenses(job);
   const net=jobNet(job);
   const estimate=jobEstimate(job);
   const balance=jobBalance(job);
 
   const daysText=job.days.length
-    ? job.days.map(d=>`- ${formatDate(d.date)}: ${d.trees} ulivi, lordo ${money(jobDayGross(job,d))}, spese ${money(dayExpenses(d))}, netto ${money(jobDayNet(job,d))}`).join("\n")
+    ? job.days.map(d=>`- ${formatDate(d.date)}: ${d.trees} ulivi, netto ${money(jobDayNet(job,d))}`).join("\n")
     : "Nessuna giornata registrata.";
 
   return `RIEPILOGO LAVORO POTATURA ULIVI
@@ -1789,11 +1558,6 @@ function buildSummaryText(job){
 Cliente: ${job.client}
 Località: ${job.place||"Non indicata"}
 Stato: ${statusLabel(job.status)}
-
-Cultivar/tipo olivo: ${job.cultivar||"Non indicato"}
-Età: ${job.age||"Non indicata"}
-Vigoria: ${job.vigor||"Non indicata"}
-Forma: ${job.shape||"Non indicata"}
 
 Totale ulivi: ${job.totalTrees||0}
 Ulivi potati: ${done}
@@ -1803,9 +1567,6 @@ Avanzamento: ${progress}%
 Preventivo: ${money(estimate)}
 Acconto: ${money(job.deposit||0)}
 Saldo da incassare: ${money(balance)}
-
-Lordo registrato: ${money(gross)}
-Spese registrate: ${money(expenses)}
 Netto registrato: ${money(net)}
 
 Giornate:
@@ -1819,14 +1580,10 @@ ApPiero`;
 
 function buildHealthText(job){
   const list=job.healthChecks||[];
-
   const rows=list.length
     ? list.map(h=>`- ${formatDate(h.date)} | ${h.treeRef||"pianta/zona non indicata"} | stato: ${h.condition} | priorità: ${h.priority}
-  Parte foto: ${h.photoPart||"non indicata"}
   Sintomi: ${(h.symptoms||[]).join(", ")||"nessuno"}
-  Problemi selezionati: ${(h.diseases||[]).join(", ")||"nessuno"}
   Analisi guidata: ${(h.suggestedProblems||[]).join(", ")||"nessun sospetto calcolato"}
-  Livello: ${h.guideLevel||"non indicato"}
   Consiglio: ${h.guideAdvice||"nessuno"}
   Note: ${h.note||"nessuna"}`).join("\n\n")
     : "Nessun controllo salute registrato.";
@@ -1836,14 +1593,40 @@ function buildHealthText(job){
 Cliente: ${job.client}
 Località: ${job.place||"Non indicata"}
 Cultivar/tipo olivo: ${job.cultivar||"Non indicato"}
-Età stimata: ${job.age||"Non indicata"}
-Vigoria: ${job.vigor||"Non indicata"}
-Forma: ${job.shape||"Non indicata"}
 
 Controlli:
 ${rows}
 
 Nota: indicazioni di campo da verificare con tecnico/agronomo in caso di sintomi gravi.
+
+ApPiero`;
+}
+
+function buildOilText(job){
+  const list=(job.oilRecords||[]).slice().sort((a,b)=>num(b.year)-num(a.year));
+
+  const rows=list.length
+    ? list.map(o=>`- Anno ${o.year}
+  Piante produttive: ${o.productiveTrees}
+  Olive raccolte: ${o.oliveKg} kg
+  Resa: ${o.yieldPercent}%
+  Olio prodotto reale: ${o.oilLiters} L
+  Olio stimato da resa: ${oilEstimatedLiters(o).toFixed(1)} L
+  Frantoio: ${o.mill||"non indicato"}
+  Raccolta: ${o.harvestPeriod||"non indicata"}
+  Qualità olive: ${o.oliveQuality||"non indicata"}
+  Note: ${o.notes||"nessuna"}`).join("\n\n")
+    : "Nessuna annata olio registrata.";
+
+  return `REGISTRO PRODUZIONE OLIO
+
+Cliente: ${job.client}
+Località: ${job.place||"Non indicata"}
+Cultivar/tipo olivo: ${job.cultivar||"Non indicato"}
+Totale ulivi: ${job.totalTrees||0}
+
+Annate:
+${rows}
 
 ApPiero`;
 }
@@ -1865,45 +1648,30 @@ async function copyText(text,msg){
   ta.focus();
   ta.select();
 
-  try{
-    document.execCommand("copy");
-    toast(msg);
-  }catch(e){
-    toast("Copia non riuscita");
-  }
+  try{document.execCommand("copy");toast(msg)}
+  catch(e){toast("Copia non riuscita")}
 
   document.body.removeChild(ta);
-}
-
-function copyEstimate(id){
-  const job=jobs.find(j=>j.id===id);
-  if(job)copyText(buildEstimateText(job),"Preventivo copiato");
-}
-
-function copySummary(id){
-  const job=jobs.find(j=>j.id===id);
-  if(job)copyText(buildSummaryText(job),"Riepilogo copiato");
-}
-
-function copyHealth(id){
-  const job=jobs.find(j=>j.id===id);
-  if(job)copyText(buildHealthText(job),"Scheda salute copiata");
 }
 
 function showPreview(id,type){
   const job=jobs.find(j=>j.id===id);
   if(!job)return;
 
-  const title=type==="estimate"?"Preventivo WhatsApp":type==="summary"?"Riepilogo WhatsApp":"Scheda salute WhatsApp";
-  const text=type==="estimate"?buildEstimateText(job):type==="summary"?buildSummaryText(job):buildHealthText(job);
-  const fn=type==="estimate"?"copyEstimate":type==="summary"?"copySummary":"copyHealth";
+  let title="Riepilogo WhatsApp";
+  let text=buildSummaryText(job);
+  let msg="Riepilogo copiato";
+
+  if(type==="estimate"){title="Preventivo WhatsApp";text=buildEstimateText(job);msg="Preventivo copiato"}
+  if(type==="health"){title="Salute WhatsApp";text=buildHealthText(job);msg="Scheda salute copiata"}
+  if(type==="oil"){title="Produzione olio WhatsApp";text=buildOilText(job);msg="Registro olio copiato"}
 
   document.getElementById("modalContent").innerHTML=`
     <div class="card">
       <h3>${title}</h3>
       <div class="quote-box">${escapeHtml(text)}</div>
       <div class="btn-row" style="margin-top:12px;">
-        <button class="btn-main" onclick="${fn}('${id}')">📋 Copia testo</button>
+        <button class="btn-main" onclick="copyText(\`${text.replaceAll("`","'")}\`,'${msg}')">📋 Copia testo</button>
         <button class="btn-soft" onclick="openJob('${id}')">Torna</button>
       </div>
     </div>`;
@@ -1929,12 +1697,11 @@ function openJob(id){
     ? job.days.slice().reverse().map(d=>`
       <div class="day-row">
         <b>${formatDate(d.date)}</b><br>
-        Ulivi potati: <strong>${Number(d.trees||0)}</strong><br>
-        Ore: <strong>${Number(d.hours||0)}</strong><br>
+        Ulivi potati: <strong>${num(d.trees)}</strong><br>
+        Ore: <strong>${num(d.hours)}</strong><br>
         Lordo: <span class="money">${money(jobDayGross(job,d))}</span><br>
         Spese: <span class="expense">${money(dayExpenses(d))}</span><br>
         Netto: <span class="netto">${money(jobDayNet(job,d))}</span><br>
-        <span class="muted small">Carburante ${money(d.expenseFuel)} · Pranzo ${money(d.expenseFood)} · Attrezzi ${money(d.expenseTools)} · Altro ${money(d.expenseOther)}</span><br>
         <span class="muted small">${escapeHtml(d.notes||"")}</span>
         ${d.photo?`
           <div class="photo-card" style="margin-top:10px;">
@@ -1959,7 +1726,7 @@ function openJob(id){
       <div class="progress-wrap"><div class="progress-bar" style="width:${progress}%"></div></div>
 
       <div class="mini-grid">
-        <div class="mini-box"><b>${job.totalTrees||0}</b><span>ulivi totali</span></div>
+        <div class="mini-box"><b>${num(job.totalTrees)}</b><span>ulivi totali</span></div>
         <div class="mini-box"><b>${done}</b><span>potati</span></div>
         <div class="mini-box"><b>${remaining}</b><span>restanti</span></div>
       </div>
@@ -1988,16 +1755,18 @@ function openJob(id){
       <p class="muted small"><strong>Note:</strong> ${escapeHtml(job.notes||"Nessuna nota")}</p>
 
       <div class="btn-row">
-        <button class="btn-main" onclick="showAddDayForm('${job.id}')">➕ Aggiungi giornata</button>
-        <button class="btn-gold" onclick="showAddPhotoForm('${job.id}')">📷 Aggiungi foto</button>
-        <button class="btn-blue" onclick="showHealthForm('${job.id}')">🩺 Salute guidata</button>
+        <button class="btn-main" onclick="showAddDayForm('${job.id}')">➕ Giornata</button>
+        <button class="btn-blue" onclick="showHealthForm('${job.id}')">🩺 Salute</button>
+        <button class="btn-gold" onclick="showOilForm('${job.id}')">🫒 Olio</button>
+        <button class="btn-soft" onclick="showAddPhotoForm('${job.id}')">📷 Foto</button>
         <button class="btn-soft" onclick="showEditJobForm('${job.id}')">✏️ Modifica</button>
       </div>
 
       <div class="btn-row" style="margin-top:9px;">
-        <button class="btn-gold" onclick="showPreview('${job.id}','estimate')">📋 Preventivo WhatsApp</button>
-        <button class="btn-blue" onclick="showPreview('${job.id}','summary')">📋 Riepilogo WhatsApp</button>
-        <button class="btn-soft" onclick="showPreview('${job.id}','health')">📋 Salute WhatsApp</button>
+        <button class="btn-gold" onclick="showPreview('${job.id}','estimate')">Preventivo</button>
+        <button class="btn-blue" onclick="showPreview('${job.id}','summary')">Riepilogo</button>
+        <button class="btn-soft" onclick="showPreview('${job.id}','health')">Salute</button>
+        <button class="btn-gold" onclick="showPreview('${job.id}','oil')">Olio</button>
       </div>
 
       <div class="btn-row" style="margin-top:9px;">
@@ -2007,6 +1776,9 @@ function openJob(id){
         <button class="btn-soft" onclick="changeStatus('${job.id}','pagato')">Pagato</button>
       </div>
     </div>
+
+    <div class="section-title"><h2>Produzione olio</h2></div>
+    ${renderOilRecords(job)}
 
     <div class="section-title"><h2>Salute olivo</h2></div>
     ${renderHealthChecks(job)}
@@ -2027,10 +1799,7 @@ function openJob(id){
   document.getElementById("jobModal").classList.add("active");
 }
 
-function closeModal(){
-  document.getElementById("jobModal").classList.remove("active");
-  openedJobId=null;
-}
+function closeModal(){document.getElementById("jobModal").classList.remove("active");openedJobId=null}
 
 function showAddDayForm(id){
   const job=jobs.find(j=>j.id===id);
@@ -2089,12 +1858,8 @@ async function addDay(id){
   const job=jobs.find(j=>j.id===id);
   if(!job)return;
 
-  const trees=Number(document.getElementById("dTrees").value||0);
-
-  if(trees<=0){
-    toast("Inserisci gli ulivi potati");
-    return;
-  }
+  const trees=num(document.getElementById("dTrees").value);
+  if(trees<=0){toast("Inserisci gli ulivi potati");return}
 
   showSaving(true);
 
@@ -2106,12 +1871,12 @@ async function addDay(id){
     id:uid(),
     date:document.getElementById("dDate").value||todayISO(),
     trees,
-    hours:Number(document.getElementById("dHours").value||0),
-    dayMoney:Number(document.getElementById("dDayMoney").value||0),
-    expenseFuel:Number(document.getElementById("dExpenseFuel").value||0),
-    expenseFood:Number(document.getElementById("dExpenseFood").value||0),
-    expenseTools:Number(document.getElementById("dExpenseTools").value||0),
-    expenseOther:Number(document.getElementById("dExpenseOther").value||0),
+    hours:num(document.getElementById("dHours").value),
+    dayMoney:num(document.getElementById("dDayMoney").value),
+    expenseFuel:num(document.getElementById("dExpenseFuel").value),
+    expenseFood:num(document.getElementById("dExpenseFood").value),
+    expenseTools:num(document.getElementById("dExpenseTools").value),
+    expenseOther:num(document.getElementById("dExpenseOther").value),
     notes:document.getElementById("dNotes").value.trim(),
     photo
   };
@@ -2120,12 +1885,7 @@ async function addDay(id){
 
   if(photo){
     job.photos.push(photo);
-    job.photoItems.push({
-      id:uid(),
-      type:photoType,
-      src:photo,
-      createdAt:new Date().toISOString()
-    });
+    job.photoItems.push({id:uid(),type:photoType,src:photo,createdAt:new Date().toISOString()});
   }
 
   if(job.status==="preventivo")job.status="attivo";
@@ -2136,18 +1896,13 @@ async function addDay(id){
   openJob(id);
 }
 
-function quickAddDay(id){
-  openJob(id);
-  setTimeout(()=>showAddDayForm(id),50);
-}
+function quickAddDay(id){openJob(id);setTimeout(()=>showAddDayForm(id),50)}
 
 function checkItem(label){
   return `<label class="check-item"><input type="checkbox" value="${escapeAttr(label)}"><span>${escapeHtml(label)}</span></label>`;
 }
 
-function checkedValues(boxId){
-  return Array.from(document.querySelectorAll("#"+boxId+" input:checked")).map(i=>i.value);
-}
+function checkedValues(boxId){return Array.from(document.querySelectorAll("#"+boxId+" input:checked")).map(i=>i.value)}
 
 function yesNoQuestion(id,label){
   return `<label><span>${escapeHtml(label)}</span>
@@ -2269,9 +2024,7 @@ function showHealthForm(id){
   </div>`;
 }
 
-function guideAnswer(id){
-  return document.getElementById(id)?.value||"";
-}
+function guideAnswer(id){return document.getElementById(id)?.value||""}
 
 function calculateGuidedDiagnosis(symptoms,answers,condition,priority){
   const s=new Set(symptoms);
@@ -2279,9 +2032,7 @@ function calculateGuidedDiagnosis(symptoms,answers,condition,priority){
   let level="Basso";
   const advice=[];
 
-  function add(problem){
-    if(!problems.includes(problem))problems.push(problem);
-  }
+  function add(problem){if(!problems.includes(problem))problems.push(problem)}
 
   if(s.has("Macchie tonde scure sulle foglie")||s.has("Foglie macchiate")||answers.qRoundSpots==="yes"){
     add("Sospetto occhio di pavone");
@@ -2341,7 +2092,7 @@ function calculateGuidedDiagnosis(symptoms,answers,condition,priority){
   if(s.has("Disseccamento rapido sospetto")||answers.qFastDry==="yes"){
     add("Disseccamento grave da verificare");
     add("Xylella / disseccamento sospetto da escludere con tecnico");
-    advice.push("In caso di disseccamento rapido, non concludere da solo: fare foto complete e chiedere verifica tecnica/agronomica.");
+    advice.push("In caso di disseccamento rapido, fare foto complete e chiedere verifica tecnica/agronomica.");
     level="Alto";
   }
 
@@ -2355,11 +2106,7 @@ function calculateGuidedDiagnosis(symptoms,answers,condition,priority){
     advice.push("La foto è salvata. Continuare il monitoraggio e aggiungere dettagli se compaiono sintomi.");
   }
 
-  return {
-    problems,
-    level,
-    advice:[...new Set(advice)].join(" ")
-  };
+  return {problems,level,advice:[...new Set(advice)].join(" ")};
 }
 
 async function addHealthCheck(id){
@@ -2387,7 +2134,6 @@ async function addHealthCheck(id){
 
   const condition=document.getElementById("hCondition").value;
   const priority=document.getElementById("hPriority").value;
-
   const guided=calculateGuidedDiagnosis(symptoms,guideAnswers,condition,priority);
 
   const h={
@@ -2411,30 +2157,101 @@ async function addHealthCheck(id){
 
   if(photo){
     job.photos.push(photo);
-    job.photoItems.push({
-      id:uid(),
-      type:"salute",
-      src:photo,
-      createdAt:new Date().toISOString()
-    });
+    job.photoItems.push({id:uid(),type:"salute",src:photo,createdAt:new Date().toISOString()});
   }
 
   save();
   showSaving(false);
+  toast(photo?"Analisi salute salvata con foto":"Analisi salvata senza foto");
+  openJob(id);
+}
 
-  if(photo){
-    toast("Analisi salute salvata con foto");
-  }else{
-    toast("Analisi salvata senza foto");
+function quickHealth(id){openJob(id);setTimeout(()=>showHealthForm(id),50)}
+
+function showOilForm(id){
+  const job=jobs.find(j=>j.id===id);
+  if(!job)return;
+
+  const currentYear=new Date().getFullYear();
+
+  document.getElementById("modalContent").innerHTML=`
+  <div class="card">
+    <h3>Produzione olio annuale</h3>
+    <p class="muted small">
+      Qui registri anno per anno quanto rende l’uliveto. Serve per vedere se la produzione migliora o peggiora nel tempo.
+    </p>
+
+    <div class="grid grid-2">
+      <label><span>Anno</span><input id="oYear" type="number" value="${currentYear}"></label>
+      <label><span>Piante produttive</span><input id="oTrees" type="number" min="0" value="${job.totalTrees||""}" placeholder="Es. 50"></label>
+    </div>
+
+    <div class="grid grid-2">
+      <label><span>Kg olive raccolte</span><input id="oOliveKg" type="number" min="0" step="0.1" placeholder="Es. 800"></label>
+      <label><span>Resa frantoio %</span><input id="oYield" type="number" min="0" step="0.1" placeholder="Es. 22"></label>
+    </div>
+
+    <div class="grid grid-2">
+      <label><span>Olio prodotto reale L</span><input id="oLiters" type="number" min="0" step="0.1" placeholder="Es. 176"></label>
+      <label><span>Frantoio</span><input id="oMill" placeholder="Es. Frantoio Rossi"></label>
+    </div>
+
+    <label><span>Periodo raccolta</span><input id="oHarvest" placeholder="Es. ottobre 2026"></label>
+
+    <label>
+      <span>Qualità olive</span>
+      <select id="oQuality">
+        <option value="">Non indicata</option>
+        <option>Ottima</option>
+        <option>Buona</option>
+        <option>Media</option>
+        <option>Scarsa</option>
+        <option>Problemi di mosca</option>
+        <option>Olive asciutte / stress</option>
+      </select>
+    </label>
+
+    <label><span>Note annata</span><textarea id="oNotes" placeholder="Es. annata buona, olive sane, poca mosca, resa alta..."></textarea></label>
+
+    <div class="btn-row">
+      <button class="btn-main" onclick="addOilRecord('${id}')">Salva annata olio</button>
+      <button class="btn-soft" onclick="openJob('${id}')">Annulla</button>
+    </div>
+  </div>`;
+}
+
+function addOilRecord(id){
+  const job=jobs.find(j=>j.id===id);
+  if(!job)return;
+
+  const year=num(document.getElementById("oYear").value);
+
+  if(!year){
+    toast("Inserisci l’anno");
+    return;
   }
 
+  const record={
+    id:uid(),
+    year,
+    productiveTrees:num(document.getElementById("oTrees").value),
+    oliveKg:num(document.getElementById("oOliveKg").value),
+    yieldPercent:num(document.getElementById("oYield").value),
+    oilLiters:num(document.getElementById("oLiters").value),
+    mill:document.getElementById("oMill").value.trim(),
+    harvestPeriod:document.getElementById("oHarvest").value.trim(),
+    oliveQuality:document.getElementById("oQuality").value,
+    notes:document.getElementById("oNotes").value.trim(),
+    createdAt:new Date().toISOString()
+  };
+
+  job.oilRecords.push(record);
+  save();
+  toast("Annata olio salvata");
   openJob(id);
 }
 
-function quickHealth(id){
-  openJob(id);
-  setTimeout(()=>showHealthForm(id),50);
-}
+function quickOil(id){openJob(id);setTimeout(()=>showOilForm(id),50)}
 
 function showAddPhotoForm(id){
   document.getElementById("modalContent").innerHTML=`
@@ -2470,10 +2287,7 @@ async function addPhoto(id){
   const file=document.getElementById("extraPhoto").files[0];
   const type=document.getElementById("extraPhotoType").value;
 
-  if(!file){
-    toast("Scegli una foto");
-    return;
-  }
+  if(!file){toast("Scegli una foto");return}
 
   showSaving(true);
 
@@ -2481,12 +2295,7 @@ async function addPhoto(id){
 
   if(photo){
     job.photos.push(photo);
-    job.photoItems.push({
-      id:uid(),
-      type,
-      src:photo,
-      createdAt:new Date().toISOString()
-    });
+    job.photoItems.push({id:uid(),type,src:photo,createdAt:new Date().toISOString()});
   }
 
   save();
@@ -2511,8 +2320,6 @@ function showEditJobForm(id){
       <label><span>Data prevista</span><input id="eDate" type="date" value="${job.startDate||todayISO()}"></label>
       <label><span>Totale ulivi</span><input id="eTotalTrees" type="number" value="${job.totalTrees||0}"></label>
     </div>
-
-    <h3>Dati oliveto</h3>
 
     <div class="grid grid-2">
       <label><span>Cultivar / tipo olivo</span><input id="eCultivar" value="${escapeAttr(job.cultivar||"")}"></label>
@@ -2570,15 +2377,15 @@ function saveEditJob(id){
   job.phone=document.getElementById("ePhone").value.trim();
   job.place=document.getElementById("ePlace").value.trim();
   job.startDate=document.getElementById("eDate").value||todayISO();
-  job.totalTrees=Number(document.getElementById("eTotalTrees").value||0);
+  job.totalTrees=num(document.getElementById("eTotalTrees").value);
   job.cultivar=document.getElementById("eCultivar").value.trim();
   job.age=document.getElementById("eAge").value.trim();
   job.vigor=document.getElementById("eVigor").value.trim();
   job.shape=document.getElementById("eShape").value.trim();
   job.priceMode=document.getElementById("ePriceMode").value;
-  job.priceValue=Number(document.getElementById("ePriceValue").value||0);
-  job.estimatedDays=Number(document.getElementById("eEstimatedDays").value||0);
-  job.deposit=Number(document.getElementById("eDeposit").value||0);
+  job.priceValue=num(document.getElementById("ePriceValue").value);
+  job.estimatedDays=num(document.getElementById("eEstimatedDays").value);
+  job.deposit=num(document.getElementById("eDeposit").value);
   job.status=document.getElementById("eStatus").value;
   job.workType=document.getElementById("eWorkType").value.trim();
   job.notes=document.getElementById("eNotes").value.trim();
@@ -2614,19 +2421,13 @@ function renderAll(){
 }
 
 function exportBackup(){
-  const data={
-    app:"ApPiero",
-    version:"6.1",
-    exportedAt:new Date().toISOString(),
-    jobs
-  };
-
+  const data={app:"ApPiero",version:"7.0",exportedAt:new Date().toISOString(),jobs};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");
 
   a.href=url;
-  a.download="appiero-v6-1-backup-"+todayISO()+".json";
+  a.download="appiero-v7-backup-"+todayISO()+".json";
   a.click();
 
   URL.revokeObjectURL(url);
@@ -2636,10 +2437,7 @@ function exportBackup(){
 function importBackup(){
   const file=document.getElementById("backupFile").files[0];
 
-  if(!file){
-    toast("Scegli un file backup");
-    return;
-  }
+  if(!file){toast("Scegli un file backup");return}
 
   const reader=new FileReader();
 
