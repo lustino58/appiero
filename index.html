@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ApPiero - Gestione Potatura Ulivi</title>
+  <title>ApPiero V2 - Gestione Potatura Ulivi</title>
 
   <meta name="theme-color" content="#18230f" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -576,8 +576,25 @@
       font-weight: 950;
     }
 
+    .netto {
+      color: var(--green2);
+      font-weight: 950;
+    }
+
+    .expense {
+      color: #ffb199;
+      font-weight: 950;
+    }
+
     .warning {
       color: #ffd27c;
+    }
+
+    .version {
+      font-size: 11px;
+      color: var(--gold);
+      margin-top: 3px;
+      font-weight: 800;
     }
   </style>
 </head>
@@ -590,6 +607,7 @@
         <div class="brand-title">
           <h1>ApPiero</h1>
           <p>Gestione potatura ulivi</p>
+          <div class="version">V2 · lordo / spese / netto</div>
         </div>
       </div>
       <div class="today-pill" id="todayText">Oggi</div>
@@ -597,7 +615,6 @@
   </header>
 
   <main>
-    <!-- DASHBOARD -->
     <section id="screen-home" class="screen active">
       <div class="grid grid-3">
         <div class="card kpi">
@@ -607,15 +624,15 @@
         </div>
 
         <div class="card kpi">
-          <div class="kpi-label">Guadagno oggi</div>
-          <div class="kpi-value money" id="kpiTodayMoney">0 €</div>
-          <div class="kpi-small">calcolo automatico</div>
+          <div class="kpi-label">Lordo oggi</div>
+          <div class="kpi-value money" id="kpiTodayGross">0 €</div>
+          <div class="kpi-small">prima delle spese</div>
         </div>
 
         <div class="card kpi">
-          <div class="kpi-label">Lavori attivi</div>
-          <div class="kpi-value" id="kpiActiveJobs">0</div>
-          <div class="kpi-small" id="kpiOpenEstimates">0 preventivi aperti</div>
+          <div class="kpi-label">Netto oggi</div>
+          <div class="kpi-value netto" id="kpiTodayNet">0 €</div>
+          <div class="kpi-small" id="kpiTodayExpenses">spese: 0 €</div>
         </div>
       </div>
 
@@ -631,13 +648,36 @@
       </div>
 
       <div class="section-title">
+        <h2>Situazione</h2>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card kpi">
+          <div class="kpi-label">Lavori attivi</div>
+          <div class="kpi-value" id="kpiActiveJobs">0</div>
+          <div class="kpi-small">da completare</div>
+        </div>
+
+        <div class="card kpi">
+          <div class="kpi-label">Preventivi aperti</div>
+          <div class="kpi-value" id="kpiOpenEstimates">0</div>
+          <div class="kpi-small">da confermare</div>
+        </div>
+
+        <div class="card kpi">
+          <div class="kpi-label">Saldo da incassare</div>
+          <div class="kpi-value money" id="kpiBalanceDue">0 €</div>
+          <div class="kpi-small">preventivi - acconti</div>
+        </div>
+      </div>
+
+      <div class="section-title">
         <h2>Ultimi lavori</h2>
       </div>
 
       <div id="homeRecentJobs" class="list"></div>
     </section>
 
-    <!-- NUOVO LAVORO -->
     <section id="screen-new" class="screen">
       <div class="card">
         <h2>Nuovo lavoro / preventivo</h2>
@@ -686,10 +726,17 @@
             </label>
           </div>
 
-          <label>
-            <span>Giorni stimati, solo se prezzo a giornata</span>
-            <input id="fEstimatedDays" type="number" min="0" placeholder="Es. 4" />
-          </label>
+          <div class="grid grid-2">
+            <label>
+              <span>Giorni stimati, se prezzo a giornata</span>
+              <input id="fEstimatedDays" type="number" min="0" placeholder="Es. 4" />
+            </label>
+
+            <label>
+              <span>Acconto ricevuto €</span>
+              <input id="fDeposit" type="number" min="0" step="0.01" placeholder="Es. 100" />
+            </label>
+          </div>
 
           <label>
             <span>Tipo lavoro</span>
@@ -728,7 +775,6 @@
       </div>
     </section>
 
-    <!-- LAVORI -->
     <section id="screen-jobs" class="screen">
       <div class="section-title">
         <h2>Lavori</h2>
@@ -748,7 +794,6 @@
       <div id="jobsList" class="list"></div>
     </section>
 
-    <!-- CALENDARIO -->
     <section id="screen-calendar" class="screen">
       <div class="section-title">
         <h2>Calendario lavori</h2>
@@ -761,7 +806,6 @@
       <div id="calendarList" class="list" style="margin-top:12px;"></div>
     </section>
 
-    <!-- STATISTICHE -->
     <section id="screen-stats" class="screen">
       <div class="section-title">
         <h2>Statistiche</h2>
@@ -779,8 +823,25 @@
         </div>
 
         <div class="card kpi">
-          <div class="kpi-label">Guadagno registrato</div>
-          <div class="kpi-value money" id="statMoney">0 €</div>
+          <div class="kpi-label">Lordo registrato</div>
+          <div class="kpi-value money" id="statGross">0 €</div>
+        </div>
+      </div>
+
+      <div class="grid grid-3" style="margin-top:12px;">
+        <div class="card kpi">
+          <div class="kpi-label">Spese registrate</div>
+          <div class="kpi-value expense" id="statExpenses">0 €</div>
+        </div>
+
+        <div class="card kpi">
+          <div class="kpi-label">Netto registrato</div>
+          <div class="kpi-value netto" id="statNet">0 €</div>
+        </div>
+
+        <div class="card kpi">
+          <div class="kpi-label">Acconti ricevuti</div>
+          <div class="kpi-value money" id="statDeposits">0 €</div>
         </div>
       </div>
 
@@ -790,7 +851,6 @@
       </div>
     </section>
 
-    <!-- BACKUP -->
     <section id="screen-backup" class="screen">
       <div class="section-title">
         <h2>Backup dati</h2>
@@ -817,7 +877,6 @@
     </section>
   </main>
 
-  <!-- MODAL DETTAGLIO LAVORO -->
   <div id="jobModal" class="modal">
     <div class="modal-box">
       <div class="modal-head">
@@ -829,7 +888,6 @@
     </div>
   </div>
 
-  <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
     <button class="nav-btn active" id="nav-home" onclick="showScreen('home')">
       <span class="nav-icon">🏠</span>Home
@@ -851,7 +909,9 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    const STORAGE_KEY = "appiero_v1_jobs";
+    const STORAGE_KEY = "appiero_v2_jobs";
+    const OLD_STORAGE_KEY = "appiero_v1_jobs";
+
     let jobs = [];
     let currentFilter = "all";
     let openedJobId = null;
@@ -889,9 +949,38 @@
       renderAll();
     }
 
+    function normalizeJob(job) {
+      if (!job.deposit) job.deposit = 0;
+      if (!Array.isArray(job.photos)) job.photos = [];
+      if (!Array.isArray(job.days)) job.days = [];
+
+      job.days = job.days.map(d => ({
+        id: d.id || uid(),
+        date: d.date || todayISO(),
+        trees: Number(d.trees || 0),
+        hours: Number(d.hours || 0),
+        dayMoney: Number(d.dayMoney || 0),
+        expenseFuel: Number(d.expenseFuel || 0),
+        expenseFood: Number(d.expenseFood || 0),
+        expenseTools: Number(d.expenseTools || 0),
+        expenseOther: Number(d.expenseOther || 0),
+        notes: d.notes || "",
+        photo: d.photo || ""
+      }));
+
+      return job;
+    }
+
     function load() {
       try {
-        jobs = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        let raw = localStorage.getItem(STORAGE_KEY);
+
+        if (!raw) {
+          raw = localStorage.getItem(OLD_STORAGE_KEY);
+        }
+
+        jobs = JSON.parse(raw || "[]").map(normalizeJob);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs));
       } catch(e) {
         jobs = [];
       }
@@ -957,6 +1046,7 @@
         priceMode: document.getElementById("fPriceMode").value,
         priceValue: Number(document.getElementById("fPriceValue").value || 0),
         estimatedDays: Number(document.getElementById("fEstimatedDays").value || 0),
+        deposit: Number(document.getElementById("fDeposit").value || 0),
         workType: document.getElementById("fWorkType").value,
         status: document.getElementById("fStatus").value,
         notes: document.getElementById("fNotes").value.trim(),
@@ -972,7 +1062,7 @@
     }
 
     function clearForm() {
-      ["fClient","fPhone","fPlace","fTotalTrees","fPriceValue","fEstimatedDays","fNotes"].forEach(id => {
+      ["fClient","fPhone","fPlace","fTotalTrees","fPriceValue","fEstimatedDays","fDeposit","fNotes"].forEach(id => {
         document.getElementById(id).value = "";
       });
       document.getElementById("fDate").value = todayISO();
@@ -986,9 +1076,19 @@
       return job.days.reduce((sum, d) => sum + Number(d.trees || 0), 0);
     }
 
-    function jobDayMoney(job, day) {
+    function dayExpenses(day) {
+      return Number(day.expenseFuel || 0) +
+             Number(day.expenseFood || 0) +
+             Number(day.expenseTools || 0) +
+             Number(day.expenseOther || 0);
+    }
+
+    function jobExpenses(job) {
+      return job.days.reduce((sum, d) => sum + dayExpenses(d), 0);
+    }
+
+    function jobDayGross(job, day) {
       const trees = Number(day.trees || 0);
-      const hours = Number(day.hours || 0);
 
       if (job.priceMode === "tree") return trees * Number(job.priceValue || 0);
       if (job.priceMode === "day") return Number(day.dayMoney || job.priceValue || 0);
@@ -999,8 +1099,16 @@
       return 0;
     }
 
-    function jobEarned(job) {
-      return job.days.reduce((sum, d) => sum + jobDayMoney(job, d), 0);
+    function jobDayNet(job, day) {
+      return jobDayGross(job, day) - dayExpenses(day);
+    }
+
+    function jobGross(job) {
+      return job.days.reduce((sum, d) => sum + jobDayGross(job, d), 0);
+    }
+
+    function jobNet(job) {
+      return job.days.reduce((sum, d) => sum + jobDayNet(job, d), 0);
     }
 
     function jobEstimate(job) {
@@ -1008,6 +1116,10 @@
       if (job.priceMode === "day") return Number(job.estimatedDays || 0) * Number(job.priceValue || 0);
       if (job.priceMode === "fixed") return Number(job.priceValue || 0);
       return 0;
+    }
+
+    function jobBalance(job) {
+      return Math.max(0, jobEstimate(job) - Number(job.deposit || 0));
     }
 
     function jobRemaining(job) {
@@ -1039,8 +1151,11 @@
       const done = jobDoneTrees(job);
       const remaining = jobRemaining(job);
       const progress = jobProgress(job);
-      const earned = jobEarned(job);
+      const gross = jobGross(job);
+      const expenses = jobExpenses(job);
+      const net = jobNet(job);
       const estimate = jobEstimate(job);
+      const balance = jobBalance(job);
 
       return `
         <div class="job-card">
@@ -1074,16 +1189,31 @@
 
           <div class="mini-grid">
             <div class="mini-box">
-              <b>${money(earned)}</b>
-              <span>guadagnato</span>
+              <b class="money">${money(gross)}</b>
+              <span>lordo</span>
             </div>
+            <div class="mini-box">
+              <b class="expense">${money(expenses)}</b>
+              <span>spese</span>
+            </div>
+            <div class="mini-box">
+              <b class="netto">${money(net)}</b>
+              <span>netto</span>
+            </div>
+          </div>
+
+          <div class="mini-grid">
             <div class="mini-box">
               <b>${money(estimate)}</b>
               <span>preventivo</span>
             </div>
             <div class="mini-box">
-              <b>${job.days.length}</b>
-              <span>giornate</span>
+              <b>${money(job.deposit || 0)}</b>
+              <span>acconto</span>
+            </div>
+            <div class="mini-box">
+              <b>${money(balance)}</b>
+              <span>saldo</span>
             </div>
           </div>
 
@@ -1131,7 +1261,9 @@
     function renderHome() {
       const today = todayISO();
       let todayTrees = 0;
-      let todayMoney = 0;
+      let todayGross = 0;
+      let todayNet = 0;
+      let todayExpenses = 0;
       let todayRows = 0;
 
       jobs.forEach(job => {
@@ -1139,16 +1271,26 @@
           if (d.date === today) {
             todayRows++;
             todayTrees += Number(d.trees || 0);
-            todayMoney += jobDayMoney(job, d);
+            todayGross += jobDayGross(job, d);
+            todayNet += jobDayNet(job, d);
+            todayExpenses += dayExpenses(d);
           }
         });
       });
 
       document.getElementById("kpiTodayTrees").textContent = todayTrees;
-      document.getElementById("kpiTodayMoney").textContent = money(todayMoney);
+      document.getElementById("kpiTodayGross").textContent = money(todayGross);
+      document.getElementById("kpiTodayNet").textContent = money(todayNet);
+      document.getElementById("kpiTodayExpenses").textContent = "spese: " + money(todayExpenses);
       document.getElementById("kpiTodayJobs").textContent = todayRows + " giornate registrate";
       document.getElementById("kpiActiveJobs").textContent = jobs.filter(j => j.status === "attivo").length;
-      document.getElementById("kpiOpenEstimates").textContent = jobs.filter(j => j.status === "preventivo").length + " preventivi aperti";
+      document.getElementById("kpiOpenEstimates").textContent = jobs.filter(j => j.status === "preventivo").length;
+
+      const balanceDue = jobs
+        .filter(j => j.status !== "pagato")
+        .reduce((s,j) => s + jobBalance(j), 0);
+
+      document.getElementById("kpiBalanceDue").textContent = money(balanceDue);
 
       const recent = jobs.slice(0, 4);
       const box = document.getElementById("homeRecentJobs");
@@ -1170,7 +1312,7 @@
             <div class="calendar-day">
               <b>${formatDate(job.startDate)}</b><br>
               <strong>${escapeHtml(job.client)}</strong> — ${escapeHtml(job.place || "Luogo non indicato")}<br>
-              <span class="muted small">${statusLabel(job.status)} · ${jobDoneTrees(job)}/${job.totalTrees || 0} ulivi</span>
+              <span class="muted small">${statusLabel(job.status)} · ${jobDoneTrees(job)}/${job.totalTrees || 0} ulivi · netto ${money(jobNet(job))}</span>
               <div style="margin-top:8px;">
                 <button class="btn-soft" onclick="openJob('${job.id}')">Apri lavoro</button>
               </div>
@@ -1185,7 +1327,7 @@
               <div class="calendar-day">
                 <b>${formatDate(d.date)}</b><br>
                 <strong>${escapeHtml(job.client)}</strong> — giornata registrata<br>
-                <span class="muted small">${Number(d.trees || 0)} ulivi · ${money(jobDayMoney(job, d))}</span>
+                <span class="muted small">${Number(d.trees || 0)} ulivi · lordo ${money(jobDayGross(job, d))} · spese ${money(dayExpenses(d))} · netto ${money(jobDayNet(job, d))}</span>
               </div>
             `
           });
@@ -1205,16 +1347,23 @@
     function renderStats() {
       const totalTrees = jobs.reduce((s,j) => s + Number(j.totalTrees || 0), 0);
       const doneTrees = jobs.reduce((s,j) => s + jobDoneTrees(j), 0);
-      const earned = jobs.reduce((s,j) => s + jobEarned(j), 0);
+      const gross = jobs.reduce((s,j) => s + jobGross(j), 0);
+      const expenses = jobs.reduce((s,j) => s + jobExpenses(j), 0);
+      const net = jobs.reduce((s,j) => s + jobNet(j), 0);
+      const deposits = jobs.reduce((s,j) => s + Number(j.deposit || 0), 0);
 
       document.getElementById("statTotalTrees").textContent = totalTrees;
       document.getElementById("statDoneTrees").textContent = doneTrees;
-      document.getElementById("statMoney").textContent = money(earned);
+      document.getElementById("statGross").textContent = money(gross);
+      document.getElementById("statExpenses").textContent = money(expenses);
+      document.getElementById("statNet").textContent = money(net);
+      document.getElementById("statDeposits").textContent = money(deposits);
 
       const active = jobs.filter(j => j.status === "attivo").length;
       const estimates = jobs.filter(j => j.status === "preventivo").length;
       const finished = jobs.filter(j => j.status === "finito").length;
       const paid = jobs.filter(j => j.status === "pagato").length;
+      const balanceDue = jobs.filter(j => j.status !== "pagato").reduce((s,j) => s + jobBalance(j), 0);
 
       document.getElementById("statsDetails").innerHTML = `
         <div class="mini-grid">
@@ -1223,7 +1372,8 @@
           <div class="mini-box"><b>${estimates}</b><span>preventivi</span></div>
           <div class="mini-box"><b>${finished}</b><span>finiti</span></div>
           <div class="mini-box"><b>${paid}</b><span>pagati</span></div>
-          <div class="mini-box"><b>${doneTrees ? Math.round(earned / doneTrees) : 0} €</b><span>media per ulivo</span></div>
+          <div class="mini-box"><b>${doneTrees ? money(net / doneTrees) : money(0)}</b><span>netto medio per ulivo</span></div>
+          <div class="mini-box"><b>${money(balanceDue)}</b><span>saldo da incassare</span></div>
         </div>
       `;
     }
@@ -1236,8 +1386,11 @@
       const done = jobDoneTrees(job);
       const remaining = jobRemaining(job);
       const progress = jobProgress(job);
-      const earned = jobEarned(job);
+      const gross = jobGross(job);
+      const expenses = jobExpenses(job);
+      const net = jobNet(job);
       const estimate = jobEstimate(job);
+      const balance = jobBalance(job);
 
       document.getElementById("modalTitle").textContent = job.client;
 
@@ -1246,12 +1399,17 @@
         : `<div class="empty">Nessuna foto salvata.</div>`;
 
       const daysHtml = job.days.length
-        ? job.days.slice().reverse().map((d, index) => `
+        ? job.days.slice().reverse().map((d) => `
           <div class="day-row">
             <b>${formatDate(d.date)}</b><br>
             Ulivi potati: <strong>${Number(d.trees || 0)}</strong><br>
             Ore: <strong>${Number(d.hours || 0)}</strong><br>
-            Guadagno giorno: <span class="money">${money(jobDayMoney(job, d))}</span><br>
+            Lordo: <span class="money">${money(jobDayGross(job, d))}</span><br>
+            Spese: <span class="expense">${money(dayExpenses(d))}</span><br>
+            Netto: <span class="netto">${money(jobDayNet(job, d))}</span><br>
+            <span class="muted small">
+              Carburante ${money(d.expenseFuel)} · Pranzo ${money(d.expenseFood)} · Attrezzi ${money(d.expenseTools)} · Altro ${money(d.expenseOther)}
+            </span><br>
             <span class="muted small">${escapeHtml(d.notes || "")}</span>
           </div>
         `).join("")
@@ -1279,9 +1437,15 @@
           </div>
 
           <div class="mini-grid">
+            <div class="mini-box"><b class="money">${money(gross)}</b><span>lordo</span></div>
+            <div class="mini-box"><b class="expense">${money(expenses)}</b><span>spese</span></div>
+            <div class="mini-box"><b class="netto">${money(net)}</b><span>netto</span></div>
+          </div>
+
+          <div class="mini-grid">
             <div class="mini-box"><b>${money(estimate)}</b><span>preventivo</span></div>
-            <div class="mini-box"><b>${money(earned)}</b><span>guadagnato</span></div>
-            <div class="mini-box"><b>${progress}%</b><span>avanzamento</span></div>
+            <div class="mini-box"><b>${money(job.deposit || 0)}</b><span>acconto</span></div>
+            <div class="mini-box"><b>${money(balance)}</b><span>saldo</span></div>
           </div>
 
           <p class="muted small"><strong>Tipo lavoro:</strong> ${escapeHtml(job.workType || "")}</p>
@@ -1347,12 +1511,38 @@
 
           ${job.priceMode === "day" ? `
             <label>
-              <span>Guadagno giornata €</span>
+              <span>Guadagno lordo giornata €</span>
               <input id="dDayMoney" type="number" min="0" step="0.01" value="${job.priceValue || 0}">
             </label>
           ` : `
             <input id="dDayMoney" type="hidden" value="0">
           `}
+
+          <h3>Spese giornata</h3>
+
+          <div class="grid grid-2">
+            <label>
+              <span>Carburante €</span>
+              <input id="dExpenseFuel" type="number" min="0" step="0.01" placeholder="Es. 15">
+            </label>
+
+            <label>
+              <span>Pranzo €</span>
+              <input id="dExpenseFood" type="number" min="0" step="0.01" placeholder="Es. 10">
+            </label>
+          </div>
+
+          <div class="grid grid-2">
+            <label>
+              <span>Attrezzatura / materiali €</span>
+              <input id="dExpenseTools" type="number" min="0" step="0.01" placeholder="Es. 5">
+            </label>
+
+            <label>
+              <span>Altre spese €</span>
+              <input id="dExpenseOther" type="number" min="0" step="0.01" placeholder="Es. 0">
+            </label>
+          </div>
 
           <label>
             <span>Foto giornata</span>
@@ -1392,6 +1582,10 @@
         trees,
         hours: Number(document.getElementById("dHours").value || 0),
         dayMoney: Number(document.getElementById("dDayMoney").value || 0),
+        expenseFuel: Number(document.getElementById("dExpenseFuel").value || 0),
+        expenseFood: Number(document.getElementById("dExpenseFood").value || 0),
+        expenseTools: Number(document.getElementById("dExpenseTools").value || 0),
+        expenseOther: Number(document.getElementById("dExpenseOther").value || 0),
         notes: document.getElementById("dNotes").value.trim(),
         photo
       };
@@ -1473,7 +1667,10 @@
             <label><span>Valore €</span><input id="ePriceValue" type="number" step="0.01" value="${job.priceValue || 0}"></label>
           </div>
 
-          <label><span>Giorni stimati</span><input id="eEstimatedDays" type="number" value="${job.estimatedDays || 0}"></label>
+          <div class="grid grid-2">
+            <label><span>Giorni stimati</span><input id="eEstimatedDays" type="number" value="${job.estimatedDays || 0}"></label>
+            <label><span>Acconto ricevuto €</span><input id="eDeposit" type="number" step="0.01" value="${job.deposit || 0}"></label>
+          </div>
 
           <label>
             <span>Stato</span>
@@ -1508,6 +1705,7 @@
       job.priceMode = document.getElementById("ePriceMode").value;
       job.priceValue = Number(document.getElementById("ePriceValue").value || 0);
       job.estimatedDays = Number(document.getElementById("eEstimatedDays").value || 0);
+      job.deposit = Number(document.getElementById("eDeposit").value || 0);
       job.status = document.getElementById("eStatus").value;
       job.workType = document.getElementById("eWorkType").value.trim();
       job.notes = document.getElementById("eNotes").value.trim();
@@ -1544,7 +1742,7 @@
     function exportBackup() {
       const data = {
         app: "ApPiero",
-        version: "1.0",
+        version: "2.0",
         exportedAt: new Date().toISOString(),
         jobs
       };
@@ -1553,7 +1751,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "appiero-backup-" + todayISO() + ".json";
+      a.download = "appiero-v2-backup-" + todayISO() + ".json";
       a.click();
       URL.revokeObjectURL(url);
       toast("Backup esportato");
@@ -1572,7 +1770,7 @@
           const data = JSON.parse(reader.result);
           if (!Array.isArray(data.jobs)) throw new Error("Formato non valido");
           if (!confirm("Vuoi sostituire i dati attuali con questo backup?")) return;
-          jobs = data.jobs;
+          jobs = data.jobs.map(normalizeJob);
           save();
           toast("Backup importato");
           showScreen("home");
