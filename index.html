@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ApPiero V7 - Potatura Ulivi</title>
+  <title>ApPiero V8 - Potatura Ulivi</title>
 
   <meta name="theme-color" content="#18230f" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -158,6 +158,7 @@
     .btn-blue{background:linear-gradient(145deg,#56c1ff,#176799)}
     .btn-red{background:linear-gradient(145deg,#ff7b64,#9d2b1e)}
     .btn-soft{background:rgba(255,255,255,.08);color:var(--text)}
+    .btn-whatsapp{background:linear-gradient(145deg,#42d66b,#128c3b);color:#06140a}
     .btn-full{width:100%}
 
     input,select,textarea{
@@ -559,7 +560,7 @@
       <div class="brand-title">
         <h1>ApPiero</h1>
         <p>Gestione potatura ulivi</p>
-        <div class="version">V7 · resa olio annuale</div>
+        <div class="version">V8 · cliente rapido WhatsApp</div>
       </div>
     </div>
     <div class="today-pill" id="todayText">Oggi</div>
@@ -864,8 +865,8 @@
 <div id="toast" class="toast"></div>
 
 <script>
-const STORAGE_KEY="appiero_v7_jobs";
-const OLD_STORAGE_KEYS=["appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
+const STORAGE_KEY="appiero_v8_jobs";
+const OLD_STORAGE_KEYS=["appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
 
 let jobs=[];
 let currentFilter="all";
@@ -1002,6 +1003,46 @@ function openPhotoViewer(src,title){
 function closePhotoViewer(){
   document.getElementById("photoViewer").classList.remove("active");
   document.getElementById("photoViewerImg").src="";
+}
+
+function cleanPhone(phone){
+  let p=String(phone||"").replace(/[^\d+]/g,"");
+  p=p.replace(/^\+/,"");
+  if(p.startsWith("00"))p=p.slice(2);
+  if(p.startsWith("39"))return p;
+  if(p.startsWith("3"))return "39"+p;
+  if(p.startsWith("0"))return "39"+p;
+  return p;
+}
+
+function callClient(id){
+  const job=jobs.find(j=>j.id===id);
+  if(!job)return;
+  if(!job.phone){toast("Telefono cliente mancante");return}
+  window.location.href="tel:"+job.phone;
+}
+
+function openWhatsAppToClient(id,type){
+  const job=jobs.find(j=>j.id===id);
+  if(!job)return;
+
+  const phone=cleanPhone(job.phone);
+
+  if(!phone){
+    toast("Telefono cliente mancante");
+    return;
+  }
+
+  let text="";
+
+  if(type==="estimate")text=buildEstimateText(job);
+  else if(type==="summary")text=buildSummaryText(job);
+  else if(type==="health")text=buildHealthText(job);
+  else if(type==="oil")text=buildOilText(job);
+  else text=`Ciao ${job.client}, ti scrivo per il lavoro di potatura ulivi in ${job.place||"oliveto"}.`;
+
+  const url="https://wa.me/"+phone+"?text="+encodeURIComponent(text);
+  window.open(url,"_blank");
 }
 
 function normalizeJob(job){
@@ -1237,6 +1278,7 @@ function renderJobCard(job){
       <div>
         <div class="job-title">${escapeHtml(job.client)}</div>
         <div class="muted small">${escapeHtml(job.place||"Luogo non indicato")}</div>
+        <div class="muted small">${job.phone?"Tel: "+escapeHtml(job.phone):"Telefono non inserito"}</div>
         <div class="muted small">${formatDate(job.startDate)} · ${escapeHtml(job.workType||"")}</div>
         <div class="muted small">Cultivar: ${escapeHtml(job.cultivar||"non indicata")} · Salute: ${healthCount} · Olio: ${oilCount}</div>
       </div>
@@ -1265,8 +1307,8 @@ function renderJobCard(job){
 
     <div class="btn-row">
       <button class="btn-main" onclick="openJob('${job.id}')">Apri</button>
-      <button class="btn-gold" onclick="quickAddDay('${job.id}')">+ Giornata</button>
-      <button class="btn-blue" onclick="quickHealth('${job.id}')">Salute</button>
+      <button class="btn-whatsapp" onclick="openWhatsAppToClient('${job.id}','message')">WhatsApp</button>
+      <button class="btn-blue" onclick="callClient('${job.id}')">Chiama</button>
       <button class="btn-gold" onclick="quickOil('${job.id}')">Olio</button>
     </div>
   </div>`;
@@ -1658,13 +1700,13 @@ function showPreview(id,type){
   const job=jobs.find(j=>j.id===id);
   if(!job)return;
 
-  let title="Riepilogo WhatsApp";
+  let title="Riepilogo";
   let text=buildSummaryText(job);
   let msg="Riepilogo copiato";
 
-  if(type==="estimate"){title="Preventivo WhatsApp";text=buildEstimateText(job);msg="Preventivo copiato"}
-  if(type==="health"){title="Salute WhatsApp";text=buildHealthText(job);msg="Scheda salute copiata"}
-  if(type==="oil"){title="Produzione olio WhatsApp";text=buildOilText(job);msg="Registro olio copiato"}
+  if(type==="estimate"){title="Preventivo";text=buildEstimateText(job);msg="Preventivo copiato"}
+  if(type==="health"){title="Salute";text=buildHealthText(job);msg="Scheda salute copiata"}
+  if(type==="oil"){title="Produzione olio";text=buildOilText(job);msg="Registro olio copiato"}
 
   document.getElementById("modalContent").innerHTML=`
     <div class="card">
@@ -1672,6 +1714,7 @@ function showPreview(id,type){
       <div class="quote-box">${escapeHtml(text)}</div>
       <div class="btn-row" style="margin-top:12px;">
         <button class="btn-main" onclick="copyText(\`${text.replaceAll("`","'")}\`,'${msg}')">📋 Copia testo</button>
+        <button class="btn-whatsapp" onclick="openWhatsAppToClient('${id}','${type}')">Invia WhatsApp</button>
         <button class="btn-soft" onclick="openJob('${id}')">Torna</button>
       </div>
     </div>`;
@@ -1718,7 +1761,7 @@ function openJob(id){
         <div>
           <h3>${escapeHtml(job.client)}</h3>
           <div class="muted small">${escapeHtml(job.place||"Luogo non indicato")}</div>
-          <div class="muted small">${job.phone?"Tel: "+escapeHtml(job.phone):""}</div>
+          <div class="muted small">${job.phone?"Tel: "+escapeHtml(job.phone):"Telefono cliente non inserito"}</div>
         </div>
         <span class="badge ${statusClass(job.status)}">${statusLabel(job.status)}</span>
       </div>
@@ -1754,6 +1797,15 @@ function openJob(id){
       <p class="muted small"><strong>Tipo prezzo:</strong> ${priceModeLabel(job)} · ${money(job.priceValue||0)}</p>
       <p class="muted small"><strong>Note:</strong> ${escapeHtml(job.notes||"Nessuna nota")}</p>
 
+      <div class="section-title"><h2>Cliente rapido</h2></div>
+      <div class="btn-row">
+        <button class="btn-blue" onclick="callClient('${job.id}')">📞 Chiama</button>
+        <button class="btn-whatsapp" onclick="openWhatsAppToClient('${job.id}','message')">💬 WhatsApp</button>
+        <button class="btn-whatsapp" onclick="openWhatsAppToClient('${job.id}','estimate')">Invia preventivo</button>
+        <button class="btn-whatsapp" onclick="openWhatsAppToClient('${job.id}','summary')">Invia riepilogo</button>
+      </div>
+
+      <div class="section-title"><h2>Azioni lavoro</h2></div>
       <div class="btn-row">
         <button class="btn-main" onclick="showAddDayForm('${job.id}')">➕ Giornata</button>
         <button class="btn-blue" onclick="showHealthForm('${job.id}')">🩺 Salute</button>
@@ -1763,10 +1815,10 @@ function openJob(id){
       </div>
 
       <div class="btn-row" style="margin-top:9px;">
-        <button class="btn-gold" onclick="showPreview('${job.id}','estimate')">Preventivo</button>
-        <button class="btn-blue" onclick="showPreview('${job.id}','summary')">Riepilogo</button>
-        <button class="btn-soft" onclick="showPreview('${job.id}','health')">Salute</button>
-        <button class="btn-gold" onclick="showPreview('${job.id}','oil')">Olio</button>
+        <button class="btn-gold" onclick="showPreview('${job.id}','estimate')">Preview preventivo</button>
+        <button class="btn-blue" onclick="showPreview('${job.id}','summary')">Preview riepilogo</button>
+        <button class="btn-soft" onclick="showPreview('${job.id}','health')">Preview salute</button>
+        <button class="btn-gold" onclick="showPreview('${job.id}','oil')">Preview olio</button>
       </div>
 
       <div class="btn-row" style="margin-top:9px;">
@@ -2178,7 +2230,7 @@ function showOilForm(id){
   <div class="card">
     <h3>Produzione olio annuale</h3>
     <p class="muted small">
-      Qui registri anno per anno quanto rende l’uliveto. Serve per vedere se la produzione migliora o peggiora nel tempo.
+      Qui registri anno per anno quanto rende l’uliveto.
     </p>
 
     <div class="grid grid-2">
@@ -2421,13 +2473,13 @@ function renderAll(){
 }
 
 function exportBackup(){
-  const data={app:"ApPiero",version:"7.0",exportedAt:new Date().toISOString(),jobs};
+  const data={app:"ApPiero",version:"8.0",exportedAt:new Date().toISOString(),jobs};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");
 
   a.href=url;
-  a.download="appiero-v7-backup-"+todayISO()+".json";
+  a.download="appiero-v8-backup-"+todayISO()+".json";
   a.click();
 
   URL.revokeObjectURL(url);
