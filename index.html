@@ -3,1500 +3,623 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ApPiero V3 - Gestione Potatura Ulivi</title>
+  <title>ApPiero V4 - Potatura Ulivi</title>
 
   <meta name="theme-color" content="#18230f" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="ApPiero" />
 
   <style>
-    :root {
-      --bg: #0b1208;
-      --bg2: #111d0d;
-      --panel: #18230f;
-      --panel2: #203114;
-      --panel3: #263d18;
-      --green: #7fbf3f;
-      --green2: #a4d65e;
-      --olive: #5f7f2f;
-      --gold: #d6a642;
-      --orange: #e67e22;
-      --red: #d84b3a;
-      --blue: #4aa3df;
-      --text: #f3f7ef;
-      --muted: #aeb8a6;
-      --line: rgba(255,255,255,0.13);
-      --shadow: 0 18px 45px rgba(0,0,0,0.42);
-      --radius: 22px;
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(164,214,94,0.18), transparent 32%),
-        radial-gradient(circle at top right, rgba(214,166,66,0.12), transparent 32%),
-        linear-gradient(180deg, #050804, var(--bg));
-      color: var(--text);
-      min-height: 100vh;
-      padding-bottom: 96px;
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      padding: 18px 16px 14px;
-      background: rgba(8, 14, 6, 0.88);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .logo-box {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo {
-      width: 52px;
-      height: 52px;
-      border-radius: 18px;
-      background:
-        radial-gradient(circle at 35% 25%, #dfffb1, transparent 25%),
-        linear-gradient(145deg, #6b8f33, #263d18 52%, #111d0d);
-      border: 1px solid rgba(255,255,255,0.18);
-      box-shadow: inset 0 0 18px rgba(255,255,255,0.08), 0 12px 25px rgba(0,0,0,0.45);
-      display: grid;
-      place-items: center;
-      font-size: 25px;
-    }
-
-    .brand-title {
-      line-height: 1.05;
-    }
-
-    .brand-title h1 {
-      margin: 0;
-      font-size: 27px;
-      letter-spacing: -0.8px;
-    }
-
-    .brand-title p {
-      margin: 5px 0 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .version {
-      font-size: 11px;
-      color: var(--gold);
-      margin-top: 3px;
-      font-weight: 800;
-    }
-
-    .today-pill {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 8px 11px;
-      font-size: 12px;
-      color: var(--green2);
-      white-space: nowrap;
-    }
-
-    main {
-      padding: 16px;
-      max-width: 980px;
-      margin: 0 auto;
-    }
-
-    .screen {
-      display: none;
-      animation: fadeIn 0.22s ease-out;
-    }
-
-    .screen.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .grid {
-      display: grid;
-      gap: 12px;
-    }
-
-    .grid-2 {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .grid-3 {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    @media (max-width: 720px) {
-      .grid-2, .grid-3 {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      background:
-        linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025)),
-        linear-gradient(180deg, var(--panel), var(--bg2));
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 16px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(120deg, rgba(255,255,255,0.08), transparent 38%);
-      opacity: 0.6;
-    }
-
-    .card > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .kpi {
-      min-height: 105px;
-    }
-
-    .kpi-label {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
-
-    .kpi-value {
-      font-size: 34px;
-      font-weight: 900;
-      letter-spacing: -1px;
-    }
-
-    .kpi-small {
-      font-size: 13px;
-      color: var(--green2);
-      margin-top: 7px;
-    }
-
-    h2 {
-      margin: 5px 0 14px;
-      font-size: 23px;
-      letter-spacing: -0.4px;
-    }
-
-    h3 {
-      margin: 0 0 10px;
-      font-size: 18px;
-    }
-
-    .muted {
-      color: var(--muted);
-    }
-
-    .small {
-      font-size: 13px;
-    }
-
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin: 18px 0 10px;
-    }
-
-    .section-title h2 {
-      margin: 0;
-    }
-
-    .btn-row {
-      display: flex;
-      gap: 9px;
-      flex-wrap: wrap;
-    }
-
-    button, .btn {
-      border: none;
-      border-radius: 16px;
-      padding: 13px 15px;
-      font-weight: 800;
-      color: white;
-      background: linear-gradient(145deg, #3d5d24, #203114);
-      border: 1px solid rgba(255,255,255,0.14);
-      box-shadow: 0 9px 20px rgba(0,0,0,0.28);
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    button:active {
-      transform: scale(0.98);
-    }
-
-    .btn-main {
-      background: linear-gradient(145deg, #a4d65e, #4f7d24);
-      color: #101908;
-    }
-
-    .btn-gold {
-      background: linear-gradient(145deg, #f0c66a, #a77320);
-      color: #1d1204;
-    }
-
-    .btn-blue {
-      background: linear-gradient(145deg, #56c1ff, #176799);
-    }
-
-    .btn-red {
-      background: linear-gradient(145deg, #ff7b64, #9d2b1e);
-    }
-
-    .btn-soft {
-      background: rgba(255,255,255,0.08);
-      color: var(--text);
-    }
-
-    .btn-full {
-      width: 100%;
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 14px 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(0,0,0,0.24);
-      color: var(--text);
-      outline: none;
-      font-size: 16px;
-    }
-
-    textarea {
-      min-height: 95px;
-      resize: vertical;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 11px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    label span {
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .form-grid {
-      display: grid;
-      gap: 10px;
-    }
-
-    .list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .job-card {
-      border-radius: 22px;
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(circle at top right, rgba(164,214,94,0.12), transparent 30%),
-        linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-      padding: 14px;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.22);
-    }
-
-    .job-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: flex-start;
-    }
-
-    .job-title {
-      font-size: 18px;
-      font-weight: 900;
-      margin-bottom: 4px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 900;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.08);
-      white-space: nowrap;
-    }
-
-    .badge-open { color: #b8ff74; }
-    .badge-work { color: #ffe08a; }
-    .badge-done { color: #7bd7ff; }
-    .badge-paid { color: #d6b2ff; }
-
-    .progress-wrap {
-      margin: 12px 0 8px;
-      height: 13px;
-      background: rgba(0,0,0,0.35);
-      border-radius: 999px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.10);
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--green2), var(--gold));
-      border-radius: 999px;
-      transition: 0.25s ease;
-    }
-
-    .mini-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-      margin: 10px 0;
-    }
-
-    .mini-box {
-      background: rgba(0,0,0,0.22);
-      border: 1px solid rgba(255,255,255,0.10);
-      padding: 9px;
-      border-radius: 15px;
-    }
-
-    .mini-box b {
-      display: block;
-      font-size: 19px;
-      margin-bottom: 2px;
-    }
-
-    .mini-box span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .photo-section {
-      margin-bottom: 15px;
-    }
-
-    .photo-section h3 {
-      font-size: 15px;
-      color: var(--green2);
-      margin: 0 0 8px;
-    }
-
-    .photo-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    @media(max-width: 600px) {
-      .photo-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .mini-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .photo-thumb {
-      width: 100%;
-      height: 110px;
-      object-fit: cover;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(0,0,0,0.25);
-    }
-
-    .bottom-nav {
-      position: fixed;
-      z-index: 80;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(5,8,4,0.92);
-      backdrop-filter: blur(15px);
-      border-top: 1px solid var(--line);
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      padding: 8px 8px 10px;
-      gap: 7px;
-    }
-
-    .nav-btn {
-      padding: 9px 4px;
-      font-size: 11px;
-      border-radius: 15px;
-      background: rgba(255,255,255,0.06);
-      color: var(--muted);
-      box-shadow: none;
-    }
-
-    .nav-btn.active {
-      background: linear-gradient(145deg, #a4d65e, #4f7d24);
-      color: #101908;
-    }
-
-    .nav-icon {
-      display: block;
-      font-size: 20px;
-      margin-bottom: 2px;
-    }
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.74);
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-      z-index: 120;
-      padding: 12px;
-    }
-
-    .modal.active {
-      display: flex;
-    }
-
-    .modal-box {
-      width: 100%;
-      max-width: 780px;
-      max-height: 92vh;
-      overflow: auto;
-      background:
-        radial-gradient(circle at top left, rgba(164,214,94,0.12), transparent 28%),
-        linear-gradient(180deg, #1a2711, #0d1509);
-      border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 28px;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.55);
-      padding: 16px;
-    }
-
-    .modal-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .modal-head h2 {
-      margin: 0;
-    }
-
-    .close-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      padding: 0;
-      background: rgba(255,255,255,0.10);
-    }
-
-    .day-row {
-      border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 18px;
-      padding: 12px;
-      background: rgba(0,0,0,0.18);
-      margin-bottom: 8px;
-    }
-
-    .day-row b {
-      color: var(--green2);
-    }
-
-    .calendar-day {
-      border-left: 4px solid var(--green);
-      padding: 12px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.06);
-      margin-bottom: 9px;
-    }
-
-    .empty {
-      padding: 22px;
-      text-align: center;
-      color: var(--muted);
-      border: 1px dashed rgba(255,255,255,0.16);
-      border-radius: 22px;
-      background: rgba(255,255,255,0.035);
-    }
-
-    .danger-zone {
-      border-color: rgba(216,75,58,0.45);
-      background: linear-gradient(145deg, rgba(216,75,58,0.12), rgba(255,255,255,0.03));
-    }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 92px;
-      transform: translateX(-50%);
-      background: #f4ffe9;
-      color: #111d0d;
-      padding: 12px 15px;
-      border-radius: 16px;
-      font-weight: 900;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.45);
-      z-index: 200;
-      opacity: 0;
-      pointer-events: none;
-      transition: 0.25s ease;
-      max-width: calc(100vw - 26px);
-      text-align: center;
-    }
-
-    .toast.show {
-      opacity: 1;
-      bottom: 105px;
-    }
-
-    .search {
-      margin-bottom: 12px;
-    }
-
-    .money {
-      color: var(--gold);
-      font-weight: 950;
-    }
-
-    .netto {
-      color: var(--green2);
-      font-weight: 950;
-    }
-
-    .expense {
-      color: #ffb199;
-      font-weight: 950;
-    }
-
-    .warning {
-      color: #ffd27c;
-    }
-
-    .quote-box {
-      white-space: pre-wrap;
-      line-height: 1.45;
-      background: rgba(0,0,0,0.28);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 18px;
-      padding: 13px;
-      font-size: 14px;
-      color: #f6f8ef;
-      margin-top: 10px;
-    }
+    :root{
+      --bg:#0b1208;--bg2:#111d0d;--panel:#18230f;--panel2:#203114;
+      --green:#7fbf3f;--green2:#a4d65e;--gold:#d6a642;--red:#d84b3a;
+      --blue:#4aa3df;--text:#f3f7ef;--muted:#aeb8a6;--line:rgba(255,255,255,.13);
+      --shadow:0 18px 45px rgba(0,0,0,.42);--radius:22px;
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{
+      margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:radial-gradient(circle at top left,rgba(164,214,94,.18),transparent 32%),
+      radial-gradient(circle at top right,rgba(214,166,66,.12),transparent 32%),
+      linear-gradient(180deg,#050804,var(--bg));color:var(--text);min-height:100vh;padding-bottom:96px;
+    }
+    header{
+      position:sticky;top:0;z-index:50;padding:18px 16px 14px;background:rgba(8,14,6,.88);
+      backdrop-filter:blur(14px);border-bottom:1px solid var(--line);
+    }
+    .brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .logo-box{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:52px;height:52px;border-radius:18px;background:radial-gradient(circle at 35% 25%,#dfffb1,transparent 25%),
+      linear-gradient(145deg,#6b8f33,#263d18 52%,#111d0d);border:1px solid rgba(255,255,255,.18);
+      box-shadow:inset 0 0 18px rgba(255,255,255,.08),0 12px 25px rgba(0,0,0,.45);
+      display:grid;place-items:center;font-size:25px;
+    }
+    .brand-title{line-height:1.05}.brand-title h1{margin:0;font-size:27px;letter-spacing:-.8px}
+    .brand-title p{margin:5px 0 0;color:var(--muted);font-size:13px}
+    .version{font-size:11px;color:var(--gold);margin-top:3px;font-weight:800}
+    .today-pill{background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:999px;padding:8px 11px;font-size:12px;color:var(--green2);white-space:nowrap}
+    main{padding:16px;max-width:980px;margin:0 auto}
+    .screen{display:none;animation:fadeIn .22s ease-out}.screen.active{display:block}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .grid{display:grid;gap:12px}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr}}
+    .card{
+      background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.025)),linear-gradient(180deg,var(--panel),var(--bg2));
+      border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;overflow:hidden;position:relative;
+    }
+    .card::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.08),transparent 38%);opacity:.6}
+    .card>*{position:relative;z-index:1}
+    .kpi{min-height:105px}.kpi-label{color:var(--muted);font-size:13px;margin-bottom:8px}
+    .kpi-value{font-size:34px;font-weight:900;letter-spacing:-1px}.kpi-small{font-size:13px;color:var(--green2);margin-top:7px}
+    h2{margin:5px 0 14px;font-size:23px;letter-spacing:-.4px}h3{margin:0 0 10px;font-size:18px}
+    .muted{color:var(--muted)}.small{font-size:13px}
+    .section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:18px 0 10px}.section-title h2{margin:0}
+    .btn-row{display:flex;gap:9px;flex-wrap:wrap}
+    button,.btn{
+      border:none;border-radius:16px;padding:13px 15px;font-weight:800;color:white;background:linear-gradient(145deg,#3d5d24,#203114);
+      border:1px solid rgba(255,255,255,.14);box-shadow:0 9px 20px rgba(0,0,0,.28);cursor:pointer;font-size:14px;
+    }
+    button:active{transform:scale(.98)}
+    .btn-main{background:linear-gradient(145deg,#a4d65e,#4f7d24);color:#101908}
+    .btn-gold{background:linear-gradient(145deg,#f0c66a,#a77320);color:#1d1204}
+    .btn-blue{background:linear-gradient(145deg,#56c1ff,#176799)}
+    .btn-red{background:linear-gradient(145deg,#ff7b64,#9d2b1e)}
+    .btn-soft{background:rgba(255,255,255,.08);color:var(--text)}
+    .btn-full{width:100%}
+    input,select,textarea{
+      width:100%;padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.24);color:var(--text);outline:none;font-size:16px;
+    }
+    textarea{min-height:95px;resize:vertical}
+    label{display:block;margin-bottom:11px;color:var(--muted);font-size:13px;font-weight:700}
+    label span{display:block;margin-bottom:6px}.form-grid{display:grid;gap:10px}.list{display:grid;gap:12px}
+    .job-card{
+      border-radius:22px;border:1px solid var(--line);background:radial-gradient(circle at top right,rgba(164,214,94,.12),transparent 30%),
+      linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.03));padding:14px;box-shadow:0 12px 28px rgba(0,0,0,.22);
+    }
+    .job-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .job-title{font-size:18px;font-weight:900;margin-bottom:4px}
+    .badge{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:900;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);white-space:nowrap}
+    .badge-open{color:#b8ff74}.badge-work{color:#ffe08a}.badge-done{color:#7bd7ff}.badge-paid{color:#d6b2ff}.badge-health{color:#ffca8a}
+    .progress-wrap{margin:12px 0 8px;height:13px;background:rgba(0,0,0,.35);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.10)}
+    .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--green2),var(--gold));border-radius:999px;transition:.25s ease}
+    .mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}
+    .mini-box{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.10);padding:9px;border-radius:15px}
+    .mini-box b{display:block;font-size:19px;margin-bottom:2px}.mini-box span{color:var(--muted);font-size:12px}
+    .photo-section{margin-bottom:15px}.photo-section h3{font-size:15px;color:var(--green2);margin:0 0 8px}
+    .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+    @media(max-width:600px){.photo-grid{grid-template-columns:repeat(2,1fr)}.mini-grid{grid-template-columns:1fr}}
+    .photo-thumb{width:100%;height:110px;object-fit:cover;border-radius:16px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.25)}
+    .bottom-nav{
+      position:fixed;z-index:80;bottom:0;left:0;right:0;background:rgba(5,8,4,.92);backdrop-filter:blur(15px);
+      border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px 10px;gap:7px;
+    }
+    .nav-btn{padding:9px 4px;font-size:11px;border-radius:15px;background:rgba(255,255,255,.06);color:var(--muted);box-shadow:none}
+    .nav-btn.active{background:linear-gradient(145deg,#a4d65e,#4f7d24);color:#101908}.nav-icon{display:block;font-size:20px;margin-bottom:2px}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.74);display:none;align-items:flex-end;justify-content:center;z-index:120;padding:12px}
+    .modal.active{display:flex}
+    .modal-box{
+      width:100%;max-width:780px;max-height:92vh;overflow:auto;background:radial-gradient(circle at top left,rgba(164,214,94,.12),transparent 28%),
+      linear-gradient(180deg,#1a2711,#0d1509);border:1px solid rgba(255,255,255,.16);border-radius:28px;box-shadow:0 30px 80px rgba(0,0,0,.55);padding:16px;
+    }
+    .modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.modal-head h2{margin:0}
+    .close-btn{width:44px;height:44px;border-radius:50%;padding:0;background:rgba(255,255,255,.10)}
+    .day-row,.health-row{border:1px solid rgba(255,255,255,.10);border-radius:18px;padding:12px;background:rgba(0,0,0,.18);margin-bottom:8px}
+    .day-row b,.health-row b{color:var(--green2)}
+    .calendar-day{border-left:4px solid var(--green);padding:12px;border-radius:16px;background:rgba(255,255,255,.06);margin-bottom:9px}
+    .empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed rgba(255,255,255,.16);border-radius:22px;background:rgba(255,255,255,.035)}
+    .danger-zone{border-color:rgba(216,75,58,.45);background:linear-gradient(145deg,rgba(216,75,58,.12),rgba(255,255,255,.03))}
+    .toast{
+      position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#f4ffe9;color:#111d0d;padding:12px 15px;border-radius:16px;font-weight:900;
+      box-shadow:0 14px 40px rgba(0,0,0,.45);z-index:200;opacity:0;pointer-events:none;transition:.25s ease;max-width:calc(100vw - 26px);text-align:center;
+    }
+    .toast.show{opacity:1;bottom:105px}
+    .search{margin-bottom:12px}.money{color:var(--gold);font-weight:950}.netto{color:var(--green2);font-weight:950}.expense{color:#ffb199;font-weight:950}
+    .quote-box{white-space:pre-wrap;line-height:1.45;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:13px;font-size:14px;color:#f6f8ef;margin-top:10px}
+    .check-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+    @media(max-width:600px){.check-grid{grid-template-columns:1fr}}
+    .check-item{display:flex;gap:8px;align-items:center;background:rgba(0,0,0,.20);border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:10px;color:var(--text);font-size:13px}
+    .check-item input{width:auto}
   </style>
 </head>
 
 <body>
-  <header>
-    <div class="brand">
-      <div class="logo-box">
-        <div class="logo">🌿</div>
-        <div class="brand-title">
-          <h1>ApPiero</h1>
-          <p>Gestione potatura ulivi</p>
-          <div class="version">V3 · preventivi WhatsApp / foto ordinate</div>
-        </div>
+<header>
+  <div class="brand">
+    <div class="logo-box">
+      <div class="logo">🌿</div>
+      <div class="brand-title">
+        <h1>ApPiero</h1>
+        <p>Gestione potatura ulivi</p>
+        <div class="version">V4 · salute olivo / problemi / cultivar</div>
       </div>
-      <div class="today-pill" id="todayText">Oggi</div>
     </div>
-  </header>
-
-  <main>
-    <section id="screen-home" class="screen active">
-      <div class="grid grid-3">
-        <div class="card kpi">
-          <div class="kpi-label">Ulivi potati oggi</div>
-          <div class="kpi-value" id="kpiTodayTrees">0</div>
-          <div class="kpi-small" id="kpiTodayJobs">0 giornate registrate</div>
-        </div>
-
-        <div class="card kpi">
-          <div class="kpi-label">Lordo oggi</div>
-          <div class="kpi-value money" id="kpiTodayGross">0 €</div>
-          <div class="kpi-small">prima delle spese</div>
-        </div>
-
-        <div class="card kpi">
-          <div class="kpi-label">Netto oggi</div>
-          <div class="kpi-value netto" id="kpiTodayNet">0 €</div>
-          <div class="kpi-small" id="kpiTodayExpenses">spese: 0 €</div>
-        </div>
-      </div>
-
-      <div class="section-title">
-        <h2>Azioni rapide</h2>
-      </div>
-
-      <div class="grid grid-2">
-        <button class="btn-main btn-full" onclick="showScreen('new')">➕ Nuovo lavoro</button>
-        <button class="btn-gold btn-full" onclick="showScreen('calendar')">📅 Calendario</button>
-        <button class="btn-blue btn-full" onclick="showScreen('jobs')">🌳 Lavori attivi</button>
-        <button class="btn-soft btn-full" onclick="showScreen('stats')">📊 Statistiche</button>
-      </div>
-
-      <div class="section-title">
-        <h2>Situazione</h2>
-      </div>
-
-      <div class="grid grid-3">
-        <div class="card kpi">
-          <div class="kpi-label">Lavori attivi</div>
-          <div class="kpi-value" id="kpiActiveJobs">0</div>
-          <div class="kpi-small">da completare</div>
-        </div>
-
-        <div class="card kpi">
-          <div class="kpi-label">Preventivi aperti</div>
-          <div class="kpi-value" id="kpiOpenEstimates">0</div>
-          <div class="kpi-small">da confermare</div>
-        </div>
-
-        <div class="card kpi">
-          <div class="kpi-label">Saldo da incassare</div>
-          <div class="kpi-value money" id="kpiBalanceDue">0 €</div>
-          <div class="kpi-small">preventivi - acconti</div>
-        </div>
-      </div>
-
-      <div class="section-title">
-        <h2>Ultimi lavori</h2>
-      </div>
-
-      <div id="homeRecentJobs" class="list"></div>
-    </section>
-
-    <section id="screen-new" class="screen">
-      <div class="card">
-        <h2>Nuovo lavoro / preventivo</h2>
-
-        <div class="form-grid">
-          <label>
-            <span>Cliente</span>
-            <input id="fClient" placeholder="Es. Mario Rossi" />
-          </label>
-
-          <label>
-            <span>Telefono cliente</span>
-            <input id="fPhone" placeholder="Es. 333 1234567" />
-          </label>
-
-          <label>
-            <span>Luogo / località</span>
-            <input id="fPlace" placeholder="Es. Località San Pietro, Imperia" />
-          </label>
-
-          <div class="grid grid-2">
-            <label>
-              <span>Data prevista inizio</span>
-              <input id="fDate" type="date" />
-            </label>
-
-            <label>
-              <span>Totale ulivi</span>
-              <input id="fTotalTrees" type="number" min="0" placeholder="Es. 120" />
-            </label>
-          </div>
-
-          <div class="grid grid-2">
-            <label>
-              <span>Tipo prezzo</span>
-              <select id="fPriceMode" onchange="updatePriceLabels()">
-                <option value="tree">Prezzo a ulivo</option>
-                <option value="day">Prezzo a giornata</option>
-                <option value="fixed">Prezzo a corpo</option>
-              </select>
-            </label>
-
-            <label>
-              <span id="priceValueLabel">Prezzo a ulivo €</span>
-              <input id="fPriceValue" type="number" min="0" step="0.01" placeholder="Es. 5" />
-            </label>
-          </div>
-
-          <div class="grid grid-2">
-            <label>
-              <span>Giorni stimati, se prezzo a giornata</span>
-              <input id="fEstimatedDays" type="number" min="0" placeholder="Es. 4" />
-            </label>
-
-            <label>
-              <span>Acconto ricevuto €</span>
-              <input id="fDeposit" type="number" min="0" step="0.01" placeholder="Es. 100" />
-            </label>
-          </div>
-
-          <label>
-            <span>Tipo lavoro</span>
-            <select id="fWorkType">
-              <option>Potatura ordinaria</option>
-              <option>Potatura di recupero</option>
-              <option>Potatura di riforma</option>
-              <option>Potatura leggera</option>
-              <option>Potatura pesante</option>
-              <option>Sopralluogo / preventivo</option>
-            </select>
-          </label>
-
-          <label>
-            <span>Stato</span>
-            <select id="fStatus">
-              <option value="preventivo">Preventivo</option>
-              <option value="attivo">Lavoro attivo</option>
-              <option value="finito">Finito</option>
-              <option value="pagato">Pagato</option>
-            </select>
-          </label>
-
-          <label>
-            <span>Tipo foto iniziale</span>
-            <select id="fPhotoType">
-              <option value="sopralluogo">Sopralluogo</option>
-              <option value="prima">Prima</option>
-              <option value="durante">Durante</option>
-              <option value="dopo">Dopo</option>
-              <option value="altro">Altro</option>
-            </select>
-          </label>
-
-          <label>
-            <span>Foto del terreno / sopralluogo</span>
-            <input id="fPhoto" type="file" accept="image/*" />
-          </label>
-
-          <label>
-            <span>Note</span>
-            <textarea id="fNotes" placeholder="Es. terreno scosceso, alberi molto alti, serve motosega..."></textarea>
-          </label>
-
-          <button class="btn-main btn-full" onclick="createJob()">Salva lavoro</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="screen-jobs" class="screen">
-      <div class="section-title">
-        <h2>Lavori</h2>
-        <button class="btn-main" onclick="showScreen('new')">➕ Nuovo</button>
-      </div>
-
-      <input class="search" id="jobSearch" oninput="renderJobs()" placeholder="Cerca cliente, luogo, note..." />
-
-      <div class="btn-row" style="margin-bottom:12px;">
-        <button class="btn-soft" onclick="setJobFilter('all')">Tutti</button>
-        <button class="btn-soft" onclick="setJobFilter('preventivo')">Preventivi</button>
-        <button class="btn-soft" onclick="setJobFilter('attivo')">Attivi</button>
-        <button class="btn-soft" onclick="setJobFilter('finito')">Finiti</button>
-        <button class="btn-soft" onclick="setJobFilter('pagato')">Pagati</button>
-      </div>
-
-      <div id="jobsList" class="list"></div>
-    </section>
-
-    <section id="screen-calendar" class="screen">
-      <div class="section-title">
-        <h2>Calendario lavori</h2>
-      </div>
-
-      <div class="card">
-        <p class="muted small">Qui vedi i lavori ordinati per data prevista e le giornate registrate.</p>
-      </div>
-
-      <div id="calendarList" class="list" style="margin-top:12px;"></div>
-    </section>
-
-    <section id="screen-stats" class="screen">
-      <div class="section-title">
-        <h2>Statistiche</h2>
-      </div>
-
-      <div class="grid grid-3">
-        <div class="card kpi">
-          <div class="kpi-label">Ulivi totali registrati</div>
-          <div class="kpi-value" id="statTotalTrees">0</div>
-        </div>
-
-        <div class="card kpi">
-          <div class="kpi-label">Ulivi già potati</div>
-          <div class="kpi-value" id="statDoneTrees">0</div>
-        </div>
-
-        <div class="card kpi">
-          <div class="kpi-label">Lordo registrato</div>
-          <div class="kpi-value money" id="statGross">0 €</div>
-        </div>
-      </div>
-
-      <div class="grid grid-3" style="margin-top:12px;">
-        <div class="card kpi">
-          <div class="kpi-label">Spese registrate</div>
-          <div class="kpi-value expense" id="statExpenses">0 €</div>
-        </div>
-
-        <div class="card kpi">
-          <div class="kpi-label">Netto registrato</div>
-          <div class="kpi-value netto" id="statNet">0 €</div>
-        </div>
-
-        <div class="card kpi">
-          <div class="kpi-label">Acconti ricevuti</div>
-          <div class="kpi-value money" id="statDeposits">0 €</div>
-        </div>
-      </div>
-
-      <div class="card" style="margin-top:12px;">
-        <h3>Riepilogo lavori</h3>
-        <div id="statsDetails"></div>
-      </div>
-    </section>
-
-    <section id="screen-backup" class="screen">
-      <div class="section-title">
-        <h2>Backup dati</h2>
-      </div>
-
-      <div class="card">
-        <h3>Esporta backup</h3>
-        <p class="muted small">Scarica un file JSON con tutti i lavori salvati. È importante farlo spesso.</p>
-        <button class="btn-main btn-full" onclick="exportBackup()">📤 Esporta backup</button>
-      </div>
-
-      <div class="card" style="margin-top:12px;">
-        <h3>Importa backup</h3>
-        <p class="muted small">Carica un backup JSON già esportato.</p>
-        <input id="backupFile" type="file" accept="application/json" />
-        <button class="btn-gold btn-full" style="margin-top:10px;" onclick="importBackup()">📥 Importa backup</button>
-      </div>
-
-      <div class="card danger-zone" style="margin-top:12px;">
-        <h3>Zona pericolosa</h3>
-        <p class="muted small">Cancella tutti i dati salvati su questo telefono/browser.</p>
-        <button class="btn-red btn-full" onclick="clearAllData()">🗑 Cancella tutto</button>
-      </div>
-    </section>
-  </main>
-
-  <div id="jobModal" class="modal">
-    <div class="modal-box">
-      <div class="modal-head">
-        <h2 id="modalTitle">Dettaglio lavoro</h2>
-        <button class="close-btn" onclick="closeModal()">✕</button>
-      </div>
-
-      <div id="modalContent"></div>
-    </div>
+    <div class="today-pill" id="todayText">Oggi</div>
   </div>
+</header>
 
-  <nav class="bottom-nav">
-    <button class="nav-btn active" id="nav-home" onclick="showScreen('home')">
-      <span class="nav-icon">🏠</span>Home
-    </button>
-    <button class="nav-btn" id="nav-new" onclick="showScreen('new')">
-      <span class="nav-icon">➕</span>Nuovo
-    </button>
-    <button class="nav-btn" id="nav-jobs" onclick="showScreen('jobs')">
-      <span class="nav-icon">🌳</span>Lavori
-    </button>
-    <button class="nav-btn" id="nav-calendar" onclick="showScreen('calendar')">
-      <span class="nav-icon">📅</span>Agenda
-    </button>
-    <button class="nav-btn" id="nav-backup" onclick="showScreen('backup')">
-      <span class="nav-icon">💾</span>Backup
-    </button>
-  </nav>
+<main>
+  <section id="screen-home" class="screen active">
+    <div class="grid grid-3">
+      <div class="card kpi"><div class="kpi-label">Ulivi potati oggi</div><div class="kpi-value" id="kpiTodayTrees">0</div><div class="kpi-small" id="kpiTodayJobs">0 giornate registrate</div></div>
+      <div class="card kpi"><div class="kpi-label">Lordo oggi</div><div class="kpi-value money" id="kpiTodayGross">0 €</div><div class="kpi-small">prima delle spese</div></div>
+      <div class="card kpi"><div class="kpi-label">Netto oggi</div><div class="kpi-value netto" id="kpiTodayNet">0 €</div><div class="kpi-small" id="kpiTodayExpenses">spese: 0 €</div></div>
+    </div>
 
-  <div id="toast" class="toast"></div>
+    <div class="section-title"><h2>Azioni rapide</h2></div>
+    <div class="grid grid-2">
+      <button class="btn-main btn-full" onclick="showScreen('new')">➕ Nuovo lavoro</button>
+      <button class="btn-gold btn-full" onclick="showScreen('calendar')">📅 Calendario</button>
+      <button class="btn-blue btn-full" onclick="showScreen('jobs')">🌳 Lavori attivi</button>
+      <button class="btn-soft btn-full" onclick="showScreen('stats')">📊 Statistiche</button>
+    </div>
 
-  <script>
-    const STORAGE_KEY = "appiero_v3_jobs";
-    const OLD_STORAGE_KEYS = ["appiero_v2_jobs", "appiero_v1_jobs"];
+    <div class="section-title"><h2>Situazione</h2></div>
+    <div class="grid grid-3">
+      <div class="card kpi"><div class="kpi-label">Lavori attivi</div><div class="kpi-value" id="kpiActiveJobs">0</div><div class="kpi-small">da completare</div></div>
+      <div class="card kpi"><div class="kpi-label">Preventivi aperti</div><div class="kpi-value" id="kpiOpenEstimates">0</div><div class="kpi-small">da confermare</div></div>
+      <div class="card kpi"><div class="kpi-label">Controlli salute</div><div class="kpi-value" id="kpiHealthChecks">0</div><div class="kpi-small">schede olivo salvate</div></div>
+    </div>
 
-    let jobs = [];
-    let currentFilter = "all";
-    let openedJobId = null;
+    <div class="section-title"><h2>Ultimi lavori</h2></div>
+    <div id="homeRecentJobs" class="list"></div>
+  </section>
 
-    const euro = new Intl.NumberFormat("it-IT", {
-      style: "currency",
-      currency: "EUR"
-    });
+  <section id="screen-new" class="screen">
+    <div class="card">
+      <h2>Nuovo lavoro / preventivo</h2>
+      <div class="form-grid">
+        <label><span>Cliente</span><input id="fClient" placeholder="Es. Mario Rossi" /></label>
+        <label><span>Telefono cliente</span><input id="fPhone" placeholder="Es. 333 1234567" /></label>
+        <label><span>Luogo / località</span><input id="fPlace" placeholder="Es. Località San Pietro, Imperia" /></label>
 
-    function todayISO() {
-      return new Date().toISOString().slice(0, 10);
-    }
-
-    function formatDate(iso) {
-      if (!iso) return "Senza data";
-      const d = new Date(iso + "T12:00:00");
-      return d.toLocaleDateString("it-IT", {
-        weekday: "short",
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric"
-      });
-    }
-
-    function uid() {
-      return Date.now().toString(36) + Math.random().toString(36).slice(2);
-    }
-
-    function money(n) {
-      return euro.format(Number(n || 0));
-    }
-
-    function save() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs));
-      renderAll();
-    }
-
-    function normalizeJob(job) {
-      if (!job.deposit) job.deposit = 0;
-      if (!Array.isArray(job.photos)) job.photos = [];
-      if (!Array.isArray(job.photoItems)) job.photoItems = [];
-      if (!Array.isArray(job.days)) job.days = [];
-
-      if (job.photos.length && job.photoItems.length === 0) {
-        job.photoItems = job.photos.map(src => ({
-          id: uid(),
-          type: "altro",
-          src,
-          createdAt: new Date().toISOString()
-        }));
-      }
-
-      job.days = job.days.map(d => ({
-        id: d.id || uid(),
-        date: d.date || todayISO(),
-        trees: Number(d.trees || 0),
-        hours: Number(d.hours || 0),
-        dayMoney: Number(d.dayMoney || 0),
-        expenseFuel: Number(d.expenseFuel || 0),
-        expenseFood: Number(d.expenseFood || 0),
-        expenseTools: Number(d.expenseTools || 0),
-        expenseOther: Number(d.expenseOther || 0),
-        notes: d.notes || "",
-        photo: d.photo || ""
-      }));
-
-      return job;
-    }
-
-    function load() {
-      try {
-        let raw = localStorage.getItem(STORAGE_KEY);
-
-        if (!raw) {
-          for (const key of OLD_STORAGE_KEYS) {
-            raw = localStorage.getItem(key);
-            if (raw) break;
-          }
-        }
-
-        jobs = JSON.parse(raw || "[]").map(normalizeJob);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs));
-      } catch(e) {
-        jobs = [];
-      }
-    }
-
-    function toast(msg) {
-      const t = document.getElementById("toast");
-      t.textContent = msg;
-      t.classList.add("show");
-      setTimeout(() => t.classList.remove("show"), 2100);
-    }
-
-    function showScreen(name) {
-      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-      document.getElementById("screen-" + name).classList.add("active");
-
-      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
-      const nav = document.getElementById("nav-" + name);
-      if (nav) nav.classList.add("active");
-
-      renderAll();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function updatePriceLabels() {
-      const mode = document.getElementById("fPriceMode").value;
-      const label = document.getElementById("priceValueLabel");
-      if (mode === "tree") label.textContent = "Prezzo a ulivo €";
-      if (mode === "day") label.textContent = "Prezzo a giornata €";
-      if (mode === "fixed") label.textContent = "Prezzo totale a corpo €";
-    }
-
-    function fileToDataURL(file) {
-      return new Promise((resolve, reject) => {
-        if (!file) return resolve("");
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    async function createJob() {
-      const client = document.getElementById("fClient").value.trim();
-
-      if (!client) {
-        toast("Inserisci il cliente");
-        return;
-      }
-
-      const photoFile = document.getElementById("fPhoto").files[0];
-      const photo = await fileToDataURL(photoFile);
-      const photoType = document.getElementById("fPhotoType").value;
-
-      const job = {
-        id: uid(),
-        createdAt: new Date().toISOString(),
-        client,
-        phone: document.getElementById("fPhone").value.trim(),
-        place: document.getElementById("fPlace").value.trim(),
-        startDate: document.getElementById("fDate").value || todayISO(),
-        totalTrees: Number(document.getElementById("fTotalTrees").value || 0),
-        priceMode: document.getElementById("fPriceMode").value,
-        priceValue: Number(document.getElementById("fPriceValue").value || 0),
-        estimatedDays: Number(document.getElementById("fEstimatedDays").value || 0),
-        deposit: Number(document.getElementById("fDeposit").value || 0),
-        workType: document.getElementById("fWorkType").value,
-        status: document.getElementById("fStatus").value,
-        notes: document.getElementById("fNotes").value.trim(),
-        photos: photo ? [photo] : [],
-        photoItems: photo ? [{
-          id: uid(),
-          type: photoType,
-          src: photo,
-          createdAt: new Date().toISOString()
-        }] : [],
-        days: []
-      };
-
-      jobs.unshift(job);
-      clearForm();
-      save();
-      toast("Lavoro salvato");
-      showScreen("jobs");
-    }
-
-    function clearForm() {
-      ["fClient","fPhone","fPlace","fTotalTrees","fPriceValue","fEstimatedDays","fDeposit","fNotes"].forEach(id => {
-        document.getElementById(id).value = "";
-      });
-      document.getElementById("fDate").value = todayISO();
-      document.getElementById("fPriceMode").value = "tree";
-      document.getElementById("fStatus").value = "preventivo";
-      document.getElementById("fPhotoType").value = "sopralluogo";
-      document.getElementById("fPhoto").value = "";
-      updatePriceLabels();
-    }
-
-    function jobDoneTrees(job) {
-      return job.days.reduce((sum, d) => sum + Number(d.trees || 0), 0);
-    }
-
-    function dayExpenses(day) {
-      return Number(day.expenseFuel || 0) +
-             Number(day.expenseFood || 0) +
-             Number(day.expenseTools || 0) +
-             Number(day.expenseOther || 0);
-    }
-
-    function jobExpenses(job) {
-      return job.days.reduce((sum, d) => sum + dayExpenses(d), 0);
-    }
-
-    function jobDayGross(job, day) {
-      const trees = Number(day.trees || 0);
-
-      if (job.priceMode === "tree") return trees * Number(job.priceValue || 0);
-      if (job.priceMode === "day") return Number(day.dayMoney || job.priceValue || 0);
-      if (job.priceMode === "fixed") {
-        if (!job.totalTrees) return 0;
-        return trees * (Number(job.priceValue || 0) / Number(job.totalTrees || 1));
-      }
-      return 0;
-    }
-
-    function jobDayNet(job, day) {
-      return jobDayGross(job, day) - dayExpenses(day);
-    }
-
-    function jobGross(job) {
-      return job.days.reduce((sum, d) => sum + jobDayGross(job, d), 0);
-    }
-
-    function jobNet(job) {
-      return job.days.reduce((sum, d) => sum + jobDayNet(job, d), 0);
-    }
-
-    function jobEstimate(job) {
-      if (job.priceMode === "tree") return Number(job.totalTrees || 0) * Number(job.priceValue || 0);
-      if (job.priceMode === "day") return Number(job.estimatedDays || 0) * Number(job.priceValue || 0);
-      if (job.priceMode === "fixed") return Number(job.priceValue || 0);
-      return 0;
-    }
-
-    function jobBalance(job) {
-      return Math.max(0, jobEstimate(job) - Number(job.deposit || 0));
-    }
-
-    function jobRemaining(job) {
-      return Math.max(0, Number(job.totalTrees || 0) - jobDoneTrees(job));
-    }
-
-    function jobProgress(job) {
-      if (!job.totalTrees) return 0;
-      return Math.min(100, Math.round((jobDoneTrees(job) / job.totalTrees) * 100));
-    }
-
-    function statusLabel(status) {
-      if (status === "preventivo") return "Preventivo";
-      if (status === "attivo") return "Attivo";
-      if (status === "finito") return "Finito";
-      if (status === "pagato") return "Pagato";
-      return status;
-    }
-
-    function statusClass(status) {
-      if (status === "preventivo") return "badge-open";
-      if (status === "attivo") return "badge-work";
-      if (status === "finito") return "badge-done";
-      if (status === "pagato") return "badge-paid";
-      return "";
-    }
-
-    function priceModeLabel(job) {
-      if (job.priceMode === "tree") return "Prezzo a ulivo";
-      if (job.priceMode === "day") return "Prezzo a giornata";
-      if (job.priceMode === "fixed") return "Prezzo a corpo";
-      return "Prezzo";
-    }
-
-    function renderJobCard(job) {
-      const done = jobDoneTrees(job);
-      const remaining = jobRemaining(job);
-      const progress = jobProgress(job);
-      const gross = jobGross(job);
-      const expenses = jobExpenses(job);
-      const net = jobNet(job);
-      const estimate = jobEstimate(job);
-      const balance = jobBalance(job);
-
-      return `
-        <div class="job-card">
-          <div class="job-top">
-            <div>
-              <div class="job-title">${escapeHtml(job.client)}</div>
-              <div class="muted small">${escapeHtml(job.place || "Luogo non indicato")}</div>
-              <div class="muted small">${formatDate(job.startDate)} · ${escapeHtml(job.workType || "")}</div>
-            </div>
-            <span class="badge ${statusClass(job.status)}">${statusLabel(job.status)}</span>
-          </div>
-
-          <div class="progress-wrap">
-            <div class="progress-bar" style="width:${progress}%"></div>
-          </div>
-
-          <div class="mini-grid">
-            <div class="mini-box">
-              <b>${done}</b>
-              <span>potati</span>
-            </div>
-            <div class="mini-box">
-              <b>${remaining}</b>
-              <span>restanti</span>
-            </div>
-            <div class="mini-box">
-              <b>${progress}%</b>
-              <span>avanzamento</span>
-            </div>
-          </div>
-
-          <div class="mini-grid">
-            <div class="mini-box">
-              <b class="money">${money(gross)}</b>
-              <span>lordo</span>
-            </div>
-            <div class="mini-box">
-              <b class="expense">${money(expenses)}</b>
-              <span>spese</span>
-            </div>
-            <div class="mini-box">
-              <b class="netto">${money(net)}</b>
-              <span>netto</span>
-            </div>
-          </div>
-
-          <div class="mini-grid">
-            <div class="mini-box">
-              <b>${money(estimate)}</b>
-              <span>preventivo</span>
-            </div>
-            <div class="mini-box">
-              <b>${money(job.deposit || 0)}</b>
-              <span>acconto</span>
-            </div>
-            <div class="mini-box">
-              <b>${money(balance)}</b>
-              <span>saldo</span>
-            </div>
-          </div>
-
-          <div class="btn-row">
-            <button class="btn-main" onclick="openJob('${job.id}')">Apri</button>
-            <button class="btn-gold" onclick="quickAddDay('${job.id}')">+ Giornata</button>
-          </div>
+        <div class="grid grid-2">
+          <label><span>Data prevista inizio</span><input id="fDate" type="date" /></label>
+          <label><span>Totale ulivi</span><input id="fTotalTrees" type="number" min="0" placeholder="Es. 120" /></label>
         </div>
-      `;
-    }
 
-    function renderJobs() {
-      const q = (document.getElementById("jobSearch")?.value || "").toLowerCase().trim();
-      let filtered = jobs.filter(job => {
-        const text = [
-          job.client,
-          job.place,
-          job.phone,
-          job.notes,
-          job.workType,
-          job.status
-        ].join(" ").toLowerCase();
-
-        const matchesText = !q || text.includes(q);
-        const matchesFilter = currentFilter === "all" || job.status === currentFilter;
-        return matchesText && matchesFilter;
-      });
-
-      const box = document.getElementById("jobsList");
-      if (!box) return;
-
-      if (!filtered.length) {
-        box.innerHTML = `<div class="empty">Nessun lavoro trovato.</div>`;
-        return;
-      }
-
-      box.innerHTML = filtered.map(renderJobCard).join("");
-    }
-
-    function setJobFilter(f) {
-      currentFilter = f;
-      renderJobs();
-    }
-
-    function renderHome() {
-      const today = todayISO();
-      let todayTrees = 0;
-      let todayGross = 0;
-      let todayNet = 0;
-      let todayExpenses = 0;
-      let todayRows = 0;
-
-      jobs.forEach(job => {
-        job.days.forEach(d => {
-          if (d.date === today) {
-            todayRows++;
-            todayTrees += Number(d.trees || 0);
-            todayGross += jobDayGross(job, d);
-            todayNet += jobDayNet(job, d);
-            todayExpenses += dayExpenses(d);
-          }
-        });
-      });
-
-      document.getElementById("kpiTodayTrees").textContent = todayTrees;
-      document.getElementById("kpiTodayGross").textContent = money(todayGross);
-      document.getElementById("kpiTodayNet").textContent = money(todayNet);
-      document.getElementById("kpiTodayExpenses").textContent = "spese: " + money(todayExpenses);
-      document.getElementById("kpiTodayJobs").textContent = todayRows + " giornate registrate";
-      document.getElementById("kpiActiveJobs").textContent = jobs.filter(j => j.status === "attivo").length;
-      document.getElementById("kpiOpenEstimates").textContent = jobs.filter(j => j.status === "preventivo").length;
-
-      const balanceDue = jobs
-        .filter(j => j.status !== "pagato")
-        .reduce((s,j) => s + jobBalance(j), 0);
-
-      document.getElementById("kpiBalanceDue").textContent = money(balanceDue);
-
-      const recent = jobs.slice(0, 4);
-      const box = document.getElementById("homeRecentJobs");
-
-      if (!recent.length) {
-        box.innerHTML = `<div class="empty">Ancora nessun lavoro. Premi “Nuovo lavoro”.</div>`;
-      } else {
-        box.innerHTML = recent.map(renderJobCard).join("");
-      }
-    }
-
-    function renderCalendar() {
-      const events = [];
-
-      jobs.forEach(job => {
-        events.push({
-          date: job.startDate || "",
-          html: `
-            <div class="calendar-day">
-              <b>${formatDate(job.startDate)}</b><br>
-              <strong>${escapeHtml(job.client)}</strong> — ${escapeHtml(job.place || "Luogo non indicato")}<br>
-              <span class="muted small">${statusLabel(job.status)} · ${jobDoneTrees(job)}/${job.totalTrees || 0} ulivi · netto ${money(jobNet(job))}</span>
-              <div style="margin-top:8px;">
-                <button class="btn-soft" onclick="openJob('${job.id}')">Apri lavoro</button>
-              </div>
-            </div>
-          `
-        });
-
-        job.days.forEach(d => {
-          events.push({
-            date: d.date,
-            html: `
-              <div class="calendar-day">
-                <b>${formatDate(d.date)}</b><br>
-                <strong>${escapeHtml(job.client)}</strong> — giornata registrata<br>
-                <span class="muted small">${Number(d.trees || 0)} ulivi · lordo ${money(jobDayGross(job, d))} · spese ${money(dayExpenses(d))} · netto ${money(jobDayNet(job, d))}</span>
-              </div>
-            `
-          });
-        });
-      });
-
-      events.sort((a,b) => (a.date || "").localeCompare(b.date || ""));
-
-      const box = document.getElementById("calendarList");
-      if (!events.length) {
-        box.innerHTML = `<div class="empty">Nessuna data in calendario.</div>`;
-      } else {
-        box.innerHTML = events.map(e => e.html).join("");
-      }
-    }
-
-    function renderStats() {
-      const totalTrees = jobs.reduce((s,j) => s + Number(j.totalTrees || 0), 0);
-      const doneTrees = jobs.reduce((s,j) => s + jobDoneTrees(j), 0);
-      const gross = jobs.reduce((s,j) => s + jobGross(j), 0);
-      const expenses = jobs.reduce((s,j) => s + jobExpenses(j), 0);
-      const net = jobs.reduce((s,j) => s + jobNet(j), 0);
-      const deposits = jobs.reduce((s,j) => s + Number(j.deposit || 0), 0);
-
-      document.getElementById("statTotalTrees").textContent = totalTrees;
-      document.getElementById("statDoneTrees").textContent = doneTrees;
-      document.getElementById("statGross").textContent = money(gross);
-      document.getElementById("statExpenses").textContent = money(expenses);
-      document.getElementById("statNet").textContent = money(net);
-      document.getElementById("statDeposits").textContent = money(deposits);
-
-      const active = jobs.filter(j => j.status === "attivo").length;
-      const estimates = jobs.filter(j => j.status === "preventivo").length;
-      const finished = jobs.filter(j => j.status === "finito").length;
-      const paid = jobs.filter(j => j.status === "pagato").length;
-      const balanceDue = jobs.filter(j => j.status !== "pagato").reduce((s,j) => s + jobBalance(j), 0);
-
-      document.getElementById("statsDetails").innerHTML = `
-        <div class="mini-grid">
-          <div class="mini-box"><b>${jobs.length}</b><span>lavori totali</span></div>
-          <div class="mini-box"><b>${active}</b><span>attivi</span></div>
-          <div class="mini-box"><b>${estimates}</b><span>preventivi</span></div>
-          <div class="mini-box"><b>${finished}</b><span>finiti</span></div>
-          <div class="mini-box"><b>${paid}</b><span>pagati</span></div>
-          <div class="mini-box"><b>${doneTrees ? money(net / doneTrees) : money(0)}</b><span>netto medio per ulivo</span></div>
-          <div class="mini-box"><b>${money(balanceDue)}</b><span>saldo da incassare</span></div>
+        <h3>Dati oliveto</h3>
+        <div class="grid grid-2">
+          <label><span>Cultivar / tipo olivo</span>
+            <select id="fCultivar">
+              <option value="">Non indicato</option>
+              <option>Taggiasca</option><option>Leccino</option><option>Frantoio</option><option>Moraiolo</option>
+              <option>Pendolino</option><option>Coratina</option><option>Ogliarola</option><option>Arbequina</option>
+              <option>Nocellara</option><option>Altro / misto</option>
+            </select>
+          </label>
+          <label><span>Età stimata</span>
+            <select id="fAge">
+              <option value="">Non indicata</option><option>Giovane</option><option>Adulta</option><option>Vecchia</option><option>Secolare</option>
+            </select>
+          </label>
         </div>
-      `;
-    }
 
-    function buildEstimateText(job) {
-      const estimate = jobEstimate(job);
-      const balance = jobBalance(job);
+        <div class="grid grid-2">
+          <label><span>Vigoria</span>
+            <select id="fVigor">
+              <option value="">Non indicata</option><option>Bassa</option><option>Media</option><option>Alta</option>
+            </select>
+          </label>
+          <label><span>Forma pianta</span>
+            <select id="fShape">
+              <option value="">Non indicata</option><option>Vaso</option><option>Vaso policonico</option><option>Cespuglio</option><option>Abbandonato / da recupero</option><option>Altro</option>
+            </select>
+          </label>
+        </div>
 
-      let priceLine = "";
-      if (job.priceMode === "tree") {
-        priceLine = `Prezzo a ulivo: ${money(job.priceValue)}\nTotale preventivo: ${money(estimate)}`;
-      } else if (job.priceMode === "day") {
-        priceLine = `Prezzo a giornata: ${money(job.priceValue)}\nGiorni stimati: ${job.estimatedDays || 0}\nTotale preventivo: ${money(estimate)}`;
-      } else {
-        priceLine = `Prezzo a corpo: ${money(estimate)}`;
-      }
+        <div class="grid grid-2">
+          <label><span>Tipo prezzo</span>
+            <select id="fPriceMode" onchange="updatePriceLabels()">
+              <option value="tree">Prezzo a ulivo</option><option value="day">Prezzo a giornata</option><option value="fixed">Prezzo a corpo</option>
+            </select>
+          </label>
+          <label><span id="priceValueLabel">Prezzo a ulivo €</span><input id="fPriceValue" type="number" min="0" step="0.01" placeholder="Es. 5" /></label>
+        </div>
 
-      return `PREVENTIVO POTATURA ULIVI
+        <div class="grid grid-2">
+          <label><span>Giorni stimati, se prezzo a giornata</span><input id="fEstimatedDays" type="number" min="0" placeholder="Es. 4" /></label>
+          <label><span>Acconto ricevuto €</span><input id="fDeposit" type="number" min="0" step="0.01" placeholder="Es. 100" /></label>
+        </div>
+
+        <label><span>Tipo lavoro</span>
+          <select id="fWorkType">
+            <option>Potatura ordinaria</option><option>Potatura di recupero</option><option>Potatura di riforma</option>
+            <option>Potatura leggera</option><option>Potatura pesante</option><option>Sopralluogo / preventivo</option>
+          </select>
+        </label>
+
+        <label><span>Stato</span>
+          <select id="fStatus">
+            <option value="preventivo">Preventivo</option><option value="attivo">Lavoro attivo</option><option value="finito">Finito</option><option value="pagato">Pagato</option>
+          </select>
+        </label>
+
+        <label><span>Tipo foto iniziale</span>
+          <select id="fPhotoType">
+            <option value="sopralluogo">Sopralluogo</option><option value="prima">Prima</option><option value="durante">Durante</option><option value="dopo">Dopo</option><option value="altro">Altro</option>
+          </select>
+        </label>
+        <label><span>Foto del terreno / sopralluogo</span><input id="fPhoto" type="file" accept="image/*" /></label>
+        <label><span>Note</span><textarea id="fNotes" placeholder="Es. terreno scosceso, alberi molto alti, serve motosega..."></textarea></label>
+        <button class="btn-main btn-full" onclick="createJob()">Salva lavoro</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-jobs" class="screen">
+    <div class="section-title"><h2>Lavori</h2><button class="btn-main" onclick="showScreen('new')">➕ Nuovo</button></div>
+    <input class="search" id="jobSearch" oninput="renderJobs()" placeholder="Cerca cliente, luogo, cultivar, note..." />
+    <div class="btn-row" style="margin-bottom:12px;">
+      <button class="btn-soft" onclick="setJobFilter('all')">Tutti</button>
+      <button class="btn-soft" onclick="setJobFilter('preventivo')">Preventivi</button>
+      <button class="btn-soft" onclick="setJobFilter('attivo')">Attivi</button>
+      <button class="btn-soft" onclick="setJobFilter('finito')">Finiti</button>
+      <button class="btn-soft" onclick="setJobFilter('pagato')">Pagati</button>
+    </div>
+    <div id="jobsList" class="list"></div>
+  </section>
+
+  <section id="screen-calendar" class="screen">
+    <div class="section-title"><h2>Calendario lavori</h2></div>
+    <div class="card"><p class="muted small">Qui vedi i lavori ordinati per data prevista e le giornate registrate.</p></div>
+    <div id="calendarList" class="list" style="margin-top:12px;"></div>
+  </section>
+
+  <section id="screen-stats" class="screen">
+    <div class="section-title"><h2>Statistiche</h2></div>
+    <div class="grid grid-3">
+      <div class="card kpi"><div class="kpi-label">Ulivi totali registrati</div><div class="kpi-value" id="statTotalTrees">0</div></div>
+      <div class="card kpi"><div class="kpi-label">Ulivi già potati</div><div class="kpi-value" id="statDoneTrees">0</div></div>
+      <div class="card kpi"><div class="kpi-label">Lordo registrato</div><div class="kpi-value money" id="statGross">0 €</div></div>
+    </div>
+    <div class="grid grid-3" style="margin-top:12px;">
+      <div class="card kpi"><div class="kpi-label">Spese registrate</div><div class="kpi-value expense" id="statExpenses">0 €</div></div>
+      <div class="card kpi"><div class="kpi-label">Netto registrato</div><div class="kpi-value netto" id="statNet">0 €</div></div>
+      <div class="card kpi"><div class="kpi-label">Schede salute</div><div class="kpi-value" id="statHealth">0</div></div>
+    </div>
+    <div class="card" style="margin-top:12px;"><h3>Riepilogo lavori</h3><div id="statsDetails"></div></div>
+  </section>
+
+  <section id="screen-backup" class="screen">
+    <div class="section-title"><h2>Backup dati</h2></div>
+    <div class="card"><h3>Esporta backup</h3><p class="muted small">Scarica un file JSON con tutti i lavori salvati.</p><button class="btn-main btn-full" onclick="exportBackup()">📤 Esporta backup</button></div>
+    <div class="card" style="margin-top:12px;"><h3>Importa backup</h3><p class="muted small">Carica un backup JSON già esportato.</p><input id="backupFile" type="file" accept="application/json" /><button class="btn-gold btn-full" style="margin-top:10px;" onclick="importBackup()">📥 Importa backup</button></div>
+    <div class="card danger-zone" style="margin-top:12px;"><h3>Zona pericolosa</h3><p class="muted small">Cancella tutti i dati salvati su questo telefono/browser.</p><button class="btn-red btn-full" onclick="clearAllData()">🗑 Cancella tutto</button></div>
+  </section>
+</main>
+
+<div id="jobModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 id="modalTitle">Dettaglio lavoro</h2>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="nav-home" onclick="showScreen('home')"><span class="nav-icon">🏠</span>Home</button>
+  <button class="nav-btn" id="nav-new" onclick="showScreen('new')"><span class="nav-icon">➕</span>Nuovo</button>
+  <button class="nav-btn" id="nav-jobs" onclick="showScreen('jobs')"><span class="nav-icon">🌳</span>Lavori</button>
+  <button class="nav-btn" id="nav-calendar" onclick="showScreen('calendar')"><span class="nav-icon">📅</span>Agenda</button>
+  <button class="nav-btn" id="nav-backup" onclick="showScreen('backup')"><span class="nav-icon">💾</span>Backup</button>
+</nav>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const STORAGE_KEY="appiero_v4_jobs";
+const OLD_STORAGE_KEYS=["appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
+let jobs=[],currentFilter="all",openedJobId=null;
+const euro=new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"});
+
+function todayISO(){return new Date().toISOString().slice(0,10)}
+function formatDate(iso){if(!iso)return"Senza data";const d=new Date(iso+"T12:00:00");return d.toLocaleDateString("it-IT",{weekday:"short",day:"2-digit",month:"2-digit",year:"numeric"})}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
+function money(n){return euro.format(Number(n||0))}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(jobs));renderAll()}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2100)}
+function escapeHtml(str){return String(str||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function escapeAttr(str){return escapeHtml(str).replaceAll("\n"," ")}
+function fileToDataURL(file){return new Promise((resolve,reject)=>{if(!file)return resolve("");const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
+
+function normalizeJob(job){
+  if(!job.deposit)job.deposit=0;
+  if(!job.cultivar)job.cultivar="";
+  if(!job.age)job.age="";
+  if(!job.vigor)job.vigor="";
+  if(!job.shape)job.shape="";
+  if(!Array.isArray(job.photos))job.photos=[];
+  if(!Array.isArray(job.photoItems))job.photoItems=[];
+  if(!Array.isArray(job.healthChecks))job.healthChecks=[];
+  if(!Array.isArray(job.days))job.days=[];
+  if(job.photos.length&&job.photoItems.length===0){
+    job.photoItems=job.photos.map(src=>({id:uid(),type:"altro",src,createdAt:new Date().toISOString()}));
+  }
+  job.days=job.days.map(d=>({
+    id:d.id||uid(),date:d.date||todayISO(),trees:Number(d.trees||0),hours:Number(d.hours||0),dayMoney:Number(d.dayMoney||0),
+    expenseFuel:Number(d.expenseFuel||0),expenseFood:Number(d.expenseFood||0),expenseTools:Number(d.expenseTools||0),expenseOther:Number(d.expenseOther||0),
+    notes:d.notes||"",photo:d.photo||""
+  }));
+  job.healthChecks=job.healthChecks.map(h=>({
+    id:h.id||uid(),date:h.date||todayISO(),treeRef:h.treeRef||"",photoPart:h.photoPart||"",condition:h.condition||"Da controllare",
+    priority:h.priority||"Media",symptoms:Array.isArray(h.symptoms)?h.symptoms:[],diseases:Array.isArray(h.diseases)?h.diseases:[],
+    note:h.note||"",photo:h.photo||""
+  }));
+  return job;
+}
+
+function load(){
+  try{
+    let raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw){for(const k of OLD_STORAGE_KEYS){raw=localStorage.getItem(k);if(raw)break}}
+    jobs=JSON.parse(raw||"[]").map(normalizeJob);
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(jobs));
+  }catch(e){jobs=[]}
+}
+
+function showScreen(name){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("screen-"+name).classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  const nav=document.getElementById("nav-"+name);if(nav)nav.classList.add("active");
+  renderAll();window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function updatePriceLabels(){
+  const mode=document.getElementById("fPriceMode").value,label=document.getElementById("priceValueLabel");
+  if(mode==="tree")label.textContent="Prezzo a ulivo €";
+  if(mode==="day")label.textContent="Prezzo a giornata €";
+  if(mode==="fixed")label.textContent="Prezzo totale a corpo €";
+}
+
+async function createJob(){
+  const client=document.getElementById("fClient").value.trim();
+  if(!client){toast("Inserisci il cliente");return}
+  const photoFile=document.getElementById("fPhoto").files[0];
+  const photo=await fileToDataURL(photoFile);
+  const photoType=document.getElementById("fPhotoType").value;
+  const job={
+    id:uid(),createdAt:new Date().toISOString(),client,
+    phone:document.getElementById("fPhone").value.trim(),
+    place:document.getElementById("fPlace").value.trim(),
+    startDate:document.getElementById("fDate").value||todayISO(),
+    totalTrees:Number(document.getElementById("fTotalTrees").value||0),
+    cultivar:document.getElementById("fCultivar").value,
+    age:document.getElementById("fAge").value,
+    vigor:document.getElementById("fVigor").value,
+    shape:document.getElementById("fShape").value,
+    priceMode:document.getElementById("fPriceMode").value,
+    priceValue:Number(document.getElementById("fPriceValue").value||0),
+    estimatedDays:Number(document.getElementById("fEstimatedDays").value||0),
+    deposit:Number(document.getElementById("fDeposit").value||0),
+    workType:document.getElementById("fWorkType").value,
+    status:document.getElementById("fStatus").value,
+    notes:document.getElementById("fNotes").value.trim(),
+    photos:photo?[photo]:[],
+    photoItems:photo?[{id:uid(),type:photoType,src:photo,createdAt:new Date().toISOString()}]:[],
+    days:[],
+    healthChecks:[]
+  };
+  jobs.unshift(job);clearForm();save();toast("Lavoro salvato");showScreen("jobs");
+}
+
+function clearForm(){
+  ["fClient","fPhone","fPlace","fTotalTrees","fPriceValue","fEstimatedDays","fDeposit","fNotes"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("fDate").value=todayISO();
+  document.getElementById("fCultivar").value="";
+  document.getElementById("fAge").value="";
+  document.getElementById("fVigor").value="";
+  document.getElementById("fShape").value="";
+  document.getElementById("fPriceMode").value="tree";
+  document.getElementById("fStatus").value="preventivo";
+  document.getElementById("fPhotoType").value="sopralluogo";
+  document.getElementById("fPhoto").value="";
+  updatePriceLabels();
+}
+
+function jobDoneTrees(job){return job.days.reduce((s,d)=>s+Number(d.trees||0),0)}
+function dayExpenses(day){return Number(day.expenseFuel||0)+Number(day.expenseFood||0)+Number(day.expenseTools||0)+Number(day.expenseOther||0)}
+function jobExpenses(job){return job.days.reduce((s,d)=>s+dayExpenses(d),0)}
+function jobDayGross(job,day){
+  const trees=Number(day.trees||0);
+  if(job.priceMode==="tree")return trees*Number(job.priceValue||0);
+  if(job.priceMode==="day")return Number(day.dayMoney||job.priceValue||0);
+  if(job.priceMode==="fixed"){if(!job.totalTrees)return 0;return trees*(Number(job.priceValue||0)/Number(job.totalTrees||1))}
+  return 0;
+}
+function jobDayNet(job,day){return jobDayGross(job,day)-dayExpenses(day)}
+function jobGross(job){return job.days.reduce((s,d)=>s+jobDayGross(job,d),0)}
+function jobNet(job){return job.days.reduce((s,d)=>s+jobDayNet(job,d),0)}
+function jobEstimate(job){
+  if(job.priceMode==="tree")return Number(job.totalTrees||0)*Number(job.priceValue||0);
+  if(job.priceMode==="day")return Number(job.estimatedDays||0)*Number(job.priceValue||0);
+  if(job.priceMode==="fixed")return Number(job.priceValue||0);
+  return 0;
+}
+function jobBalance(job){return Math.max(0,jobEstimate(job)-Number(job.deposit||0))}
+function jobRemaining(job){return Math.max(0,Number(job.totalTrees||0)-jobDoneTrees(job))}
+function jobProgress(job){if(!job.totalTrees)return 0;return Math.min(100,Math.round((jobDoneTrees(job)/job.totalTrees)*100))}
+function statusLabel(s){return s==="preventivo"?"Preventivo":s==="attivo"?"Attivo":s==="finito"?"Finito":s==="pagato"?"Pagato":s}
+function statusClass(s){return s==="preventivo"?"badge-open":s==="attivo"?"badge-work":s==="finito"?"badge-done":s==="pagato"?"badge-paid":""}
+function priceModeLabel(job){return job.priceMode==="tree"?"Prezzo a ulivo":job.priceMode==="day"?"Prezzo a giornata":job.priceMode==="fixed"?"Prezzo a corpo":"Prezzo"}
+
+function renderJobCard(job){
+  const done=jobDoneTrees(job),remaining=jobRemaining(job),progress=jobProgress(job),gross=jobGross(job),expenses=jobExpenses(job),net=jobNet(job),estimate=jobEstimate(job),balance=jobBalance(job);
+  return `
+  <div class="job-card">
+    <div class="job-top">
+      <div>
+        <div class="job-title">${escapeHtml(job.client)}</div>
+        <div class="muted small">${escapeHtml(job.place||"Luogo non indicato")}</div>
+        <div class="muted small">${formatDate(job.startDate)} · ${escapeHtml(job.workType||"")}</div>
+        <div class="muted small">Cultivar: ${escapeHtml(job.cultivar||"non indicata")} · Salute: ${(job.healthChecks||[]).length} schede</div>
+      </div>
+      <span class="badge ${statusClass(job.status)}">${statusLabel(job.status)}</span>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" style="width:${progress}%"></div></div>
+    <div class="mini-grid">
+      <div class="mini-box"><b>${done}</b><span>potati</span></div>
+      <div class="mini-box"><b>${remaining}</b><span>restanti</span></div>
+      <div class="mini-box"><b>${progress}%</b><span>avanzamento</span></div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-box"><b class="money">${money(gross)}</b><span>lordo</span></div>
+      <div class="mini-box"><b class="expense">${money(expenses)}</b><span>spese</span></div>
+      <div class="mini-box"><b class="netto">${money(net)}</b><span>netto</span></div>
+    </div>
+    <div class="mini-grid">
+      <div class="mini-box"><b>${money(estimate)}</b><span>preventivo</span></div>
+      <div class="mini-box"><b>${money(job.deposit||0)}</b><span>acconto</span></div>
+      <div class="mini-box"><b>${money(balance)}</b><span>saldo</span></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-main" onclick="openJob('${job.id}')">Apri</button>
+      <button class="btn-gold" onclick="quickAddDay('${job.id}')">+ Giornata</button>
+      <button class="btn-blue" onclick="quickHealth('${job.id}')">Salute</button>
+    </div>
+  </div>`;
+}
+
+function renderJobs(){
+  const q=(document.getElementById("jobSearch")?.value||"").toLowerCase().trim();
+  const filtered=jobs.filter(job=>{
+    const text=[job.client,job.place,job.phone,job.notes,job.workType,job.status,job.cultivar,job.age,job.vigor,job.shape].join(" ").toLowerCase();
+    return (!q||text.includes(q))&&(currentFilter==="all"||job.status===currentFilter);
+  });
+  const box=document.getElementById("jobsList");
+  if(!filtered.length){box.innerHTML=`<div class="empty">Nessun lavoro trovato.</div>`;return}
+  box.innerHTML=filtered.map(renderJobCard).join("");
+}
+function setJobFilter(f){currentFilter=f;renderJobs()}
+
+function renderHome(){
+  const today=todayISO();let todayTrees=0,todayGross=0,todayNet=0,todayExpenses=0,todayRows=0;
+  jobs.forEach(job=>job.days.forEach(d=>{if(d.date===today){todayRows++;todayTrees+=Number(d.trees||0);todayGross+=jobDayGross(job,d);todayNet+=jobDayNet(job,d);todayExpenses+=dayExpenses(d)}}));
+  document.getElementById("kpiTodayTrees").textContent=todayTrees;
+  document.getElementById("kpiTodayGross").textContent=money(todayGross);
+  document.getElementById("kpiTodayNet").textContent=money(todayNet);
+  document.getElementById("kpiTodayExpenses").textContent="spese: "+money(todayExpenses);
+  document.getElementById("kpiTodayJobs").textContent=todayRows+" giornate registrate";
+  document.getElementById("kpiActiveJobs").textContent=jobs.filter(j=>j.status==="attivo").length;
+  document.getElementById("kpiOpenEstimates").textContent=jobs.filter(j=>j.status==="preventivo").length;
+  document.getElementById("kpiHealthChecks").textContent=jobs.reduce((s,j)=>s+(j.healthChecks||[]).length,0);
+  const recent=jobs.slice(0,4),box=document.getElementById("homeRecentJobs");
+  box.innerHTML=recent.length?recent.map(renderJobCard).join(""):`<div class="empty">Ancora nessun lavoro. Premi “Nuovo lavoro”.</div>`;
+}
+
+function renderCalendar(){
+  const events=[];
+  jobs.forEach(job=>{
+    events.push({date:job.startDate||"",html:`<div class="calendar-day"><b>${formatDate(job.startDate)}</b><br><strong>${escapeHtml(job.client)}</strong> — ${escapeHtml(job.place||"Luogo non indicato")}<br><span class="muted small">${statusLabel(job.status)} · ${jobDoneTrees(job)}/${job.totalTrees||0} ulivi · netto ${money(jobNet(job))}</span><div style="margin-top:8px;"><button class="btn-soft" onclick="openJob('${job.id}')">Apri lavoro</button></div></div>`});
+    job.days.forEach(d=>events.push({date:d.date,html:`<div class="calendar-day"><b>${formatDate(d.date)}</b><br><strong>${escapeHtml(job.client)}</strong> — giornata registrata<br><span class="muted small">${Number(d.trees||0)} ulivi · lordo ${money(jobDayGross(job,d))} · spese ${money(dayExpenses(d))} · netto ${money(jobDayNet(job,d))}</span></div>`}));
+    (job.healthChecks||[]).forEach(h=>events.push({date:h.date,html:`<div class="calendar-day"><b>${formatDate(h.date)}</b><br><strong>${escapeHtml(job.client)}</strong> — controllo salute olivo<br><span class="muted small">${escapeHtml(h.condition)} · priorità ${escapeHtml(h.priority)} · ${escapeHtml((h.diseases||[]).join(", ")||"nessuna malattia indicata")}</span></div>`}));
+  });
+  events.sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+  document.getElementById("calendarList").innerHTML=events.length?events.map(e=>e.html).join(""):`<div class="empty">Nessuna data in calendario.</div>`;
+}
+
+function renderStats(){
+  const totalTrees=jobs.reduce((s,j)=>s+Number(j.totalTrees||0),0),doneTrees=jobs.reduce((s,j)=>s+jobDoneTrees(j),0),gross=jobs.reduce((s,j)=>s+jobGross(j),0),expenses=jobs.reduce((s,j)=>s+jobExpenses(j),0),net=jobs.reduce((s,j)=>s+jobNet(j),0),health=jobs.reduce((s,j)=>s+(j.healthChecks||[]).length,0);
+  document.getElementById("statTotalTrees").textContent=totalTrees;
+  document.getElementById("statDoneTrees").textContent=doneTrees;
+  document.getElementById("statGross").textContent=money(gross);
+  document.getElementById("statExpenses").textContent=money(expenses);
+  document.getElementById("statNet").textContent=money(net);
+  document.getElementById("statHealth").textContent=health;
+  const active=jobs.filter(j=>j.status==="attivo").length,estimates=jobs.filter(j=>j.status==="preventivo").length,finished=jobs.filter(j=>j.status==="finito").length,paid=jobs.filter(j=>j.status==="pagato").length,balanceDue=jobs.filter(j=>j.status!=="pagato").reduce((s,j)=>s+jobBalance(j),0);
+  document.getElementById("statsDetails").innerHTML=`<div class="mini-grid">
+    <div class="mini-box"><b>${jobs.length}</b><span>lavori totali</span></div>
+    <div class="mini-box"><b>${active}</b><span>attivi</span></div>
+    <div class="mini-box"><b>${estimates}</b><span>preventivi</span></div>
+    <div class="mini-box"><b>${finished}</b><span>finiti</span></div>
+    <div class="mini-box"><b>${paid}</b><span>pagati</span></div>
+    <div class="mini-box"><b>${doneTrees?money(net/doneTrees):money(0)}</b><span>netto medio per ulivo</span></div>
+    <div class="mini-box"><b>${money(balanceDue)}</b><span>saldo da incassare</span></div>
+    <div class="mini-box"><b>${health}</b><span>controlli salute</span></div>
+  </div>`;
+}
+
+function renderPhotos(job){
+  const items=Array.isArray(job.photoItems)?job.photoItems:[];
+  if(!items.length)return`<div class="empty">Nessuna foto salvata.</div>`;
+  const groups=[["sopralluogo","Foto sopralluogo"],["prima","Foto prima"],["durante","Foto durante"],["dopo","Foto dopo"],["salute","Foto salute olivo"],["altro","Altre foto"]];
+  return groups.map(([type,label])=>{
+    const list=items.filter(p=>p.type===type);
+    if(!list.length)return"";
+    return `<div class="photo-section"><h3>${label}</h3><div class="photo-grid">${list.map(p=>`<img class="photo-thumb" src="${p.src}">`).join("")}</div></div>`;
+  }).join("")||`<div class="empty">Nessuna foto salvata.</div>`;
+}
+
+function renderHealthChecks(job){
+  const list=job.healthChecks||[];
+  if(!list.length)return`<div class="empty">Nessuna scheda salute salvata.</div>`;
+  return list.slice().reverse().map(h=>`
+    <div class="health-row">
+      <b>${formatDate(h.date)}</b> <span class="badge badge-health">${escapeHtml(h.condition)}</span><br>
+      Pianta/zona: <strong>${escapeHtml(h.treeRef||"non indicata")}</strong><br>
+      Foto: <strong>${escapeHtml(h.photoPart||"non indicata")}</strong> · Priorità: <strong>${escapeHtml(h.priority)}</strong><br>
+      Sintomi: <span class="muted small">${escapeHtml((h.symptoms||[]).join(", ")||"nessuno")}</span><br>
+      Possibili problemi: <span class="muted small">${escapeHtml((h.diseases||[]).join(", ")||"nessuno")}</span><br>
+      <span class="muted small">${escapeHtml(h.note||"")}</span>
+      ${h.photo?`<div class="photo-grid"><img class="photo-thumb" src="${h.photo}"></div>`:""}
+    </div>`).join("");
+}
+
+function buildEstimateText(job){
+  const estimate=jobEstimate(job),balance=jobBalance(job);
+  let priceLine="";
+  if(job.priceMode==="tree")priceLine=`Prezzo a ulivo: ${money(job.priceValue)}\nTotale preventivo: ${money(estimate)}`;
+  else if(job.priceMode==="day")priceLine=`Prezzo a giornata: ${money(job.priceValue)}\nGiorni stimati: ${job.estimatedDays||0}\nTotale preventivo: ${money(estimate)}`;
+  else priceLine=`Prezzo a corpo: ${money(estimate)}`;
+  return `PREVENTIVO POTATURA ULIVI
 
 Cliente: ${job.client}
-Località: ${job.place || "Non indicata"}
-Tipo lavoro: ${job.workType || "Potatura ulivi"}
+Località: ${job.place||"Non indicata"}
+Tipo lavoro: ${job.workType||"Potatura ulivi"}
 Data prevista: ${formatDate(job.startDate)}
 
-Totale ulivi: ${job.totalTrees || 0}
+Cultivar/tipo olivo: ${job.cultivar||"Non indicato"}
+Età stimata: ${job.age||"Non indicata"}
+Vigoria: ${job.vigor||"Non indicata"}
+Forma: ${job.shape||"Non indicata"}
+
+Totale ulivi: ${job.totalTrees||0}
 ${priceLine}
 
-Acconto ricevuto: ${money(job.deposit || 0)}
+Acconto ricevuto: ${money(job.deposit||0)}
 Saldo da incassare: ${money(balance)}
 
 Note:
-${job.notes || "Nessuna nota"}
+${job.notes||"Nessuna nota"}
 
 ApPiero`;
-    }
+}
 
-    function buildSummaryText(job) {
-      const done = jobDoneTrees(job);
-      const remaining = jobRemaining(job);
-      const progress = jobProgress(job);
-      const gross = jobGross(job);
-      const expenses = jobExpenses(job);
-      const net = jobNet(job);
-      const estimate = jobEstimate(job);
-      const balance = jobBalance(job);
-
-      const daysText = job.days.length
-        ? job.days.map(d => `- ${formatDate(d.date)}: ${d.trees} ulivi, lordo ${money(jobDayGross(job, d))}, spese ${money(dayExpenses(d))}, netto ${money(jobDayNet(job, d))}`).join("\n")
-        : "Nessuna giornata registrata.";
-
-      return `RIEPILOGO LAVORO POTATURA ULIVI
+function buildSummaryText(job){
+  const done=jobDoneTrees(job),remaining=jobRemaining(job),progress=jobProgress(job),gross=jobGross(job),expenses=jobExpenses(job),net=jobNet(job),estimate=jobEstimate(job),balance=jobBalance(job);
+  const daysText=job.days.length?job.days.map(d=>`- ${formatDate(d.date)}: ${d.trees} ulivi, lordo ${money(jobDayGross(job,d))}, spese ${money(dayExpenses(d))}, netto ${money(jobDayNet(job,d))}`).join("\n"):"Nessuna giornata registrata.";
+  return `RIEPILOGO LAVORO POTATURA ULIVI
 
 Cliente: ${job.client}
-Località: ${job.place || "Non indicata"}
+Località: ${job.place||"Non indicata"}
 Stato: ${statusLabel(job.status)}
 
-Totale ulivi: ${job.totalTrees || 0}
+Cultivar/tipo olivo: ${job.cultivar||"Non indicato"}
+Età: ${job.age||"Non indicata"}
+Vigoria: ${job.vigor||"Non indicata"}
+Forma: ${job.shape||"Non indicata"}
+
+Totale ulivi: ${job.totalTrees||0}
 Ulivi potati: ${done}
 Ulivi restanti: ${remaining}
 Avanzamento: ${progress}%
 
 Preventivo: ${money(estimate)}
-Acconto: ${money(job.deposit || 0)}
+Acconto: ${money(job.deposit||0)}
 Saldo da incassare: ${money(balance)}
 
 Lordo registrato: ${money(gross)}
@@ -1507,594 +630,356 @@ Giornate:
 ${daysText}
 
 Note:
-${job.notes || "Nessuna nota"}
+${job.notes||"Nessuna nota"}
 
 ApPiero`;
-    }
+}
 
-    async function copyText(text, successMsg) {
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text);
-          toast(successMsg);
-          return;
-        }
-      } catch(e) {}
+function buildHealthText(job){
+  const list=job.healthChecks||[];
+  const rows=list.length?list.map(h=>`- ${formatDate(h.date)} | ${h.treeRef||"pianta/zona non indicata"} | stato: ${h.condition} | priorità: ${h.priority}
+  Sintomi: ${(h.symptoms||[]).join(", ")||"nessuno"}
+  Possibili problemi: ${(h.diseases||[]).join(", ")||"nessuno"}
+  Note: ${h.note||"nessuna"}`).join("\n\n"):"Nessun controllo salute registrato.";
+  return `SCHEDA SALUTE OLIVO
 
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      ta.style.left = "-9999px";
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
+Cliente: ${job.client}
+Località: ${job.place||"Non indicata"}
+Cultivar/tipo olivo: ${job.cultivar||"Non indicato"}
+Età stimata: ${job.age||"Non indicata"}
+Vigoria: ${job.vigor||"Non indicata"}
+Forma: ${job.shape||"Non indicata"}
 
-      try {
-        document.execCommand("copy");
-        toast(successMsg);
-      } catch(e) {
-        toast("Copia non riuscita");
-      }
+Controlli:
+${rows}
 
-      document.body.removeChild(ta);
-    }
+Nota: indicazioni di campo da verificare con tecnico/agronomo in caso di sintomi gravi.
 
-    function copyEstimate(id) {
-      const job = jobs.find(j => j.id === id);
-      if (!job) return;
-      copyText(buildEstimateText(job), "Preventivo copiato");
-    }
+ApPiero`;
+}
 
-    function copySummary(id) {
-      const job = jobs.find(j => j.id === id);
-      if (!job) return;
-      copyText(buildSummaryText(job), "Riepilogo copiato");
-    }
+async function copyText(text,msg){
+  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);toast(msg);return}}catch(e){}
+  const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand("copy");toast(msg)}catch(e){toast("Copia non riuscita")}
+  document.body.removeChild(ta);
+}
+function copyEstimate(id){const job=jobs.find(j=>j.id===id);if(job)copyText(buildEstimateText(job),"Preventivo copiato")}
+function copySummary(id){const job=jobs.find(j=>j.id===id);if(job)copyText(buildSummaryText(job),"Riepilogo copiato")}
+function copyHealth(id){const job=jobs.find(j=>j.id===id);if(job)copyText(buildHealthText(job),"Scheda salute copiata")}
 
-    function showEstimatePreview(id) {
-      const job = jobs.find(j => j.id === id);
-      if (!job) return;
+function showPreview(id,type){
+  const job=jobs.find(j=>j.id===id);if(!job)return;
+  const title=type==="estimate"?"Preventivo WhatsApp":type==="summary"?"Riepilogo WhatsApp":"Scheda salute WhatsApp";
+  const text=type==="estimate"?buildEstimateText(job):type==="summary"?buildSummaryText(job):buildHealthText(job);
+  const fn=type==="estimate"?"copyEstimate":type==="summary"?"copySummary":"copyHealth";
+  document.getElementById("modalContent").innerHTML=`<div class="card"><h3>${title}</h3><div class="quote-box">${escapeHtml(text)}</div><div class="btn-row" style="margin-top:12px;"><button class="btn-main" onclick="${fn}('${id}')">📋 Copia testo</button><button class="btn-soft" onclick="openJob('${id}')">Torna</button></div></div>`;
+}
 
-      document.getElementById("modalContent").innerHTML = `
-        <div class="card">
-          <h3>Preventivo WhatsApp</h3>
-          <div class="quote-box">${escapeHtml(buildEstimateText(job))}</div>
-          <div class="btn-row" style="margin-top:12px;">
-            <button class="btn-main" onclick="copyEstimate('${id}')">📋 Copia preventivo</button>
-            <button class="btn-soft" onclick="openJob('${id}')">Torna</button>
-          </div>
+function openJob(id){
+  openedJobId=id;const job=jobs.find(j=>j.id===id);if(!job)return;
+  const done=jobDoneTrees(job),remaining=jobRemaining(job),progress=jobProgress(job),gross=jobGross(job),expenses=jobExpenses(job),net=jobNet(job),estimate=jobEstimate(job),balance=jobBalance(job);
+  document.getElementById("modalTitle").textContent=job.client;
+  const daysHtml=job.days.length?job.days.slice().reverse().map(d=>`
+    <div class="day-row">
+      <b>${formatDate(d.date)}</b><br>
+      Ulivi potati: <strong>${Number(d.trees||0)}</strong><br>
+      Ore: <strong>${Number(d.hours||0)}</strong><br>
+      Lordo: <span class="money">${money(jobDayGross(job,d))}</span><br>
+      Spese: <span class="expense">${money(dayExpenses(d))}</span><br>
+      Netto: <span class="netto">${money(jobDayNet(job,d))}</span><br>
+      <span class="muted small">Carburante ${money(d.expenseFuel)} · Pranzo ${money(d.expenseFood)} · Attrezzi ${money(d.expenseTools)} · Altro ${money(d.expenseOther)}</span><br>
+      <span class="muted small">${escapeHtml(d.notes||"")}</span>
+    </div>`).join(""):`<div class="empty">Ancora nessuna giornata registrata.</div>`;
+  document.getElementById("modalContent").innerHTML=`
+    <div class="card">
+      <div class="job-top">
+        <div>
+          <h3>${escapeHtml(job.client)}</h3>
+          <div class="muted small">${escapeHtml(job.place||"Luogo non indicato")}</div>
+          <div class="muted small">${job.phone?"Tel: "+escapeHtml(job.phone):""}</div>
         </div>
-      `;
-    }
-
-    function showSummaryPreview(id) {
-      const job = jobs.find(j => j.id === id);
-      if (!job) return;
-
-      document.getElementById("modalContent").innerHTML = `
-        <div class="card">
-          <h3>Riepilogo WhatsApp</h3>
-          <div class="quote-box">${escapeHtml(buildSummaryText(job))}</div>
-          <div class="btn-row" style="margin-top:12px;">
-            <button class="btn-main" onclick="copySummary('${id}')">📋 Copia riepilogo</button>
-            <button class="btn-soft" onclick="openJob('${id}')">Torna</button>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderPhotos(job) {
-      const items = Array.isArray(job.photoItems) ? job.photoItems : [];
-      if (!items.length) return `<div class="empty">Nessuna foto salvata.</div>`;
-
-      const groups = [
-        ["sopralluogo", "Foto sopralluogo"],
-        ["prima", "Foto prima"],
-        ["durante", "Foto durante"],
-        ["dopo", "Foto dopo"],
-        ["altro", "Altre foto"]
-      ];
-
-      return groups.map(([type, label]) => {
-        const list = items.filter(p => p.type === type);
-        if (!list.length) return "";
-        return `
-          <div class="photo-section">
-            <h3>${label}</h3>
-            <div class="photo-grid">
-              ${list.map(p => `<img class="photo-thumb" src="${p.src}">`).join("")}
-            </div>
-          </div>
-        `;
-      }).join("") || `<div class="empty">Nessuna foto salvata.</div>`;
-    }
-
-    function openJob(id) {
-      openedJobId = id;
-      const job = jobs.find(j => j.id === id);
-      if (!job) return;
-
-      const done = jobDoneTrees(job);
-      const remaining = jobRemaining(job);
-      const progress = jobProgress(job);
-      const gross = jobGross(job);
-      const expenses = jobExpenses(job);
-      const net = jobNet(job);
-      const estimate = jobEstimate(job);
-      const balance = jobBalance(job);
-
-      document.getElementById("modalTitle").textContent = job.client;
-
-      const photosHtml = renderPhotos(job);
-
-      const daysHtml = job.days.length
-        ? job.days.slice().reverse().map((d) => `
-          <div class="day-row">
-            <b>${formatDate(d.date)}</b><br>
-            Ulivi potati: <strong>${Number(d.trees || 0)}</strong><br>
-            Ore: <strong>${Number(d.hours || 0)}</strong><br>
-            Lordo: <span class="money">${money(jobDayGross(job, d))}</span><br>
-            Spese: <span class="expense">${money(dayExpenses(d))}</span><br>
-            Netto: <span class="netto">${money(jobDayNet(job, d))}</span><br>
-            <span class="muted small">
-              Carburante ${money(d.expenseFuel)} · Pranzo ${money(d.expenseFood)} · Attrezzi ${money(d.expenseTools)} · Altro ${money(d.expenseOther)}
-            </span><br>
-            <span class="muted small">${escapeHtml(d.notes || "")}</span>
-          </div>
-        `).join("")
-        : `<div class="empty">Ancora nessuna giornata registrata.</div>`;
-
-      document.getElementById("modalContent").innerHTML = `
-        <div class="card">
-          <div class="job-top">
-            <div>
-              <h3>${escapeHtml(job.client)}</h3>
-              <div class="muted small">${escapeHtml(job.place || "Luogo non indicato")}</div>
-              <div class="muted small">${job.phone ? "Tel: " + escapeHtml(job.phone) : ""}</div>
-            </div>
-            <span class="badge ${statusClass(job.status)}">${statusLabel(job.status)}</span>
-          </div>
-
-          <div class="progress-wrap">
-            <div class="progress-bar" style="width:${progress}%"></div>
-          </div>
-
-          <div class="mini-grid">
-            <div class="mini-box"><b>${job.totalTrees || 0}</b><span>ulivi totali</span></div>
-            <div class="mini-box"><b>${done}</b><span>potati</span></div>
-            <div class="mini-box"><b>${remaining}</b><span>restanti</span></div>
-          </div>
-
-          <div class="mini-grid">
-            <div class="mini-box"><b class="money">${money(gross)}</b><span>lordo</span></div>
-            <div class="mini-box"><b class="expense">${money(expenses)}</b><span>spese</span></div>
-            <div class="mini-box"><b class="netto">${money(net)}</b><span>netto</span></div>
-          </div>
-
-          <div class="mini-grid">
-            <div class="mini-box"><b>${money(estimate)}</b><span>preventivo</span></div>
-            <div class="mini-box"><b>${money(job.deposit || 0)}</b><span>acconto</span></div>
-            <div class="mini-box"><b>${money(balance)}</b><span>saldo</span></div>
-          </div>
-
-          <p class="muted small"><strong>Tipo lavoro:</strong> ${escapeHtml(job.workType || "")}</p>
-          <p class="muted small"><strong>Tipo prezzo:</strong> ${priceModeLabel(job)} · ${money(job.priceValue || 0)}</p>
-          <p class="muted small"><strong>Note:</strong> ${escapeHtml(job.notes || "Nessuna nota")}</p>
-
-          <div class="btn-row">
-            <button class="btn-main" onclick="showAddDayForm('${job.id}')">➕ Aggiungi giornata</button>
-            <button class="btn-gold" onclick="showAddPhotoForm('${job.id}')">📷 Aggiungi foto</button>
-            <button class="btn-blue" onclick="showEditJobForm('${job.id}')">✏️ Modifica</button>
-          </div>
-
-          <div class="btn-row" style="margin-top:9px;">
-            <button class="btn-gold" onclick="showEstimatePreview('${job.id}')">📋 Preventivo WhatsApp</button>
-            <button class="btn-blue" onclick="showSummaryPreview('${job.id}')">📋 Riepilogo WhatsApp</button>
-          </div>
-
-          <div class="btn-row" style="margin-top:9px;">
-            <button class="btn-soft" onclick="changeStatus('${job.id}','preventivo')">Preventivo</button>
-            <button class="btn-soft" onclick="changeStatus('${job.id}','attivo')">Attivo</button>
-            <button class="btn-soft" onclick="changeStatus('${job.id}','finito')">Finito</button>
-            <button class="btn-soft" onclick="changeStatus('${job.id}','pagato')">Pagato</button>
-          </div>
-        </div>
-
-        <div class="section-title"><h2>Foto ordinate</h2></div>
-        ${photosHtml}
-
-        <div class="section-title"><h2>Giornate</h2></div>
-        ${daysHtml}
-
-        <div class="card danger-zone" style="margin-top:12px;">
-          <h3>Elimina lavoro</h3>
-          <p class="muted small">Cancella definitivamente questo lavoro.</p>
-          <button class="btn-red btn-full" onclick="deleteJob('${job.id}')">Elimina lavoro</button>
-        </div>
-      `;
-
-      document.getElementById("jobModal").classList.add("active");
-    }
-
-    function closeModal() {
-      document.getElementById("jobModal").classList.remove("active");
-      openedJobId = null;
-    }
-
-    function showAddDayForm(id) {
-      const job = jobs.find(j => j.id === id);
-      if (!job) return;
-
-      document.getElementById("modalContent").innerHTML = `
-        <div class="card">
-          <h3>Aggiungi giornata</h3>
-
-          <label>
-            <span>Data</span>
-            <input id="dDate" type="date" value="${todayISO()}">
-          </label>
-
-          <label>
-            <span>Ulivi potati oggi</span>
-            <input id="dTrees" type="number" min="0" placeholder="Es. 35">
-          </label>
-
-          <label>
-            <span>Ore lavorate</span>
-            <input id="dHours" type="number" min="0" step="0.5" placeholder="Es. 7">
-          </label>
-
-          ${job.priceMode === "day" ? `
-            <label>
-              <span>Guadagno lordo giornata €</span>
-              <input id="dDayMoney" type="number" min="0" step="0.01" value="${job.priceValue || 0}">
-            </label>
-          ` : `
-            <input id="dDayMoney" type="hidden" value="0">
-          `}
-
-          <h3>Spese giornata</h3>
-
-          <div class="grid grid-2">
-            <label>
-              <span>Carburante €</span>
-              <input id="dExpenseFuel" type="number" min="0" step="0.01" placeholder="Es. 15">
-            </label>
-
-            <label>
-              <span>Pranzo €</span>
-              <input id="dExpenseFood" type="number" min="0" step="0.01" placeholder="Es. 10">
-            </label>
-          </div>
-
-          <div class="grid grid-2">
-            <label>
-              <span>Attrezzatura / materiali €</span>
-              <input id="dExpenseTools" type="number" min="0" step="0.01" placeholder="Es. 5">
-            </label>
-
-            <label>
-              <span>Altre spese €</span>
-              <input id="dExpenseOther" type="number" min="0" step="0.01" placeholder="Es. 0">
-            </label>
-          </div>
-
-          <label>
-            <span>Tipo foto giornata</span>
-            <select id="dPhotoType">
-              <option value="durante">Durante</option>
-              <option value="prima">Prima</option>
-              <option value="dopo">Dopo</option>
-              <option value="sopralluogo">Sopralluogo</option>
-              <option value="altro">Altro</option>
-            </select>
-          </label>
-
-          <label>
-            <span>Foto giornata</span>
-            <input id="dPhoto" type="file" accept="image/*">
-          </label>
-
-          <label>
-            <span>Note giornata</span>
-            <textarea id="dNotes" placeholder="Es. parte alta finita, restano alberi vicino strada..."></textarea>
-          </label>
-
-          <div class="btn-row">
-            <button class="btn-main" onclick="addDay('${id}')">Salva giornata</button>
-            <button class="btn-soft" onclick="openJob('${id}')">Annulla</button>
-          </div>
-        </div>
-      `;
-    }
-
-    async function addDay(id) {
-      const job = jobs.find(j => j.id === id);
-      if (!job) return;
-
-      const trees = Number(document.getElementById("dTrees").value || 0);
-
-      if (trees <= 0) {
-        toast("Inserisci gli ulivi potati");
-        return;
-      }
-
-      const photoFile = document.getElementById("dPhoto").files[0];
-      const photo = await fileToDataURL(photoFile);
-      const photoType = document.getElementById("dPhotoType").value;
-
-      const day = {
-        id: uid(),
-        date: document.getElementById("dDate").value || todayISO(),
-        trees,
-        hours: Number(document.getElementById("dHours").value || 0),
-        dayMoney: Number(document.getElementById("dDayMoney").value || 0),
-        expenseFuel: Number(document.getElementById("dExpenseFuel").value || 0),
-        expenseFood: Number(document.getElementById("dExpenseFood").value || 0),
-        expenseTools: Number(document.getElementById("dExpenseTools").value || 0),
-        expenseOther: Number(document.getElementById("dExpenseOther").value || 0),
-        notes: document.getElementById("dNotes").value.trim(),
-        photo
-      };
-
-      job.days.push(day);
-
-      if (photo) {
-        job.photos.push(photo);
-        job.photoItems.push({
-          id: uid(),
-          type: photoType,
-          src: photo,
-          createdAt: new Date().toISOString()
-        });
-      }
-
-      if (job.status === "preventivo") job.status = "attivo";
-
-      save();
-      toast("Giornata salvata");
-      openJob(id);
-    }
-
-    function quickAddDay(id) {
-      openJob(id);
-      setTimeout(() => showAddDayForm(id), 50);
-    }
-
-    function showAddPhotoForm(id) {
-      document.getElementById("modalContent").innerHTML = `
-        <div class="card">
-          <h3>Aggiungi foto</h3>
-
-          <label>
-            <span>Tipo foto</span>
-            <select id="extraPhotoType">
-              <option value="sopralluogo">Sopralluogo</option>
-              <option value="prima">Prima</option>
-              <option value="durante">Durante</option>
-              <option value="dopo">Dopo</option>
-              <option value="altro">Altro</option>
-            </select>
-          </label>
-
-          <label>
-            <span>Foto lavoro / terreno / ulivi</span>
-            <input id="extraPhoto" type="file" accept="image/*">
-          </label>
-
-          <div class="btn-row">
-            <button class="btn-main" onclick="addPhoto('${id}')">Salva foto</button>
-            <button class="btn-soft" onclick="openJob('${id}')">Annulla</button>
-          </div>
-        </div>
-      `;
-    }
-
-    async function addPhoto(id) {
-      const job = jobs.find(j => j.id === id);
-      if (!job) return;
-
-      const file = document.getElementById("extraPhoto").files[0];
-      const type = document.getElementById("extraPhotoType").value;
-
-      if (!file) {
-        toast("Scegli una foto");
-        return;
-      }
-
-      const photo = await fileToDataURL(file);
-      job.photos.push(photo);
-      job.photoItems.push({
-        id: uid(),
-        type,
-        src: photo,
-        createdAt: new Date().toISOString()
-      });
-
-      save();
-      toast("Foto salvata");
-      openJob(id);
-    }
-
-    function showEditJobForm(id) {
-      const job = jobs.find(j => j.id === id);
-      if (!job) return;
-
-      document.getElementById("modalContent").innerHTML = `
-        <div class="card">
-          <h3>Modifica lavoro</h3>
-
-          <label><span>Cliente</span><input id="eClient" value="${escapeAttr(job.client)}"></label>
-          <label><span>Telefono</span><input id="ePhone" value="${escapeAttr(job.phone || "")}"></label>
-          <label><span>Luogo</span><input id="ePlace" value="${escapeAttr(job.place || "")}"></label>
-
-          <div class="grid grid-2">
-            <label><span>Data prevista</span><input id="eDate" type="date" value="${job.startDate || todayISO()}"></label>
-            <label><span>Totale ulivi</span><input id="eTotalTrees" type="number" value="${job.totalTrees || 0}"></label>
-          </div>
-
-          <div class="grid grid-2">
-            <label>
-              <span>Tipo prezzo</span>
-              <select id="ePriceMode">
-                <option value="tree" ${job.priceMode === "tree" ? "selected" : ""}>Prezzo a ulivo</option>
-                <option value="day" ${job.priceMode === "day" ? "selected" : ""}>Prezzo a giornata</option>
-                <option value="fixed" ${job.priceMode === "fixed" ? "selected" : ""}>Prezzo a corpo</option>
-              </select>
-            </label>
-
-            <label><span>Valore €</span><input id="ePriceValue" type="number" step="0.01" value="${job.priceValue || 0}"></label>
-          </div>
-
-          <div class="grid grid-2">
-            <label><span>Giorni stimati</span><input id="eEstimatedDays" type="number" value="${job.estimatedDays || 0}"></label>
-            <label><span>Acconto ricevuto €</span><input id="eDeposit" type="number" step="0.01" value="${job.deposit || 0}"></label>
-          </div>
-
-          <label>
-            <span>Stato</span>
-            <select id="eStatus">
-              <option value="preventivo" ${job.status === "preventivo" ? "selected" : ""}>Preventivo</option>
-              <option value="attivo" ${job.status === "attivo" ? "selected" : ""}>Attivo</option>
-              <option value="finito" ${job.status === "finito" ? "selected" : ""}>Finito</option>
-              <option value="pagato" ${job.status === "pagato" ? "selected" : ""}>Pagato</option>
-            </select>
-          </label>
-
-          <label><span>Tipo lavoro</span><input id="eWorkType" value="${escapeAttr(job.workType || "")}"></label>
-          <label><span>Note</span><textarea id="eNotes">${escapeHtml(job.notes || "")}</textarea></label>
-
-          <div class="btn-row">
-            <button class="btn-main" onclick="saveEditJob('${id}')">Salva modifiche</button>
-            <button class="btn-soft" onclick="openJob('${id}')">Annulla</button>
-          </div>
-        </div>
-      `;
-    }
-
-    function saveEditJob(id) {
-      const job = jobs.find(j => j.id === id);
-      if (!job) return;
-
-      job.client = document.getElementById("eClient").value.trim() || "Senza nome";
-      job.phone = document.getElementById("ePhone").value.trim();
-      job.place = document.getElementById("ePlace").value.trim();
-      job.startDate = document.getElementById("eDate").value || todayISO();
-      job.totalTrees = Number(document.getElementById("eTotalTrees").value || 0);
-      job.priceMode = document.getElementById("ePriceMode").value;
-      job.priceValue = Number(document.getElementById("ePriceValue").value || 0);
-      job.estimatedDays = Number(document.getElementById("eEstimatedDays").value || 0);
-      job.deposit = Number(document.getElementById("eDeposit").value || 0);
-      job.status = document.getElementById("eStatus").value;
-      job.workType = document.getElementById("eWorkType").value.trim();
-      job.notes = document.getElementById("eNotes").value.trim();
-
-      save();
-      toast("Modifiche salvate");
-      openJob(id);
-    }
-
-    function changeStatus(id, status) {
-      const job = jobs.find(j => j.id === id);
-      if (!job) return;
-      job.status = status;
-      save();
-      toast("Stato aggiornato");
-      openJob(id);
-    }
-
-    function deleteJob(id) {
-      if (!confirm("Vuoi eliminare questo lavoro?")) return;
-      jobs = jobs.filter(j => j.id !== id);
-      save();
-      closeModal();
-      toast("Lavoro eliminato");
-    }
-
-    function renderAll() {
-      renderHome();
-      renderJobs();
-      renderCalendar();
-      renderStats();
-    }
-
-    function exportBackup() {
-      const data = {
-        app: "ApPiero",
-        version: "3.0",
-        exportedAt: new Date().toISOString(),
-        jobs
-      };
-
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "appiero-v3-backup-" + todayISO() + ".json";
-      a.click();
-      URL.revokeObjectURL(url);
-      toast("Backup esportato");
-    }
-
-    function importBackup() {
-      const file = document.getElementById("backupFile").files[0];
-      if (!file) {
-        toast("Scegli un file backup");
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const data = JSON.parse(reader.result);
-          if (!Array.isArray(data.jobs)) throw new Error("Formato non valido");
-          if (!confirm("Vuoi sostituire i dati attuali con questo backup?")) return;
-          jobs = data.jobs.map(normalizeJob);
-          save();
-          toast("Backup importato");
-          showScreen("home");
-        } catch(e) {
-          toast("Backup non valido");
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    function clearAllData() {
-      if (!confirm("Vuoi cancellare TUTTI i dati di ApPiero?")) return;
-      if (!confirm("Confermi? Questa operazione non si può annullare.")) return;
-      jobs = [];
-      localStorage.removeItem(STORAGE_KEY);
-      renderAll();
-      toast("Dati cancellati");
-    }
-
-    function escapeHtml(str) {
-      return String(str || "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    function escapeAttr(str) {
-      return escapeHtml(str).replaceAll("\n", " ");
-    }
-
-    function init() {
-      load();
-      document.getElementById("todayText").textContent = new Date().toLocaleDateString("it-IT", {
-        weekday: "long",
-        day: "2-digit",
-        month: "long"
-      });
-      document.getElementById("fDate").value = todayISO();
-      updatePriceLabels();
-      renderAll();
-    }
-
-    init();
-  </script>
+        <span class="badge ${statusClass(job.status)}">${statusLabel(job.status)}</span>
+      </div>
+      <div class="progress-wrap"><div class="progress-bar" style="width:${progress}%"></div></div>
+      <div class="mini-grid">
+        <div class="mini-box"><b>${job.totalTrees||0}</b><span>ulivi totali</span></div>
+        <div class="mini-box"><b>${done}</b><span>potati</span></div>
+        <div class="mini-box"><b>${remaining}</b><span>restanti</span></div>
+      </div>
+      <div class="mini-grid">
+        <div class="mini-box"><b class="money">${money(gross)}</b><span>lordo</span></div>
+        <div class="mini-box"><b class="expense">${money(expenses)}</b><span>spese</span></div>
+        <div class="mini-box"><b class="netto">${money(net)}</b><span>netto</span></div>
+      </div>
+      <div class="mini-grid">
+        <div class="mini-box"><b>${money(estimate)}</b><span>preventivo</span></div>
+        <div class="mini-box"><b>${money(job.deposit||0)}</b><span>acconto</span></div>
+        <div class="mini-box"><b>${money(balance)}</b><span>saldo</span></div>
+      </div>
+      <div class="mini-grid">
+        <div class="mini-box"><b>${escapeHtml(job.cultivar||"—")}</b><span>cultivar</span></div>
+        <div class="mini-box"><b>${escapeHtml(job.age||"—")}</b><span>età</span></div>
+        <div class="mini-box"><b>${escapeHtml(job.vigor||"—")}</b><span>vigoria</span></div>
+      </div>
+      <p class="muted small"><strong>Forma:</strong> ${escapeHtml(job.shape||"Non indicata")}</p>
+      <p class="muted small"><strong>Tipo lavoro:</strong> ${escapeHtml(job.workType||"")}</p>
+      <p class="muted small"><strong>Tipo prezzo:</strong> ${priceModeLabel(job)} · ${money(job.priceValue||0)}</p>
+      <p class="muted small"><strong>Note:</strong> ${escapeHtml(job.notes||"Nessuna nota")}</p>
+      <div class="btn-row">
+        <button class="btn-main" onclick="showAddDayForm('${job.id}')">➕ Aggiungi giornata</button>
+        <button class="btn-gold" onclick="showAddPhotoForm('${job.id}')">📷 Aggiungi foto</button>
+        <button class="btn-blue" onclick="showHealthForm('${job.id}')">🩺 Salute olivo</button>
+        <button class="btn-soft" onclick="showEditJobForm('${job.id}')">✏️ Modifica</button>
+      </div>
+      <div class="btn-row" style="margin-top:9px;">
+        <button class="btn-gold" onclick="showPreview('${job.id}','estimate')">📋 Preventivo WhatsApp</button>
+        <button class="btn-blue" onclick="showPreview('${job.id}','summary')">📋 Riepilogo WhatsApp</button>
+        <button class="btn-soft" onclick="showPreview('${job.id}','health')">📋 Salute WhatsApp</button>
+      </div>
+      <div class="btn-row" style="margin-top:9px;">
+        <button class="btn-soft" onclick="changeStatus('${job.id}','preventivo')">Preventivo</button>
+        <button class="btn-soft" onclick="changeStatus('${job.id}','attivo')">Attivo</button>
+        <button class="btn-soft" onclick="changeStatus('${job.id}','finito')">Finito</button>
+        <button class="btn-soft" onclick="changeStatus('${job.id}','pagato')">Pagato</button>
+      </div>
+    </div>
+    <div class="section-title"><h2>Salute olivo</h2></div>
+    ${renderHealthChecks(job)}
+    <div class="section-title"><h2>Foto ordinate</h2></div>
+    ${renderPhotos(job)}
+    <div class="section-title"><h2>Giornate</h2></div>
+    ${daysHtml}
+    <div class="card danger-zone" style="margin-top:12px;"><h3>Elimina lavoro</h3><p class="muted small">Cancella definitivamente questo lavoro.</p><button class="btn-red btn-full" onclick="deleteJob('${job.id}')">Elimina lavoro</button></div>
+  `;
+  document.getElementById("jobModal").classList.add("active");
+}
+
+function closeModal(){document.getElementById("jobModal").classList.remove("active");openedJobId=null}
+
+function showAddDayForm(id){
+  const job=jobs.find(j=>j.id===id);if(!job)return;
+  document.getElementById("modalContent").innerHTML=`
+  <div class="card">
+    <h3>Aggiungi giornata</h3>
+    <label><span>Data</span><input id="dDate" type="date" value="${todayISO()}"></label>
+    <label><span>Ulivi potati oggi</span><input id="dTrees" type="number" min="0" placeholder="Es. 35"></label>
+    <label><span>Ore lavorate</span><input id="dHours" type="number" min="0" step="0.5" placeholder="Es. 7"></label>
+    ${job.priceMode==="day"?`<label><span>Guadagno lordo giornata €</span><input id="dDayMoney" type="number" min="0" step="0.01" value="${job.priceValue||0}"></label>`:`<input id="dDayMoney" type="hidden" value="0">`}
+    <h3>Spese giornata</h3>
+    <div class="grid grid-2">
+      <label><span>Carburante €</span><input id="dExpenseFuel" type="number" min="0" step="0.01" placeholder="Es. 15"></label>
+      <label><span>Pranzo €</span><input id="dExpenseFood" type="number" min="0" step="0.01" placeholder="Es. 10"></label>
+    </div>
+    <div class="grid grid-2">
+      <label><span>Attrezzatura / materiali €</span><input id="dExpenseTools" type="number" min="0" step="0.01" placeholder="Es. 5"></label>
+      <label><span>Altre spese €</span><input id="dExpenseOther" type="number" min="0" step="0.01" placeholder="Es. 0"></label>
+    </div>
+    <label><span>Tipo foto giornata</span><select id="dPhotoType"><option value="durante">Durante</option><option value="prima">Prima</option><option value="dopo">Dopo</option><option value="sopralluogo">Sopralluogo</option><option value="salute">Salute olivo</option><option value="altro">Altro</option></select></label>
+    <label><span>Foto giornata</span><input id="dPhoto" type="file" accept="image/*"></label>
+    <label><span>Note giornata</span><textarea id="dNotes" placeholder="Es. parte alta finita, restano alberi vicino strada..."></textarea></label>
+    <div class="btn-row"><button class="btn-main" onclick="addDay('${id}')">Salva giornata</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div>
+  </div>`;
+}
+
+async function addDay(id){
+  const job=jobs.find(j=>j.id===id);if(!job)return;
+  const trees=Number(document.getElementById("dTrees").value||0);
+  if(trees<=0){toast("Inserisci gli ulivi potati");return}
+  const photoFile=document.getElementById("dPhoto").files[0],photo=await fileToDataURL(photoFile),photoType=document.getElementById("dPhotoType").value;
+  const day={
+    id:uid(),date:document.getElementById("dDate").value||todayISO(),trees,
+    hours:Number(document.getElementById("dHours").value||0),dayMoney:Number(document.getElementById("dDayMoney").value||0),
+    expenseFuel:Number(document.getElementById("dExpenseFuel").value||0),expenseFood:Number(document.getElementById("dExpenseFood").value||0),
+    expenseTools:Number(document.getElementById("dExpenseTools").value||0),expenseOther:Number(document.getElementById("dExpenseOther").value||0),
+    notes:document.getElementById("dNotes").value.trim(),photo
+  };
+  job.days.push(day);
+  if(photo){job.photos.push(photo);job.photoItems.push({id:uid(),type:photoType,src:photo,createdAt:new Date().toISOString()})}
+  if(job.status==="preventivo")job.status="attivo";
+  save();toast("Giornata salvata");openJob(id);
+}
+function quickAddDay(id){openJob(id);setTimeout(()=>showAddDayForm(id),50)}
+
+function showHealthForm(id){
+  document.getElementById("modalContent").innerHTML=`
+  <div class="card">
+    <h3>Salute olivo / problemi</h3>
+    <p class="muted small">Questa non è una diagnosi agronomica automatica. È una scheda di campo per segnare sintomi, sospetti e foto.</p>
+    <div class="grid grid-2">
+      <label><span>Data controllo</span><input id="hDate" type="date" value="${todayISO()}"></label>
+      <label><span>Pianta / zona / numero</span><input id="hTreeRef" placeholder="Es. fila 2, pianta 14"></label>
+    </div>
+    <div class="grid grid-2">
+      <label><span>Parte fotografata</span>
+        <select id="hPhotoPart">
+          <option>Chioma intera</option><option>Foglie</option><option>Rami</option><option>Tronco</option><option>Corteccia</option><option>Olive/frutti</option><option>Terreno</option>
+        </select>
+      </label>
+      <label><span>Condizione generale</span>
+        <select id="hCondition">
+          <option>Buona</option><option>Media</option><option>Da controllare</option><option>Grave</option>
+        </select>
+      </label>
+    </div>
+    <label><span>Priorità intervento</span>
+      <select id="hPriority"><option>Bassa</option><option>Media</option><option>Alta</option><option>Urgente</option></select>
+    </label>
+
+    <h3>Sintomi osservati</h3>
+    <div class="check-grid" id="symptomsBox">
+      ${checkItem("Foglie macchiate")}${checkItem("Foglie gialle")}${checkItem("Caduta foglie")}${checkItem("Rami secchi")}
+      ${checkItem("Chioma rada")}${checkItem("Corteccia spaccata")}${checkItem("Frutti rovinati")}${checkItem("Presenza insetti")}
+      ${checkItem("Disseccamento parziale")}${checkItem("Stress idrico")}${checkItem("Ferite da potatura")}${checkItem("Marciume / carie del legno")}
+    </div>
+
+    <h3>Possibili problemi / malattie</h3>
+    <div class="check-grid" id="diseasesBox">
+      ${checkItem("Occhio di pavone")}${checkItem("Rogna dell’olivo")}${checkItem("Verticilliosi")}${checkItem("Cocciniglia")}
+      ${checkItem("Mosca dell’olivo")}${checkItem("Xylella / disseccamento sospetto")}${checkItem("Carenza nutrizionale")}${checkItem("Stress idrico")}
+      ${checkItem("Danni da gelo")}${checkItem("Danni da potatura")}${checkItem("Carie del legno")}${checkItem("Altro")}
+    </div>
+
+    <label><span>Foto salute olivo</span><input id="hPhoto" type="file" accept="image/*"></label>
+    <label><span>Note del potatore</span><textarea id="hNote" placeholder="Es. foglie con macchie tonde, ramo secco lato nord, controllare tra 15 giorni..."></textarea></label>
+    <div class="btn-row"><button class="btn-main" onclick="addHealthCheck('${id}')">Salva scheda salute</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div>
+  </div>`;
+}
+function checkItem(label){return `<label class="check-item"><input type="checkbox" value="${escapeAttr(label)}"><span>${escapeHtml(label)}</span></label>`}
+function checkedValues(boxId){return Array.from(document.querySelectorAll("#"+boxId+" input:checked")).map(i=>i.value)}
+
+async function addHealthCheck(id){
+  const job=jobs.find(j=>j.id===id);if(!job)return;
+  const file=document.getElementById("hPhoto").files[0],photo=await fileToDataURL(file);
+  const h={
+    id:uid(),date:document.getElementById("hDate").value||todayISO(),
+    treeRef:document.getElementById("hTreeRef").value.trim(),
+    photoPart:document.getElementById("hPhotoPart").value,
+    condition:document.getElementById("hCondition").value,
+    priority:document.getElementById("hPriority").value,
+    symptoms:checkedValues("symptomsBox"),
+    diseases:checkedValues("diseasesBox"),
+    note:document.getElementById("hNote").value.trim(),
+    photo
+  };
+  job.healthChecks.push(h);
+  if(photo){job.photos.push(photo);job.photoItems.push({id:uid(),type:"salute",src:photo,createdAt:new Date().toISOString()})}
+  save();toast("Scheda salute salvata");openJob(id);
+}
+function quickHealth(id){openJob(id);setTimeout(()=>showHealthForm(id),50)}
+
+function showAddPhotoForm(id){
+  document.getElementById("modalContent").innerHTML=`
+  <div class="card">
+    <h3>Aggiungi foto</h3>
+    <label><span>Tipo foto</span><select id="extraPhotoType"><option value="sopralluogo">Sopralluogo</option><option value="prima">Prima</option><option value="durante">Durante</option><option value="dopo">Dopo</option><option value="salute">Salute olivo</option><option value="altro">Altro</option></select></label>
+    <label><span>Foto lavoro / terreno / ulivi</span><input id="extraPhoto" type="file" accept="image/*"></label>
+    <div class="btn-row"><button class="btn-main" onclick="addPhoto('${id}')">Salva foto</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div>
+  </div>`;
+}
+async function addPhoto(id){
+  const job=jobs.find(j=>j.id===id);if(!job)return;
+  const file=document.getElementById("extraPhoto").files[0],type=document.getElementById("extraPhotoType").value;
+  if(!file){toast("Scegli una foto");return}
+  const photo=await fileToDataURL(file);
+  job.photos.push(photo);job.photoItems.push({id:uid(),type,src:photo,createdAt:new Date().toISOString()});
+  save();toast("Foto salvata");openJob(id);
+}
+
+function showEditJobForm(id){
+  const job=jobs.find(j=>j.id===id);if(!job)return;
+  document.getElementById("modalContent").innerHTML=`
+  <div class="card">
+    <h3>Modifica lavoro</h3>
+    <label><span>Cliente</span><input id="eClient" value="${escapeAttr(job.client)}"></label>
+    <label><span>Telefono</span><input id="ePhone" value="${escapeAttr(job.phone||"")}"></label>
+    <label><span>Luogo</span><input id="ePlace" value="${escapeAttr(job.place||"")}"></label>
+    <div class="grid grid-2">
+      <label><span>Data prevista</span><input id="eDate" type="date" value="${job.startDate||todayISO()}"></label>
+      <label><span>Totale ulivi</span><input id="eTotalTrees" type="number" value="${job.totalTrees||0}"></label>
+    </div>
+    <h3>Dati oliveto</h3>
+    <div class="grid grid-2">
+      <label><span>Cultivar / tipo olivo</span><input id="eCultivar" value="${escapeAttr(job.cultivar||"")}"></label>
+      <label><span>Età stimata</span><input id="eAge" value="${escapeAttr(job.age||"")}"></label>
+    </div>
+    <div class="grid grid-2">
+      <label><span>Vigoria</span><input id="eVigor" value="${escapeAttr(job.vigor||"")}"></label>
+      <label><span>Forma pianta</span><input id="eShape" value="${escapeAttr(job.shape||"")}"></label>
+    </div>
+    <div class="grid grid-2">
+      <label><span>Tipo prezzo</span><select id="ePriceMode">
+        <option value="tree" ${job.priceMode==="tree"?"selected":""}>Prezzo a ulivo</option>
+        <option value="day" ${job.priceMode==="day"?"selected":""}>Prezzo a giornata</option>
+        <option value="fixed" ${job.priceMode==="fixed"?"selected":""}>Prezzo a corpo</option>
+      </select></label>
+      <label><span>Valore €</span><input id="ePriceValue" type="number" step="0.01" value="${job.priceValue||0}"></label>
+    </div>
+    <div class="grid grid-2">
+      <label><span>Giorni stimati</span><input id="eEstimatedDays" type="number" value="${job.estimatedDays||0}"></label>
+      <label><span>Acconto ricevuto €</span><input id="eDeposit" type="number" step="0.01" value="${job.deposit||0}"></label>
+    </div>
+    <label><span>Stato</span><select id="eStatus">
+      <option value="preventivo" ${job.status==="preventivo"?"selected":""}>Preventivo</option>
+      <option value="attivo" ${job.status==="attivo"?"selected":""}>Attivo</option>
+      <option value="finito" ${job.status==="finito"?"selected":""}>Finito</option>
+      <option value="pagato" ${job.status==="pagato"?"selected":""}>Pagato</option>
+    </select></label>
+    <label><span>Tipo lavoro</span><input id="eWorkType" value="${escapeAttr(job.workType||"")}"></label>
+    <label><span>Note</span><textarea id="eNotes">${escapeHtml(job.notes||"")}</textarea></label>
+    <div class="btn-row"><button class="btn-main" onclick="saveEditJob('${id}')">Salva modifiche</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div>
+  </div>`;
+}
+
+function saveEditJob(id){
+  const job=jobs.find(j=>j.id===id);if(!job)return;
+  job.client=document.getElementById("eClient").value.trim()||"Senza nome";
+  job.phone=document.getElementById("ePhone").value.trim();
+  job.place=document.getElementById("ePlace").value.trim();
+  job.startDate=document.getElementById("eDate").value||todayISO();
+  job.totalTrees=Number(document.getElementById("eTotalTrees").value||0);
+  job.cultivar=document.getElementById("eCultivar").value.trim();
+  job.age=document.getElementById("eAge").value.trim();
+  job.vigor=document.getElementById("eVigor").value.trim();
+  job.shape=document.getElementById("eShape").value.trim();
+  job.priceMode=document.getElementById("ePriceMode").value;
+  job.priceValue=Number(document.getElementById("ePriceValue").value||0);
+  job.estimatedDays=Number(document.getElementById("eEstimatedDays").value||0);
+  job.deposit=Number(document.getElementById("eDeposit").value||0);
+  job.status=document.getElementById("eStatus").value;
+  job.workType=document.getElementById("eWorkType").value.trim();
+  job.notes=document.getElementById("eNotes").value.trim();
+  save();toast("Modifiche salvate");openJob(id);
+}
+
+function changeStatus(id,status){const job=jobs.find(j=>j.id===id);if(!job)return;job.status=status;save();toast("Stato aggiornato");openJob(id)}
+function deleteJob(id){if(!confirm("Vuoi eliminare questo lavoro?"))return;jobs=jobs.filter(j=>j.id!==id);save();closeModal();toast("Lavoro eliminato")}
+function renderAll(){renderHome();renderJobs();renderCalendar();renderStats()}
+
+function exportBackup(){
+  const data={app:"ApPiero",version:"4.0",exportedAt:new Date().toISOString(),jobs};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="appiero-v4-backup-"+todayISO()+".json";a.click();URL.revokeObjectURL(url);toast("Backup esportato");
+}
+function importBackup(){
+  const file=document.getElementById("backupFile").files[0];if(!file){toast("Scegli un file backup");return}
+  const reader=new FileReader();
+  reader.onload=()=>{try{const data=JSON.parse(reader.result);if(!Array.isArray(data.jobs))throw new Error("Formato non valido");if(!confirm("Vuoi sostituire i dati attuali con questo backup?"))return;jobs=data.jobs.map(normalizeJob);save();toast("Backup importato");showScreen("home")}catch(e){toast("Backup non valido")}};
+  reader.readAsText(file);
+}
+function clearAllData(){
+  if(!confirm("Vuoi cancellare TUTTI i dati di ApPiero?"))return;
+  if(!confirm("Confermi? Questa operazione non si può annullare."))return;
+  jobs=[];localStorage.removeItem(STORAGE_KEY);renderAll();toast("Dati cancellati");
+}
+function init(){
+  load();
+  document.getElementById("todayText").textContent=new Date().toLocaleDateString("it-IT",{weekday:"long",day:"2-digit",month:"long"});
+  document.getElementById("fDate").value=todayISO();
+  updatePriceLabels();
+  renderAll();
+}
+init();
+</script>
 </body>
 </html>
