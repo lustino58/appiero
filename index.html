@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ApPiero V2 - Gestione Potatura Ulivi</title>
+  <title>ApPiero V3 - Gestione Potatura Ulivi</title>
 
   <meta name="theme-color" content="#18230f" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -98,6 +98,13 @@
       margin: 5px 0 0;
       color: var(--muted);
       font-size: 13px;
+    }
+
+    .version {
+      font-size: 11px;
+      color: var(--gold);
+      margin-top: 3px;
+      font-weight: 800;
     }
 
     .today-pill {
@@ -400,6 +407,16 @@
       font-size: 12px;
     }
 
+    .photo-section {
+      margin-bottom: 15px;
+    }
+
+    .photo-section h3 {
+      font-size: 15px;
+      color: var(--green2);
+      margin: 0 0 8px;
+    }
+
     .photo-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -590,11 +607,16 @@
       color: #ffd27c;
     }
 
-    .version {
-      font-size: 11px;
-      color: var(--gold);
-      margin-top: 3px;
-      font-weight: 800;
+    .quote-box {
+      white-space: pre-wrap;
+      line-height: 1.45;
+      background: rgba(0,0,0,0.28);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 13px;
+      font-size: 14px;
+      color: #f6f8ef;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -607,7 +629,7 @@
         <div class="brand-title">
           <h1>ApPiero</h1>
           <p>Gestione potatura ulivi</p>
-          <div class="version">V2 · lordo / spese / netto</div>
+          <div class="version">V3 · preventivi WhatsApp / foto ordinate</div>
         </div>
       </div>
       <div class="today-pill" id="todayText">Oggi</div>
@@ -761,6 +783,17 @@
           </label>
 
           <label>
+            <span>Tipo foto iniziale</span>
+            <select id="fPhotoType">
+              <option value="sopralluogo">Sopralluogo</option>
+              <option value="prima">Prima</option>
+              <option value="durante">Durante</option>
+              <option value="dopo">Dopo</option>
+              <option value="altro">Altro</option>
+            </select>
+          </label>
+
+          <label>
             <span>Foto del terreno / sopralluogo</span>
             <input id="fPhoto" type="file" accept="image/*" />
           </label>
@@ -909,8 +942,8 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    const STORAGE_KEY = "appiero_v2_jobs";
-    const OLD_STORAGE_KEY = "appiero_v1_jobs";
+    const STORAGE_KEY = "appiero_v3_jobs";
+    const OLD_STORAGE_KEYS = ["appiero_v2_jobs", "appiero_v1_jobs"];
 
     let jobs = [];
     let currentFilter = "all";
@@ -952,7 +985,17 @@
     function normalizeJob(job) {
       if (!job.deposit) job.deposit = 0;
       if (!Array.isArray(job.photos)) job.photos = [];
+      if (!Array.isArray(job.photoItems)) job.photoItems = [];
       if (!Array.isArray(job.days)) job.days = [];
+
+      if (job.photos.length && job.photoItems.length === 0) {
+        job.photoItems = job.photos.map(src => ({
+          id: uid(),
+          type: "altro",
+          src,
+          createdAt: new Date().toISOString()
+        }));
+      }
 
       job.days = job.days.map(d => ({
         id: d.id || uid(),
@@ -976,7 +1019,10 @@
         let raw = localStorage.getItem(STORAGE_KEY);
 
         if (!raw) {
-          raw = localStorage.getItem(OLD_STORAGE_KEY);
+          for (const key of OLD_STORAGE_KEYS) {
+            raw = localStorage.getItem(key);
+            if (raw) break;
+          }
         }
 
         jobs = JSON.parse(raw || "[]").map(normalizeJob);
@@ -1025,7 +1071,6 @@
 
     async function createJob() {
       const client = document.getElementById("fClient").value.trim();
-      const place = document.getElementById("fPlace").value.trim();
 
       if (!client) {
         toast("Inserisci il cliente");
@@ -1034,13 +1079,14 @@
 
       const photoFile = document.getElementById("fPhoto").files[0];
       const photo = await fileToDataURL(photoFile);
+      const photoType = document.getElementById("fPhotoType").value;
 
       const job = {
         id: uid(),
         createdAt: new Date().toISOString(),
         client,
         phone: document.getElementById("fPhone").value.trim(),
-        place,
+        place: document.getElementById("fPlace").value.trim(),
         startDate: document.getElementById("fDate").value || todayISO(),
         totalTrees: Number(document.getElementById("fTotalTrees").value || 0),
         priceMode: document.getElementById("fPriceMode").value,
@@ -1051,6 +1097,12 @@
         status: document.getElementById("fStatus").value,
         notes: document.getElementById("fNotes").value.trim(),
         photos: photo ? [photo] : [],
+        photoItems: photo ? [{
+          id: uid(),
+          type: photoType,
+          src: photo,
+          createdAt: new Date().toISOString()
+        }] : [],
         days: []
       };
 
@@ -1068,6 +1120,7 @@
       document.getElementById("fDate").value = todayISO();
       document.getElementById("fPriceMode").value = "tree";
       document.getElementById("fStatus").value = "preventivo";
+      document.getElementById("fPhotoType").value = "sopralluogo";
       document.getElementById("fPhoto").value = "";
       updatePriceLabels();
     }
@@ -1145,6 +1198,13 @@
       if (status === "finito") return "badge-done";
       if (status === "pagato") return "badge-paid";
       return "";
+    }
+
+    function priceModeLabel(job) {
+      if (job.priceMode === "tree") return "Prezzo a ulivo";
+      if (job.priceMode === "day") return "Prezzo a giornata";
+      if (job.priceMode === "fixed") return "Prezzo a corpo";
+      return "Prezzo";
     }
 
     function renderJobCard(job) {
@@ -1378,6 +1438,177 @@
       `;
     }
 
+    function buildEstimateText(job) {
+      const estimate = jobEstimate(job);
+      const balance = jobBalance(job);
+
+      let priceLine = "";
+      if (job.priceMode === "tree") {
+        priceLine = `Prezzo a ulivo: ${money(job.priceValue)}\nTotale preventivo: ${money(estimate)}`;
+      } else if (job.priceMode === "day") {
+        priceLine = `Prezzo a giornata: ${money(job.priceValue)}\nGiorni stimati: ${job.estimatedDays || 0}\nTotale preventivo: ${money(estimate)}`;
+      } else {
+        priceLine = `Prezzo a corpo: ${money(estimate)}`;
+      }
+
+      return `PREVENTIVO POTATURA ULIVI
+
+Cliente: ${job.client}
+Località: ${job.place || "Non indicata"}
+Tipo lavoro: ${job.workType || "Potatura ulivi"}
+Data prevista: ${formatDate(job.startDate)}
+
+Totale ulivi: ${job.totalTrees || 0}
+${priceLine}
+
+Acconto ricevuto: ${money(job.deposit || 0)}
+Saldo da incassare: ${money(balance)}
+
+Note:
+${job.notes || "Nessuna nota"}
+
+ApPiero`;
+    }
+
+    function buildSummaryText(job) {
+      const done = jobDoneTrees(job);
+      const remaining = jobRemaining(job);
+      const progress = jobProgress(job);
+      const gross = jobGross(job);
+      const expenses = jobExpenses(job);
+      const net = jobNet(job);
+      const estimate = jobEstimate(job);
+      const balance = jobBalance(job);
+
+      const daysText = job.days.length
+        ? job.days.map(d => `- ${formatDate(d.date)}: ${d.trees} ulivi, lordo ${money(jobDayGross(job, d))}, spese ${money(dayExpenses(d))}, netto ${money(jobDayNet(job, d))}`).join("\n")
+        : "Nessuna giornata registrata.";
+
+      return `RIEPILOGO LAVORO POTATURA ULIVI
+
+Cliente: ${job.client}
+Località: ${job.place || "Non indicata"}
+Stato: ${statusLabel(job.status)}
+
+Totale ulivi: ${job.totalTrees || 0}
+Ulivi potati: ${done}
+Ulivi restanti: ${remaining}
+Avanzamento: ${progress}%
+
+Preventivo: ${money(estimate)}
+Acconto: ${money(job.deposit || 0)}
+Saldo da incassare: ${money(balance)}
+
+Lordo registrato: ${money(gross)}
+Spese registrate: ${money(expenses)}
+Netto registrato: ${money(net)}
+
+Giornate:
+${daysText}
+
+Note:
+${job.notes || "Nessuna nota"}
+
+ApPiero`;
+    }
+
+    async function copyText(text, successMsg) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          toast(successMsg);
+          return;
+        }
+      } catch(e) {}
+
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+
+      try {
+        document.execCommand("copy");
+        toast(successMsg);
+      } catch(e) {
+        toast("Copia non riuscita");
+      }
+
+      document.body.removeChild(ta);
+    }
+
+    function copyEstimate(id) {
+      const job = jobs.find(j => j.id === id);
+      if (!job) return;
+      copyText(buildEstimateText(job), "Preventivo copiato");
+    }
+
+    function copySummary(id) {
+      const job = jobs.find(j => j.id === id);
+      if (!job) return;
+      copyText(buildSummaryText(job), "Riepilogo copiato");
+    }
+
+    function showEstimatePreview(id) {
+      const job = jobs.find(j => j.id === id);
+      if (!job) return;
+
+      document.getElementById("modalContent").innerHTML = `
+        <div class="card">
+          <h3>Preventivo WhatsApp</h3>
+          <div class="quote-box">${escapeHtml(buildEstimateText(job))}</div>
+          <div class="btn-row" style="margin-top:12px;">
+            <button class="btn-main" onclick="copyEstimate('${id}')">📋 Copia preventivo</button>
+            <button class="btn-soft" onclick="openJob('${id}')">Torna</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function showSummaryPreview(id) {
+      const job = jobs.find(j => j.id === id);
+      if (!job) return;
+
+      document.getElementById("modalContent").innerHTML = `
+        <div class="card">
+          <h3>Riepilogo WhatsApp</h3>
+          <div class="quote-box">${escapeHtml(buildSummaryText(job))}</div>
+          <div class="btn-row" style="margin-top:12px;">
+            <button class="btn-main" onclick="copySummary('${id}')">📋 Copia riepilogo</button>
+            <button class="btn-soft" onclick="openJob('${id}')">Torna</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPhotos(job) {
+      const items = Array.isArray(job.photoItems) ? job.photoItems : [];
+      if (!items.length) return `<div class="empty">Nessuna foto salvata.</div>`;
+
+      const groups = [
+        ["sopralluogo", "Foto sopralluogo"],
+        ["prima", "Foto prima"],
+        ["durante", "Foto durante"],
+        ["dopo", "Foto dopo"],
+        ["altro", "Altre foto"]
+      ];
+
+      return groups.map(([type, label]) => {
+        const list = items.filter(p => p.type === type);
+        if (!list.length) return "";
+        return `
+          <div class="photo-section">
+            <h3>${label}</h3>
+            <div class="photo-grid">
+              ${list.map(p => `<img class="photo-thumb" src="${p.src}">`).join("")}
+            </div>
+          </div>
+        `;
+      }).join("") || `<div class="empty">Nessuna foto salvata.</div>`;
+    }
+
     function openJob(id) {
       openedJobId = id;
       const job = jobs.find(j => j.id === id);
@@ -1394,9 +1625,7 @@
 
       document.getElementById("modalTitle").textContent = job.client;
 
-      const photosHtml = job.photos && job.photos.length
-        ? `<div class="photo-grid">${job.photos.map(src => `<img class="photo-thumb" src="${src}">`).join("")}</div>`
-        : `<div class="empty">Nessuna foto salvata.</div>`;
+      const photosHtml = renderPhotos(job);
 
       const daysHtml = job.days.length
         ? job.days.slice().reverse().map((d) => `
@@ -1449,12 +1678,18 @@
           </div>
 
           <p class="muted small"><strong>Tipo lavoro:</strong> ${escapeHtml(job.workType || "")}</p>
+          <p class="muted small"><strong>Tipo prezzo:</strong> ${priceModeLabel(job)} · ${money(job.priceValue || 0)}</p>
           <p class="muted small"><strong>Note:</strong> ${escapeHtml(job.notes || "Nessuna nota")}</p>
 
           <div class="btn-row">
             <button class="btn-main" onclick="showAddDayForm('${job.id}')">➕ Aggiungi giornata</button>
             <button class="btn-gold" onclick="showAddPhotoForm('${job.id}')">📷 Aggiungi foto</button>
             <button class="btn-blue" onclick="showEditJobForm('${job.id}')">✏️ Modifica</button>
+          </div>
+
+          <div class="btn-row" style="margin-top:9px;">
+            <button class="btn-gold" onclick="showEstimatePreview('${job.id}')">📋 Preventivo WhatsApp</button>
+            <button class="btn-blue" onclick="showSummaryPreview('${job.id}')">📋 Riepilogo WhatsApp</button>
           </div>
 
           <div class="btn-row" style="margin-top:9px;">
@@ -1465,7 +1700,7 @@
           </div>
         </div>
 
-        <div class="section-title"><h2>Foto</h2></div>
+        <div class="section-title"><h2>Foto ordinate</h2></div>
         ${photosHtml}
 
         <div class="section-title"><h2>Giornate</h2></div>
@@ -1545,6 +1780,17 @@
           </div>
 
           <label>
+            <span>Tipo foto giornata</span>
+            <select id="dPhotoType">
+              <option value="durante">Durante</option>
+              <option value="prima">Prima</option>
+              <option value="dopo">Dopo</option>
+              <option value="sopralluogo">Sopralluogo</option>
+              <option value="altro">Altro</option>
+            </select>
+          </label>
+
+          <label>
             <span>Foto giornata</span>
             <input id="dPhoto" type="file" accept="image/*">
           </label>
@@ -1575,6 +1821,7 @@
 
       const photoFile = document.getElementById("dPhoto").files[0];
       const photo = await fileToDataURL(photoFile);
+      const photoType = document.getElementById("dPhotoType").value;
 
       const day = {
         id: uid(),
@@ -1591,7 +1838,17 @@
       };
 
       job.days.push(day);
-      if (photo) job.photos.push(photo);
+
+      if (photo) {
+        job.photos.push(photo);
+        job.photoItems.push({
+          id: uid(),
+          type: photoType,
+          src: photo,
+          createdAt: new Date().toISOString()
+        });
+      }
+
       if (job.status === "preventivo") job.status = "attivo";
 
       save();
@@ -1608,10 +1865,23 @@
       document.getElementById("modalContent").innerHTML = `
         <div class="card">
           <h3>Aggiungi foto</h3>
+
+          <label>
+            <span>Tipo foto</span>
+            <select id="extraPhotoType">
+              <option value="sopralluogo">Sopralluogo</option>
+              <option value="prima">Prima</option>
+              <option value="durante">Durante</option>
+              <option value="dopo">Dopo</option>
+              <option value="altro">Altro</option>
+            </select>
+          </label>
+
           <label>
             <span>Foto lavoro / terreno / ulivi</span>
             <input id="extraPhoto" type="file" accept="image/*">
           </label>
+
           <div class="btn-row">
             <button class="btn-main" onclick="addPhoto('${id}')">Salva foto</button>
             <button class="btn-soft" onclick="openJob('${id}')">Annulla</button>
@@ -1625,6 +1895,8 @@
       if (!job) return;
 
       const file = document.getElementById("extraPhoto").files[0];
+      const type = document.getElementById("extraPhotoType").value;
+
       if (!file) {
         toast("Scegli una foto");
         return;
@@ -1632,6 +1904,13 @@
 
       const photo = await fileToDataURL(file);
       job.photos.push(photo);
+      job.photoItems.push({
+        id: uid(),
+        type,
+        src: photo,
+        createdAt: new Date().toISOString()
+      });
+
       save();
       toast("Foto salvata");
       openJob(id);
@@ -1742,7 +2021,7 @@
     function exportBackup() {
       const data = {
         app: "ApPiero",
-        version: "2.0",
+        version: "3.0",
         exportedAt: new Date().toISOString(),
         jobs
       };
@@ -1751,7 +2030,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "appiero-v2-backup-" + todayISO() + ".json";
+      a.download = "appiero-v3-backup-" + todayISO() + ".json";
       a.click();
       URL.revokeObjectURL(url);
       toast("Backup esportato");
