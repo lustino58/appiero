@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ApPiero V8.3 - Potatura Ulivi</title>
+  <title>ApPiero V8.4 - Archivio Clienti</title>
   <meta name="theme-color" content="#18230f" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="ApPiero" />
@@ -50,8 +50,8 @@
     textarea{min-height:95px;resize:vertical}
     label{display:block;margin-bottom:11px;color:var(--muted);font-size:13px;font-weight:700}label span{display:block;margin-bottom:6px}
     .form-grid{display:grid;gap:10px}.list{display:grid;gap:12px}
-    .job-card{border-radius:22px;border:1px solid var(--line);background:radial-gradient(circle at top right,rgba(164,214,94,.12),transparent 30%),linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.03));padding:14px;box-shadow:0 12px 28px rgba(0,0,0,.22)}
-    .job-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.job-title{font-size:18px;font-weight:900;margin-bottom:4px}
+    .job-card,.client-card{border-radius:22px;border:1px solid var(--line);background:radial-gradient(circle at top right,rgba(164,214,94,.12),transparent 30%),linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.03));padding:14px;box-shadow:0 12px 28px rgba(0,0,0,.22)}
+    .job-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.job-title,.client-title{font-size:18px;font-weight:900;margin-bottom:4px}
     .badge{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:900;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);white-space:nowrap}
     .badge-open{color:#b8ff74}.badge-work{color:#ffe08a}.badge-done{color:#7bd7ff}.badge-paid{color:#d6b2ff}.badge-health{color:#ffca8a}.badge-oil{color:#f0c66a}.badge-danger{color:#ff9b91}
     .progress-wrap{margin:12px 0 8px;height:13px;background:rgba(0,0,0,.35);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.10)}
@@ -93,7 +93,7 @@
       <div class="brand-title">
         <h1>ApPiero</h1>
         <p>Gestione potatura ulivi</p>
-        <div class="version">V8.3 · pulizia memoria</div>
+        <div class="version">V8.4 · archivio clienti</div>
       </div>
     </div>
     <div class="today-pill" id="todayText">Oggi</div>
@@ -103,7 +103,7 @@
 <main>
   <section id="screen-home" class="screen active">
     <div class="grid grid-3">
-      <div class="card kpi"><div class="kpi-label">Ulivi potati oggi</div><div class="kpi-value" id="kpiTodayTrees">0</div><div class="kpi-small" id="kpiTodayJobs">0 giornate registrate</div></div>
+      <div class="card kpi"><div class="kpi-label">Clienti</div><div class="kpi-value" id="kpiClients">0</div><div class="kpi-small">archivio clienti</div></div>
       <div class="card kpi"><div class="kpi-label">Da incassare</div><div class="kpi-value expense" id="kpiBalanceDue">0 €</div><div class="kpi-small">saldo lavori aperti</div></div>
       <div class="card kpi"><div class="kpi-label">Memoria usata</div><div class="kpi-value" id="kpiMemory">0</div><div class="kpi-small">KB circa</div></div>
     </div>
@@ -111,7 +111,7 @@
     <div class="section-title"><h2>Azioni rapide</h2></div>
     <div class="grid grid-2">
       <button class="btn-main btn-full" onclick="showScreen('new')">➕ Nuovo lavoro</button>
-      <button class="btn-gold btn-full" onclick="showScreen('calendar')">📅 Calendario</button>
+      <button class="btn-gold btn-full" onclick="showScreen('clients')">👥 Clienti</button>
       <button class="btn-blue btn-full" onclick="showScreen('jobs')">🌳 Lavori</button>
       <button class="btn-soft btn-full" onclick="showScreen('stats')">📊 Statistiche</button>
     </div>
@@ -170,6 +170,24 @@
     </div>
   </section>
 
+  <section id="screen-clients" class="screen">
+    <div class="section-title">
+      <h2>Archivio clienti</h2>
+      <button class="btn-main" onclick="showScreen('new')">➕ Nuovo</button>
+    </div>
+
+    <input class="search" id="clientSearch" oninput="renderClients()" placeholder="Cerca cliente, telefono, luogo..." />
+
+    <div class="btn-row" style="margin-bottom:12px;">
+      <button class="btn-soft" onclick="setClientSort('name')">Nome</button>
+      <button class="btn-soft" onclick="setClientSort('balance')">Da incassare</button>
+      <button class="btn-soft" onclick="setClientSort('paid')">Incassato</button>
+      <button class="btn-soft" onclick="setClientSort('health')">Problemi salute</button>
+    </div>
+
+    <div id="clientsList" class="list"></div>
+  </section>
+
   <section id="screen-jobs" class="screen">
     <div class="section-title"><h2>Lavori</h2><button class="btn-main" onclick="showScreen('new')">➕ Nuovo</button></div>
     <input class="search" id="jobSearch" oninput="renderJobs()" placeholder="Cerca cliente, luogo, telefono, cultivar, pagamenti, anno olio..." />
@@ -198,9 +216,9 @@
   <section id="screen-stats" class="screen">
     <div class="section-title"><h2>Statistiche</h2></div>
     <div class="grid grid-3">
+      <div class="card kpi"><div class="kpi-label">Clienti</div><div class="kpi-value" id="statClients">0</div></div>
       <div class="card kpi"><div class="kpi-label">Ulivi totali registrati</div><div class="kpi-value" id="statTotalTrees">0</div></div>
       <div class="card kpi"><div class="kpi-label">Ulivi già potati</div><div class="kpi-value" id="statDoneTrees">0</div></div>
-      <div class="card kpi"><div class="kpi-label">Netto registrato</div><div class="kpi-value netto" id="statNet">0 €</div></div>
     </div>
     <div class="grid grid-3" style="margin-top:12px;">
       <div class="card kpi"><div class="kpi-label">Incassato</div><div class="kpi-value paid" id="statPaid">0 €</div></div>
@@ -249,26 +267,26 @@
   </section>
 </main>
 
-<div id="jobModal" class="modal"><div class="modal-box"><div class="modal-head"><h2 id="modalTitle">Dettaglio lavoro</h2><button class="close-btn" onclick="closeModal()">✕</button></div><div id="modalContent"></div></div></div>
+<div id="jobModal" class="modal"><div class="modal-box"><div class="modal-head"><h2 id="modalTitle">Dettaglio</h2><button class="close-btn" onclick="closeModal()">✕</button></div><div id="modalContent"></div></div></div>
 
 <div id="photoViewer" class="photo-viewer"><div class="photo-viewer-head"><div class="photo-viewer-title" id="photoViewerTitle">Foto</div><button class="btn-red" onclick="closePhotoViewer()">Chiudi foto</button></div><img id="photoViewerImg" src="" alt="Foto ingrandita" /></div>
 
-<div id="savingOverlay" class="saving-overlay"><div class="saving-box" id="savingText">Sto salvando e comprimendo la foto...<br>Attendi qualche secondo.</div></div>
+<div id="savingOverlay" class="saving-overlay"><div class="saving-box" id="savingText">Sto salvando...<br>Attendi qualche secondo.</div></div>
 
 <nav class="bottom-nav">
   <button class="nav-btn active" id="nav-home" onclick="showScreen('home')"><span class="nav-icon">🏠</span>Home</button>
   <button class="nav-btn" id="nav-new" onclick="showScreen('new')"><span class="nav-icon">➕</span>Nuovo</button>
+  <button class="nav-btn" id="nav-clients" onclick="showScreen('clients')"><span class="nav-icon">👥</span>Clienti</button>
   <button class="nav-btn" id="nav-jobs" onclick="showScreen('jobs')"><span class="nav-icon">🌳</span>Lavori</button>
-  <button class="nav-btn" id="nav-calendar" onclick="showScreen('calendar')"><span class="nav-icon">📅</span>Agenda</button>
   <button class="nav-btn" id="nav-backup" onclick="showScreen('backup')"><span class="nav-icon">💾</span>Backup</button>
 </nav>
 
 <div id="toast" class="toast"></div>
 
 <script>
-const STORAGE_KEY="appiero_v83_jobs";
-const OLD_STORAGE_KEYS=["appiero_v82_jobs","appiero_v81_jobs","appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
-let jobs=[],currentFilter="all",openedJobId=null;
+const STORAGE_KEY="appiero_v84_jobs";
+const OLD_STORAGE_KEYS=["appiero_v83_jobs","appiero_v82_jobs","appiero_v81_jobs","appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
+let jobs=[],currentFilter="all",openedJobId=null,clientSort="name";
 const euro=new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"});
 
 function todayISO(){return new Date().toISOString().slice(0,10)}
@@ -279,7 +297,7 @@ function num(n){return Number(n||0)}
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)}
 function escapeHtml(str){return String(str||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
 function escapeAttr(str){return escapeHtml(str).replaceAll("\n"," ")}
-function showSaving(show,msg){document.getElementById("savingText").innerHTML=msg||"Sto salvando e comprimendo la foto...<br>Attendi qualche secondo.";document.getElementById("savingOverlay").classList.toggle("active",!!show)}
+function showSaving(show,msg){document.getElementById("savingText").innerHTML=msg||"Sto salvando...<br>Attendi qualche secondo.";document.getElementById("savingOverlay").classList.toggle("active",!!show)}
 function storageKB(){try{return Math.round((localStorage.getItem(STORAGE_KEY)||"").length/1024)}catch(e){return 0}}
 function totalStorageKB(){let t=0;try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("appiero_"))t+=(localStorage.getItem(k)||"").length}}catch(e){}return Math.round(t/1024)}
 function safeSetStorage(key,value){try{localStorage.setItem(key,value);return true}catch(e){console.error(e);toast("Memoria piena: esporta backup, poi pulisci vecchie versioni o alleggerisci foto");return false}}
@@ -290,7 +308,7 @@ function previewFile(input,boxId){
   const file=input.files&&input.files[0];
   if(!file){box.style.display="none";box.innerHTML="";return}
   const reader=new FileReader();
-  reader.onload=e=>{box.innerHTML=`<img src="${e.target.result}" alt="Anteprima foto"><p>ANTEPRIMA FOTO CARICATA. In V8.3 la foto viene compressa molto di più.</p>`;box.style.display="block";toast("Foto caricata")};
+  reader.onload=e=>{box.innerHTML=`<img src="${e.target.result}" alt="Anteprima foto"><p>ANTEPRIMA FOTO CARICATA. La foto viene compressa prima del salvataggio.</p>`;box.style.display="block";toast("Foto caricata")};
   reader.onerror=()=>{box.innerHTML="<p>Errore: foto non letta. Prova con un'altra foto.</p>";box.style.display="block";toast("Errore caricamento foto")};
   reader.readAsDataURL(file);
 }
@@ -305,7 +323,7 @@ function compressImage(file,maxWidth=560,quality=.45){
           let width=img.width,height=img.height;
           if(width>maxWidth){height=Math.round(height*(maxWidth/width));width=maxWidth}
           const canvas=document.createElement("canvas");canvas.width=width;canvas.height=height;
-          const ctx=canvas.getContext("2d");ctx.drawImage(img,0,0,width,height);
+          canvas.getContext("2d").drawImage(img,0,0,width,height);
           resolve(canvas.toDataURL("image/jpeg",quality));
         }catch(err){reject(err)}
       };
@@ -423,6 +441,139 @@ function oilEstimatedLiters(o){if(!o.oliveKg||!o.yieldPercent)return 0;return nu
 function jobHasHealthProblem(job){return (job.healthChecks||[]).some(h=>["Da controllare","Grave"].includes(h.condition)||["Alta","Urgente"].includes(h.priority)||h.guideLevel==="Alto"||h.guideLevel==="Medio")}
 function jobSearchText(job){return [job.client,job.place,job.phone,job.notes,job.workType,job.status,job.cultivar,job.age,job.vigor,job.shape,paymentStatus(job),(job.payments||[]).map(p=>p.method+" "+p.type+" "+p.note+" "+p.amount).join(" "),(job.oilRecords||[]).map(o=>o.year+" "+o.mill+" "+o.notes).join(" "),(job.healthChecks||[]).map(h=>(h.symptoms||[]).join(" ")+" "+(h.suggestedProblems||[]).join(" ")+" "+h.note).join(" ")].join(" ").toLowerCase()}
 
+function clientKey(name){return String(name||"Senza nome").trim().toLowerCase()}
+function getClients(){
+  const map=new Map();
+  jobs.forEach(job=>{
+    const key=clientKey(job.client);
+    if(!map.has(key)){
+      map.set(key,{
+        key,
+        name:job.client||"Senza nome",
+        phone:job.phone||"",
+        places:new Set(),
+        jobs:[],
+        totalTrees:0,
+        doneTrees:0,
+        estimate:0,
+        paid:0,
+        balance:0,
+        net:0,
+        health:0,
+        healthProblems:0,
+        oil:0,
+        oilLiters:0
+      });
+    }
+    const c=map.get(key);
+    c.jobs.push(job);
+    if(job.phone && !c.phone)c.phone=job.phone;
+    if(job.place)c.places.add(job.place);
+    c.totalTrees+=num(job.totalTrees);
+    c.doneTrees+=jobDoneTrees(job);
+    c.estimate+=jobEstimate(job);
+    c.paid+=jobPaid(job);
+    c.balance+=jobBalance(job);
+    c.net+=jobNet(job);
+    c.health+=(job.healthChecks||[]).length;
+    if(jobHasHealthProblem(job))c.healthProblems++;
+    c.oil+=(job.oilRecords||[]).length;
+    c.oilLiters+=(job.oilRecords||[]).reduce((s,o)=>s+num(o.oilLiters),0);
+  });
+  return [...map.values()];
+}
+function setClientSort(s){clientSort=s;renderClients()}
+function renderClients(){
+  const q=(document.getElementById("clientSearch")?.value||"").toLowerCase().trim();
+  let list=getClients().filter(c=>{
+    const text=[c.name,c.phone,[...c.places].join(" ")].join(" ").toLowerCase();
+    return !q || text.includes(q);
+  });
+  if(clientSort==="name")list.sort((a,b)=>a.name.localeCompare(b.name));
+  if(clientSort==="balance")list.sort((a,b)=>b.balance-a.balance);
+  if(clientSort==="paid")list.sort((a,b)=>b.paid-a.paid);
+  if(clientSort==="health")list.sort((a,b)=>b.healthProblems-a.healthProblems);
+  const box=document.getElementById("clientsList");
+  if(!box)return;
+  box.innerHTML=list.length?list.map(renderClientCard).join(""):`<div class="empty">Nessun cliente trovato.</div>`;
+}
+function renderClientCard(c){
+  return `<div class="client-card">
+    <div class="job-top">
+      <div>
+        <div class="client-title">${escapeHtml(c.name)}</div>
+        <div class="muted small">${escapeHtml(c.phone||"Telefono non inserito")}</div>
+        <div class="muted small">${escapeHtml([...c.places].join(" · ")||"Luogo non indicato")}</div>
+      </div>
+      <span class="badge badge-open">${c.jobs.length} lavori</span>
+    </div>
+
+    <div class="mini-grid">
+      <div class="mini-box"><b>${c.totalTrees}</b><span>ulivi gestiti</span></div>
+      <div class="mini-box"><b>${c.doneTrees}</b><span>ulivi potati</span></div>
+      <div class="mini-box"><b>${c.healthProblems}</b><span>problemi salute</span></div>
+    </div>
+
+    <div class="mini-grid">
+      <div class="mini-box"><b class="paid">${money(c.paid)}</b><span>incassato</span></div>
+      <div class="mini-box"><b class="expense">${money(c.balance)}</b><span>da incassare</span></div>
+      <div class="mini-box"><b class="money">${c.oilLiters.toFixed(1)} L</b><span>olio registrato</span></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-main" onclick="openClient('${escapeAttr(c.key)}')">Apri cliente</button>
+      ${c.phone?`<button class="btn-blue" onclick="callClientFromPhone('${escapeAttr(c.phone)}')">Chiama</button>`:""}
+      ${c.phone?`<button class="btn-whatsapp" onclick="whatsappClient('${escapeAttr(c.phone)}','${escapeAttr(c.name)}')">WhatsApp</button>`:""}
+    </div>
+  </div>`;
+}
+function callClientFromPhone(phone){window.location.href="tel:"+phone}
+function whatsappClient(phone,name){
+  const p=cleanPhone(phone);
+  if(!p){toast("Telefono mancante");return}
+  window.open("https://wa.me/"+p+"?text="+encodeURIComponent(`Ciao ${name}, ti scrivo per i lavori di potatura ulivi.`),"_blank");
+}
+function openClient(key){
+  const c=getClients().find(x=>x.key===key);
+  if(!c)return;
+  document.getElementById("modalTitle").textContent=c.name;
+  const jobsHtml=c.jobs.map(renderJobCard).join("");
+  document.getElementById("modalContent").innerHTML=`
+    <div class="card">
+      <h3>${escapeHtml(c.name)}</h3>
+      <p class="muted small">${escapeHtml(c.phone||"Telefono non inserito")}</p>
+      <p class="muted small">${escapeHtml([...c.places].join(" · ")||"Luogo non indicato")}</p>
+
+      <div class="mini-grid">
+        <div class="mini-box"><b>${c.jobs.length}</b><span>lavori</span></div>
+        <div class="mini-box"><b>${c.totalTrees}</b><span>ulivi gestiti</span></div>
+        <div class="mini-box"><b>${c.doneTrees}</b><span>ulivi potati</span></div>
+      </div>
+
+      <div class="mini-grid">
+        <div class="mini-box"><b class="paid">${money(c.paid)}</b><span>incassato</span></div>
+        <div class="mini-box"><b class="expense">${money(c.balance)}</b><span>da incassare</span></div>
+        <div class="mini-box"><b class="netto">${money(c.net)}</b><span>netto lavori</span></div>
+      </div>
+
+      <div class="mini-grid">
+        <div class="mini-box"><b>${c.health}</b><span>schede salute</span></div>
+        <div class="mini-box"><b class="expense">${c.healthProblems}</b><span>problemi salute</span></div>
+        <div class="mini-box"><b class="money">${c.oilLiters.toFixed(1)} L</b><span>olio registrato</span></div>
+      </div>
+
+      <div class="btn-row">
+        ${c.phone?`<button class="btn-blue" onclick="callClientFromPhone('${escapeAttr(c.phone)}')">Chiama</button>`:""}
+        ${c.phone?`<button class="btn-whatsapp" onclick="whatsappClient('${escapeAttr(c.phone)}','${escapeAttr(c.name)}')">WhatsApp</button>`:""}
+      </div>
+    </div>
+
+    <div class="section-title"><h2>Lavori del cliente</h2></div>
+    ${jobsHtml || `<div class="empty">Nessun lavoro.</div>`}
+  `;
+  document.getElementById("jobModal").classList.add("active");
+}
+
 function renderJobCard(job){
   const done=jobDoneTrees(job),remaining=jobRemaining(job),progress=jobProgress(job),gross=jobGross(job),expenses=jobExpenses(job),net=jobNet(job),estimate=jobEstimate(job),paid=jobPaid(job),balance=jobBalance(job);
   const healthCount=(job.healthChecks||[]).length,oilCount=(job.oilRecords||[]).length,hasProblem=jobHasHealthProblem(job);
@@ -444,17 +595,19 @@ function renderJobs(){
     const matchFilter=currentFilter==="all"||job.status===currentFilter||(currentFilter==="saldo"&&balance>0&&job.status!=="pagato")||(currentFilter==="partial"&&paid>0&&balance>0)||(currentFilter==="health"&&jobHasHealthProblem(job))||(currentFilter==="oil"&&(job.oilRecords||[]).length>0);
     return matchQ&&matchFilter;
   });
-  document.getElementById("jobsList").innerHTML=filtered.length?filtered.map(renderJobCard).join(""):`<div class="empty">Nessun lavoro trovato.</div>`;
+  const box=document.getElementById("jobsList");
+  if(box)box.innerHTML=filtered.length?filtered.map(renderJobCard).join(""):`<div class="empty">Nessun lavoro trovato.</div>`;
 }
 function setJobFilter(f){currentFilter=f;renderJobs()}
 
 function renderHome(){
-  const today=todayISO();let todayTrees=0,todayNet=0,todayRows=0;
-  jobs.forEach(job=>job.days.forEach(d=>{if(d.date===today){todayRows++;todayTrees+=num(d.trees);todayNet+=jobDayNet(job,d)}}));
   const totalPaid=jobs.reduce((s,j)=>s+jobPaid(j),0),balanceDue=jobs.filter(j=>j.status!=="pagato").reduce((s,j)=>s+jobBalance(j),0);
-  document.getElementById("kpiTodayTrees").textContent=todayTrees;document.getElementById("kpiTodayJobs").textContent=todayRows+" giornate registrate";
-  document.getElementById("kpiBalanceDue").textContent=money(balanceDue);document.getElementById("kpiMemory").textContent=totalStorageKB();
-  document.getElementById("kpiActiveJobs").textContent=jobs.filter(j=>j.status==="attivo").length;document.getElementById("kpiHealthProblems").textContent=jobs.filter(jobHasHealthProblem).length;document.getElementById("kpiPaidTotal").textContent=money(totalPaid);
+  document.getElementById("kpiClients").textContent=getClients().length;
+  document.getElementById("kpiBalanceDue").textContent=money(balanceDue);
+  document.getElementById("kpiMemory").textContent=totalStorageKB();
+  document.getElementById("kpiActiveJobs").textContent=jobs.filter(j=>j.status==="attivo").length;
+  document.getElementById("kpiHealthProblems").textContent=jobs.filter(jobHasHealthProblem).length;
+  document.getElementById("kpiPaidTotal").textContent=money(totalPaid);
   const recent=jobs.slice(0,4);document.getElementById("homeRecentJobs").innerHTML=recent.length?recent.map(renderJobCard).join(""):`<div class="empty">Ancora nessun lavoro. Premi “Nuovo lavoro”.</div>`;
   updateMemoryInfo();
 }
@@ -468,14 +621,15 @@ function renderCalendar(){
     (job.oilRecords||[]).forEach(o=>events.push({date:String(o.year)+"-12-31",html:`<div class="calendar-day"><b>Anno ${escapeHtml(o.year)}</b><br><strong>${escapeHtml(job.client)}</strong> — produzione olio<br><span class="muted small">${num(o.productiveTrees)} piante · resa ${num(o.yieldPercent)}% · olio ${num(o.oilLiters)} L</span></div>`}));
   });
   events.sort((a,b)=>(a.date||"").localeCompare(b.date||""));
-  document.getElementById("calendarList").innerHTML=events.length?events.map(e=>e.html).join(""):`<div class="empty">Nessuna data in calendario.</div>`;
+  const box=document.getElementById("calendarList");
+  if(box)box.innerHTML=events.length?events.map(e=>e.html).join(""):`<div class="empty">Nessuna data in calendario.</div>`;
 }
 function renderStats(){
   const totalTrees=jobs.reduce((s,j)=>s+num(j.totalTrees),0),doneTrees=jobs.reduce((s,j)=>s+jobDoneTrees(j),0),net=jobs.reduce((s,j)=>s+jobNet(j),0),oilLiters=jobs.reduce((s,j)=>s+(j.oilRecords||[]).reduce((x,o)=>x+num(o.oilLiters),0),0);
   const totalPaid=jobs.reduce((s,j)=>s+jobPaid(j),0),balanceDue=jobs.filter(j=>j.status!=="pagato").reduce((s,j)=>s+jobBalance(j),0);
-  document.getElementById("statTotalTrees").textContent=totalTrees;document.getElementById("statDoneTrees").textContent=doneTrees;document.getElementById("statNet").textContent=money(net);document.getElementById("statPaid").textContent=money(totalPaid);document.getElementById("statBalance").textContent=money(balanceDue);document.getElementById("statOilLiters").textContent=oilLiters.toFixed(1)+" L";
+  document.getElementById("statClients").textContent=getClients().length;document.getElementById("statTotalTrees").textContent=totalTrees;document.getElementById("statDoneTrees").textContent=doneTrees;document.getElementById("statPaid").textContent=money(totalPaid);document.getElementById("statBalance").textContent=money(balanceDue);document.getElementById("statOilLiters").textContent=oilLiters.toFixed(1)+" L";
   const active=jobs.filter(j=>j.status==="attivo").length,estimates=jobs.filter(j=>j.status==="preventivo").length,paidFull=jobs.filter(j=>jobEstimate(j)>0&&jobPaid(j)>=jobEstimate(j)).length,partial=jobs.filter(j=>jobPaid(j)>0&&jobBalance(j)>0).length;
-  document.getElementById("statsDetails").innerHTML=`<div class="mini-grid"><div class="mini-box"><b>${jobs.length}</b><span>lavori totali</span></div><div class="mini-box"><b>${active}</b><span>attivi</span></div><div class="mini-box"><b>${estimates}</b><span>preventivi</span></div><div class="mini-box"><b>${paidFull}</b><span>pagati completo</span></div><div class="mini-box"><b>${partial}</b><span>pagati parziale</span></div><div class="mini-box"><b>${money(balanceDue)}</b><span>saldo da incassare</span></div><div class="mini-box"><b>${doneTrees?money(net/doneTrees):money(0)}</b><span>netto medio per ulivo</span></div><div class="mini-box"><b>${oilLiters.toFixed(1)} L</b><span>olio totale registrato</span></div></div>`;
+  document.getElementById("statsDetails").innerHTML=`<div class="mini-grid"><div class="mini-box"><b>${jobs.length}</b><span>lavori totali</span></div><div class="mini-box"><b>${active}</b><span>attivi</span></div><div class="mini-box"><b>${estimates}</b><span>preventivi</span></div><div class="mini-box"><b>${paidFull}</b><span>pagati completo</span></div><div class="mini-box"><b>${partial}</b><span>pagati parziale</span></div><div class="mini-box"><b>${money(balanceDue)}</b><span>saldo da incassare</span></div><div class="mini-box"><b>${money(net)}</b><span>netto registrato</span></div><div class="mini-box"><b>${oilLiters.toFixed(1)} L</b><span>olio totale registrato</span></div></div>`;
 }
 
 function renderPayments(job){
@@ -666,7 +820,7 @@ async function addHealthCheck(id){
   const condition=document.getElementById("hCondition").value,priority=document.getElementById("hPriority").value,guided=calculateGuidedDiagnosis(symptoms,guideAnswers,condition,priority);
   const h={id:uid(),date:document.getElementById("hDate").value||todayISO(),treeRef:document.getElementById("hTreeRef").value.trim(),photoPart:document.getElementById("hPhotoPart").value,condition,priority,symptoms,diseases,guideAnswers,suggestedProblems:guided.problems,guideLevel:guided.level,guideAdvice:guided.advice,cureAdvice:guided.cures,agronomistAdvice:guided.agro,note:document.getElementById("hNote").value.trim(),photo};
   job.healthChecks.push(h);if(photo){job.photos.push(photo);job.photoItems.push({id:uid(),type:"salute",src:photo,createdAt:new Date().toISOString()})}
-  save();showSaving(false);toast(photo?"Analisi salute salvata con foto leggera":"Analisi salvata senza foto");openJob(id);
+  save();showSaving(false);toast(photo?"Analisi salute salvata con foto":"Analisi salvata senza foto");openJob(id);
 }
 function quickHealth(id){openJob(id);setTimeout(()=>showHealthForm(id),50)}
 
@@ -682,12 +836,12 @@ function addOilRecord(id){
 function quickOil(id){openJob(id);setTimeout(()=>showOilForm(id),50)}
 
 function showAddPhotoForm(id){
-  document.getElementById("modalContent").innerHTML=`<div class="card"><h3>Aggiungi foto</h3><p class="muted small">In V8.3 le foto vengono salvate più leggere per evitare memoria piena.</p><label><span>Tipo foto</span><select id="extraPhotoType"><option value="sopralluogo">Sopralluogo</option><option value="prima">Prima</option><option value="durante">Durante</option><option value="dopo">Dopo</option><option value="salute">Salute olivo</option><option value="altro">Altro</option></select></label><label><span>Foto lavoro / terreno / ulivi</span><input id="extraPhoto" type="file" accept="image/*" onchange="previewFile(this,'extraPhotoPreview')"></label><div id="extraPhotoPreview" class="preview-box"></div><div class="btn-row"><button class="btn-main" onclick="addPhoto('${id}')">Salva foto</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div></div>`;
+  document.getElementById("modalContent").innerHTML=`<div class="card"><h3>Aggiungi foto</h3><p class="muted small">Le foto vengono salvate compresse per non riempire la memoria.</p><label><span>Tipo foto</span><select id="extraPhotoType"><option value="sopralluogo">Sopralluogo</option><option value="prima">Prima</option><option value="durante">Durante</option><option value="dopo">Dopo</option><option value="salute">Salute olivo</option><option value="altro">Altro</option></select></label><label><span>Foto lavoro / terreno / ulivi</span><input id="extraPhoto" type="file" accept="image/*" onchange="previewFile(this,'extraPhotoPreview')"></label><div id="extraPhotoPreview" class="preview-box"></div><div class="btn-row"><button class="btn-main" onclick="addPhoto('${id}')">Salva foto</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div></div>`;
 }
 async function addPhoto(id){
   const job=jobs.find(j=>j.id===id);if(!job)return;const file=document.getElementById("extraPhoto").files[0],type=document.getElementById("extraPhotoType").value;if(!file){toast("Scegli una foto");return}
   showSaving(true);const photo=await fileToCompressedDataURL(file);if(photo){job.photos.push(photo);job.photoItems.push({id:uid(),type,src:photo,createdAt:new Date().toISOString()})}
-  save();showSaving(false);toast(photo?"Foto leggera salvata":"Foto non salvata");openJob(id);
+  save();showSaving(false);toast(photo?"Foto salvata":"Foto non salvata");openJob(id);
 }
 
 function showEditJobForm(id){
@@ -701,7 +855,7 @@ function saveEditJob(id){
 }
 function changeStatus(id,status){const job=jobs.find(j=>j.id===id);if(!job)return;job.status=status;save();toast("Stato aggiornato");openJob(id)}
 function deleteJob(id){if(!confirm("Vuoi eliminare questo lavoro?"))return;jobs=jobs.filter(j=>j.id!==id);save();closeModal();toast("Lavoro eliminato")}
-function renderAll(){renderHome();renderJobs();renderCalendar();renderStats()}
+function renderAll(){renderHome();renderClients();renderJobs();renderCalendar();renderStats()}
 
 function cloneForBackup(includePhotos){
   return jobs.map(j=>{
@@ -716,9 +870,9 @@ function cloneForBackup(includePhotos){
   });
 }
 function exportBackup(includePhotos=true){
-  const data={app:"ApPiero",version:"8.3",photos:includePhotos,exportedAt:new Date().toISOString(),jobs:cloneForBackup(includePhotos)};
+  const data={app:"ApPiero",version:"8.4",photos:includePhotos,exportedAt:new Date().toISOString(),jobs:cloneForBackup(includePhotos)};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
-  a.href=url;a.download=(includePhotos?"appiero-v8-3-backup-completo-":"appiero-v8-3-backup-leggero-")+todayISO()+".json";a.click();URL.revokeObjectURL(url);
+  a.href=url;a.download=(includePhotos?"appiero-v8-4-backup-completo-":"appiero-v8-4-backup-leggero-")+todayISO()+".json";a.click();URL.revokeObjectURL(url);
   toast(includePhotos?"Backup completo esportato":"Backup leggero senza foto esportato");
 }
 function importBackup(){
@@ -729,7 +883,7 @@ function importBackup(){
 }
 function clearAllData(){if(!confirm("Vuoi cancellare TUTTI i dati di ApPiero?"))return;if(!confirm("Confermi? Questa operazione non si può annullare."))return;jobs=[];localStorage.removeItem(STORAGE_KEY);renderAll();toast("Dati cancellati")}
 function cleanOldStorage(){
-  if(!confirm("Pulisco solo i dati delle vecchie versioni. La V8.3 resta. Procedo?"))return;
+  if(!confirm("Pulisco solo i dati delle vecchie versioni. La V8.4 resta. Procedo?"))return;
   OLD_STORAGE_KEYS.forEach(k=>localStorage.removeItem(k));
   toast("Vecchie versioni pulite");
   updateMemoryInfo();renderAll();
@@ -747,7 +901,7 @@ async function makePhotosLighter(){
 }
 function updateMemoryInfo(){
   const el=document.getElementById("memoryInfo");
-  if(el)el.textContent=`Memoria V8.3: circa ${storageKB()} KB. Totale vecchie versioni incluse: circa ${totalStorageKB()} KB.`;
+  if(el)el.textContent=`Memoria V8.4: circa ${storageKB()} KB. Totale vecchie versioni incluse: circa ${totalStorageKB()} KB.`;
 }
 
 function init(){
