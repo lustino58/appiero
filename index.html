@@ -3,914 +3,637 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ApPiero V8.4 - Archivio Clienti</title>
+  <title>ApPiero V8.5 - Salute rapida</title>
   <meta name="theme-color" content="#18230f" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-title" content="ApPiero" />
-
   <style>
     :root{
-      --bg:#0b1208;--bg2:#111d0d;--panel:#18230f;--green:#7fbf3f;--green2:#a4d65e;
-      --gold:#d6a642;--red:#d84b3a;--blue:#4aa3df;--text:#f3f7ef;--muted:#aeb8a6;
-      --line:rgba(255,255,255,.14);--shadow:0 18px 45px rgba(0,0,0,.42);--radius:22px;
+      --bg:#071005;--bg2:#101b0c;--panel:#182610;--panel2:#203018;
+      --green:#9bd95a;--green2:#6fa634;--gold:#d6a642;--blue:#44aeea;
+      --red:#d84b3a;--text:#f4f7ef;--muted:#b4beac;--line:rgba(255,255,255,.14);
+      --shadow:0 18px 45px rgba(0,0,0,.42);--radius:24px;
     }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     body{
-      margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:radial-gradient(circle at top left,rgba(164,214,94,.18),transparent 32%),
-      radial-gradient(circle at top right,rgba(214,166,66,.12),transparent 32%),
-      linear-gradient(180deg,#050804,var(--bg));
-      color:var(--text);min-height:100vh;padding-bottom:96px;
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top left,rgba(155,217,90,.18),transparent 34%),
+        linear-gradient(180deg,#050904,var(--bg));
+      color:var(--text);
+      min-height:100vh;
+      padding-bottom:98px;
     }
-    header{position:sticky;top:0;z-index:50;padding:18px 16px 14px;background:rgba(8,14,6,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-    .brand{display:flex;justify-content:space-between;align-items:center;gap:12px}
-    .logo-box{display:flex;align-items:center;gap:12px}
-    .logo{width:52px;height:52px;border-radius:18px;background:radial-gradient(circle at 35% 25%,#dfffb1,transparent 25%),linear-gradient(145deg,#6b8f33,#263d18 52%,#111d0d);border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 0 18px rgba(255,255,255,.08),0 12px 25px rgba(0,0,0,.45);display:grid;place-items:center;font-size:25px}
-    .brand-title h1{margin:0;font-size:27px;letter-spacing:-.8px}
-    .brand-title p{margin:5px 0 0;color:var(--muted);font-size:13px}
-    .version{font-size:11px;color:var(--gold);margin-top:3px;font-weight:800}
-    .today-pill{background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:999px;padding:8px 11px;font-size:12px;color:var(--green2);white-space:nowrap}
+    header{
+      position:sticky;top:0;z-index:50;
+      padding:18px 16px 14px;
+      background:rgba(7,14,5,.94);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:blur(14px);
+    }
+    .brand{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand-left{display:flex;align-items:center;gap:13px}
+    .logo{
+      width:58px;height:58px;border-radius:20px;
+      background:radial-gradient(circle at 35% 25%,#e8ffc4,transparent 25%),linear-gradient(145deg,#6b8f33,#1a2b10);
+      display:grid;place-items:center;font-size:28px;
+      border:1px solid rgba(255,255,255,.18);box-shadow:var(--shadow);
+    }
+    h1{margin:0;font-size:31px;letter-spacing:-1px}
+    .subtitle{margin:3px 0 0;color:var(--muted);font-size:14px;line-height:1.1}
+    .version{color:var(--gold);font-weight:900;font-size:12px;margin-top:4px}
+    .today{border:1px solid var(--line);background:rgba(255,255,255,.07);padding:9px 12px;border-radius:999px;color:var(--green);font-size:13px;white-space:nowrap}
     main{padding:16px;max-width:980px;margin:0 auto}
-    .screen{display:none;animation:fadeIn .2s ease-out}.screen.active{display:block}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    .grid{display:grid;gap:12px}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    @media(max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr}}
-    .card{background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.025)),linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;overflow:hidden;position:relative}
-    .card::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,rgba(255,255,255,.08),transparent 38%);opacity:.55}
-    .card>*{position:relative;z-index:1}
-    h2{margin:5px 0 14px;font-size:23px;letter-spacing:-.4px}h3{margin:0 0 10px;font-size:18px}
-    .muted{color:var(--muted)}.small{font-size:13px}
-    .kpi{min-height:105px}.kpi-label{color:var(--muted);font-size:13px;margin-bottom:8px}.kpi-value{font-size:34px;font-weight:900;letter-spacing:-1px}.kpi-small{font-size:13px;color:var(--green2);margin-top:7px}
-    .section-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:18px 0 10px}.section-title h2{margin:0}
-    .btn-row{display:flex;gap:9px;flex-wrap:wrap}
-    button,.btn{border:none;border-radius:16px;padding:13px 15px;font-weight:800;color:white;background:linear-gradient(145deg,#3d5d24,#203114);border:1px solid rgba(255,255,255,.14);box-shadow:0 9px 20px rgba(0,0,0,.28);cursor:pointer;font-size:14px}
+    .screen{display:none}.screen.active{display:block}
+    .grid{display:grid;gap:12px}.grid2{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}
+    @media(max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+    .card,.job,.client{
+      background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025)),linear-gradient(180deg,var(--panel),var(--bg2));
+      border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);overflow:hidden;
+    }
+    .kpi-label{color:var(--muted);font-size:14px}.kpi-value{font-size:38px;font-weight:950;margin:10px 0 4px}.kpi-small{color:var(--green);font-size:13px}
+    h2{font-size:27px;margin:20px 0 12px;letter-spacing:-.7px}h3{font-size:19px;margin:0 0 12px}
+    .muted{color:var(--muted)}.small{font-size:13px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 10px}
+    .section-head h2{margin:0}
+    input,select,textarea{
+      width:100%;padding:14px;border-radius:17px;border:1px solid rgba(255,255,255,.16);
+      background:rgba(0,0,0,.25);color:var(--text);font-size:16px;outline:none;
+    }
+    textarea{min-height:96px;resize:vertical}
+    label{display:block;color:var(--muted);font-weight:800;font-size:13px;margin:0 0 12px}label span{display:block;margin-bottom:6px}
+    button{
+      border:1px solid rgba(255,255,255,.14);border-radius:17px;padding:13px 15px;
+      font-weight:950;font-size:14px;color:var(--text);background:rgba(255,255,255,.08);
+      box-shadow:0 9px 20px rgba(0,0,0,.25);
+    }
     button:active{transform:scale(.98)}
-    .btn-main{background:linear-gradient(145deg,#a4d65e,#4f7d24);color:#101908}.btn-gold{background:linear-gradient(145deg,#f0c66a,#a77320);color:#1d1204}.btn-blue{background:linear-gradient(145deg,#56c1ff,#176799)}.btn-red{background:linear-gradient(145deg,#ff7b64,#9d2b1e)}.btn-soft{background:rgba(255,255,255,.08);color:var(--text)}.btn-whatsapp{background:linear-gradient(145deg,#42d66b,#128c3b);color:#06140a}.btn-full{width:100%}
-    input,select,textarea{width:100%;padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.24);color:var(--text);outline:none;font-size:16px}
-    textarea{min-height:95px;resize:vertical}
-    label{display:block;margin-bottom:11px;color:var(--muted);font-size:13px;font-weight:700}label span{display:block;margin-bottom:6px}
-    .form-grid{display:grid;gap:10px}.list{display:grid;gap:12px}
-    .job-card,.client-card{border-radius:22px;border:1px solid var(--line);background:radial-gradient(circle at top right,rgba(164,214,94,.12),transparent 30%),linear-gradient(145deg,rgba(255,255,255,.08),rgba(255,255,255,.03));padding:14px;box-shadow:0 12px 28px rgba(0,0,0,.22)}
-    .job-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.job-title,.client-title{font-size:18px;font-weight:900;margin-bottom:4px}
-    .badge{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:900;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);white-space:nowrap}
-    .badge-open{color:#b8ff74}.badge-work{color:#ffe08a}.badge-done{color:#7bd7ff}.badge-paid{color:#d6b2ff}.badge-health{color:#ffca8a}.badge-oil{color:#f0c66a}.badge-danger{color:#ff9b91}
-    .progress-wrap{margin:12px 0 8px;height:13px;background:rgba(0,0,0,.35);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.10)}
-    .progress-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--green2),var(--gold));border-radius:999px;transition:.25s ease}
-    .mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}
-    @media(max-width:600px){.mini-grid{grid-template-columns:1fr}}
-    .mini-box{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.10);padding:9px;border-radius:15px}.mini-box b{display:block;font-size:19px;margin-bottom:2px}.mini-box span{color:var(--muted);font-size:12px}
-    .money{color:var(--gold);font-weight:950}.netto{color:var(--green2);font-weight:950}.expense{color:#ffb199;font-weight:950}.paid{color:#d6b2ff;font-weight:950}
-    .photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}@media(min-width:760px){.photo-grid{grid-template-columns:repeat(3,1fr)}}
-    .photo-card{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.13);border-radius:18px;padding:8px}
-    .photo-thumb{width:100%;height:120px;object-fit:cover;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:#050805;display:block;margin-bottom:8px}
-    .preview-box{margin:8px 0 14px;display:none;border:1px solid rgba(164,214,94,.45);border-radius:18px;padding:10px;background:rgba(0,0,0,.28)}
-    .preview-box img{width:100%;max-height:260px;object-fit:contain;border-radius:14px;background:#071004;display:block}.preview-box p{margin:8px 0 0;color:var(--green2);font-weight:900;font-size:13px}
-    .bottom-nav{position:fixed;z-index:80;bottom:0;left:0;right:0;background:rgba(5,8,4,.92);backdrop-filter:blur(15px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px 10px;gap:7px}
-    .nav-btn{padding:9px 4px;font-size:11px;border-radius:15px;background:rgba(255,255,255,.06);color:var(--muted);box-shadow:none}.nav-btn.active{background:linear-gradient(145deg,#a4d65e,#4f7d24);color:#101908}.nav-icon{display:block;font-size:20px;margin-bottom:2px}
-    .modal{position:fixed;inset:0;background:rgba(0,0,0,.74);display:none;align-items:flex-end;justify-content:center;z-index:120;padding:12px}.modal.active{display:flex}
-    .modal-box{width:100%;max-width:780px;max-height:92vh;overflow:auto;background:radial-gradient(circle at top left,rgba(164,214,94,.12),transparent 28%),linear-gradient(180deg,#1a2711,#0d1509);border:1px solid rgba(255,255,255,.16);border-radius:28px;box-shadow:0 30px 80px rgba(0,0,0,.55);padding:16px}
-    .modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.modal-head h2{margin:0}.close-btn{width:44px;height:44px;border-radius:50%;padding:0;background:rgba(255,255,255,.10)}
-    .day-row,.health-row,.oil-row,.pay-row{border:1px solid rgba(255,255,255,.10);border-radius:18px;padding:12px;background:rgba(0,0,0,.18);margin-bottom:8px}.day-row b,.health-row b,.oil-row b,.pay-row b{color:var(--green2)}
-    .calendar-day{border-left:4px solid var(--green);padding:12px;border-radius:16px;background:rgba(255,255,255,.06);margin-bottom:9px}
-    .empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed rgba(255,255,255,.16);border-radius:22px;background:rgba(255,255,255,.035)}
-    .danger-zone{border-color:rgba(216,75,58,.45);background:linear-gradient(145deg,rgba(216,75,58,.12),rgba(255,255,255,.03))}
-    .toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:#f4ffe9;color:#111d0d;padding:12px 15px;border-radius:16px;font-weight:900;box-shadow:0 14px 40px rgba(0,0,0,.45);z-index:200;opacity:0;pointer-events:none;transition:.25s ease;max-width:calc(100vw - 26px);text-align:center}.toast.show{opacity:1;bottom:105px}
-    .search{margin-bottom:12px}.check-grid{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px}@media(min-width:760px){.check-grid{grid-template-columns:repeat(2,1fr)}}
-    .check-item{display:flex;gap:8px;align-items:center;background:rgba(0,0,0,.20);border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:10px;color:var(--text);font-size:13px}.check-item input{width:auto}
-    .advice-box{background:linear-gradient(145deg,rgba(214,166,66,.18),rgba(255,255,255,.04));border:1px solid rgba(214,166,66,.35);border-radius:18px;padding:12px;margin:12px 0}.advice-box h3{color:var(--gold);margin-bottom:8px}
-    .diagnosis-tag{display:inline-block;margin:4px 5px 4px 0;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);font-size:12px;font-weight:800;color:#ffe08a}
-    .quote-box{white-space:pre-wrap;line-height:1.45;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:13px;font-size:14px;color:#f6f8ef;margin-top:10px}
-    .photo-viewer{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:300;display:none;flex-direction:column;padding:12px}.photo-viewer.active{display:flex}.photo-viewer-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:4px 0 10px}.photo-viewer-title{color:white;font-weight:900;font-size:16px}.photo-viewer img{width:100%;height:calc(100vh - 90px);object-fit:contain;border-radius:14px;background:#000}
-    .saving-overlay{position:fixed;inset:0;background:rgba(0,0,0,.76);z-index:260;display:none;align-items:center;justify-content:center;padding:20px;text-align:center}.saving-overlay.active{display:flex}.saving-box{background:#f4ffe9;color:#111d0d;border-radius:22px;padding:20px;font-weight:900;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .btn-main{background:linear-gradient(145deg,#a7dc5f,#558226);color:#101908}
+    .btn-gold{background:linear-gradient(145deg,#f0c76a,#a77320);color:#1a1104}
+    .btn-blue{background:linear-gradient(145deg,#5fc7ff,#176799)}
+    .btn-red{background:linear-gradient(145deg,#ff7762,#92251a)}
+    .btn-wa{background:linear-gradient(145deg,#4be071,#118839);color:#071408}
+    .btn-row{display:flex;gap:9px;flex-wrap:wrap}.btn-full{width:100%}
+    .job-title,.client-title{font-size:25px;font-weight:950;margin-bottom:5px}
+    .topline{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .badge{display:inline-flex;padding:7px 11px;border-radius:999px;border:1px solid var(--line);font-size:12px;font-weight:950;background:rgba(255,255,255,.08);white-space:nowrap}
+    .b-prev{color:#b8ff74}.b-att{color:#ffe08a}.b-fin{color:#7bd7ff}.b-pag{color:#d7b4ff}.b-warn{color:#ffb199}
+    .bar{height:13px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.1);border-radius:999px;overflow:hidden;margin:12px 0}
+    .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--gold));width:0%}
+    .mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+    @media(max-width:600px){.mini{grid-template-columns:1fr}}
+    .mini div{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:10px}
+    .mini b{display:block;font-size:20px}.mini span{font-size:12px;color:var(--muted)}
+    .money{color:var(--gold)!important}.paid{color:#d7b4ff!important}.due{color:#ffb199!important}.net{color:var(--green)!important}
+    .list{display:grid;gap:12px}.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed rgba(255,255,255,.18);border-radius:22px;background:rgba(255,255,255,.035)}
+    .bottom{
+      position:fixed;left:0;right:0;bottom:0;z-index:90;
+      display:grid;grid-template-columns:repeat(5,1fr);gap:7px;padding:8px 8px 10px;
+      background:rgba(5,8,4,.94);border-top:1px solid var(--line);backdrop-filter:blur(14px);
+    }
+    .nav{box-shadow:none;padding:9px 3px;border-radius:16px;font-size:11px;color:var(--muted);background:rgba(255,255,255,.06)}
+    .nav.active{background:linear-gradient(145deg,#a7dc5f,#558226);color:#101908}
+    .ico{display:block;font-size:20px;margin-bottom:2px}
+    .modal{position:fixed;inset:0;z-index:150;display:none;align-items:flex-end;justify-content:center;padding:12px;background:rgba(0,0,0,.74)}
+    .modal.active{display:flex}
+    .modalbox{width:100%;max-width:820px;max-height:92vh;overflow:auto;border-radius:28px;padding:16px;background:linear-gradient(180deg,#1a2711,#0b1208);border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.55)}
+    .modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.modalhead h2{margin:0}
+    .close{width:44px;height:44px;border-radius:50%;padding:0}
+    .rowbox{border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.18);border-radius:18px;padding:12px;margin-bottom:8px}
+    .photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}@media(min-width:760px){.photo-grid{grid-template-columns:repeat(3,1fr)}}
+    .thumb{width:100%;height:120px;object-fit:cover;border-radius:14px;background:#000;border:1px solid rgba(255,255,255,.14)}
+    .preview{display:none;margin:8px 0 14px;padding:10px;border:1px solid rgba(155,217,90,.45);border-radius:18px;background:rgba(0,0,0,.26)}
+    .preview img{width:100%;max-height:260px;object-fit:contain;border-radius:14px;background:#000}
+    .checkgrid{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px}@media(min-width:760px){.checkgrid{grid-template-columns:repeat(2,1fr)}}
+    .check{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.11);background:rgba(0,0,0,.2);border-radius:14px;padding:10px;color:var(--text)}.check input{width:auto}
+    .tag{display:inline-block;margin:4px 5px 4px 0;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);font-size:12px;font-weight:900;color:#ffe08a}
+    .viewer{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.96);display:none;flex-direction:column;padding:12px}.viewer.active{display:flex}.viewer img{width:100%;height:calc(100vh - 90px);object-fit:contain;background:#000;border-radius:14px}
+    .toast{position:fixed;z-index:400;left:50%;bottom:105px;transform:translateX(-50%);background:#f4ffe9;color:#111d0d;padding:13px 16px;border-radius:17px;font-weight:950;opacity:0;pointer-events:none;box-shadow:0 18px 45px rgba(0,0,0,.45);transition:.25s;text-align:center;max-width:calc(100vw - 28px)}
+    .toast.show{opacity:1}
   </style>
 </head>
-
 <body>
 <header>
   <div class="brand">
-    <div class="logo-box">
+    <div class="brand-left">
       <div class="logo">🌿</div>
-      <div class="brand-title">
+      <div>
         <h1>ApPiero</h1>
-        <p>Gestione potatura ulivi</p>
-        <div class="version">V8.4 · archivio clienti</div>
+        <div class="subtitle">Gestione potatura ulivi</div>
+        <div class="version">V8.5 · salute rapida</div>
       </div>
     </div>
-    <div class="today-pill" id="todayText">Oggi</div>
+    <div class="today" id="todayText">oggi</div>
   </div>
 </header>
 
 <main>
   <section id="screen-home" class="screen active">
-    <div class="grid grid-3">
-      <div class="card kpi"><div class="kpi-label">Clienti</div><div class="kpi-value" id="kpiClients">0</div><div class="kpi-small">archivio clienti</div></div>
-      <div class="card kpi"><div class="kpi-label">Da incassare</div><div class="kpi-value expense" id="kpiBalanceDue">0 €</div><div class="kpi-small">saldo lavori aperti</div></div>
-      <div class="card kpi"><div class="kpi-label">Memoria usata</div><div class="kpi-value" id="kpiMemory">0</div><div class="kpi-small">KB circa</div></div>
+    <div class="grid grid3">
+      <div class="card"><div class="kpi-label">Clienti</div><div class="kpi-value" id="kpiClients">0</div><div class="kpi-small">archivio clienti</div></div>
+      <div class="card"><div class="kpi-label">Da incassare</div><div class="kpi-value due" id="kpiDue">0 €</div><div class="kpi-small">saldo lavori aperti</div></div>
+      <div class="card"><div class="kpi-label">Memoria</div><div class="kpi-value" id="kpiMem">0</div><div class="kpi-small">KB circa</div></div>
     </div>
 
-    <div class="section-title"><h2>Azioni rapide</h2></div>
-    <div class="grid grid-2">
-      <button class="btn-main btn-full" onclick="showScreen('new')">➕ Nuovo lavoro</button>
-      <button class="btn-gold btn-full" onclick="showScreen('clients')">👥 Clienti</button>
-      <button class="btn-blue btn-full" onclick="showScreen('jobs')">🌳 Lavori</button>
-      <button class="btn-soft btn-full" onclick="showScreen('stats')">📊 Statistiche</button>
+    <h2>Azioni rapide</h2>
+    <div class="grid grid2">
+      <button class="btn-main" onclick="showScreen('new')">➕ Nuovo lavoro</button>
+      <button class="btn-gold" onclick="showScreen('clients')">👥 Clienti</button>
+      <button class="btn-blue" onclick="showScreen('jobs')">🌳 Lavori</button>
+      <button onclick="showScreen('stats')">📊 Statistiche</button>
     </div>
 
-    <div class="section-title"><h2>Situazione</h2></div>
-    <div class="grid grid-3">
-      <div class="card kpi"><div class="kpi-label">Lavori attivi</div><div class="kpi-value" id="kpiActiveJobs">0</div><div class="kpi-small">da completare</div></div>
-      <div class="card kpi"><div class="kpi-label">Problemi salute</div><div class="kpi-value expense" id="kpiHealthProblems">0</div><div class="kpi-small">schede da controllare</div></div>
-      <div class="card kpi"><div class="kpi-label">Incassato</div><div class="kpi-value paid" id="kpiPaidTotal">0 €</div><div class="kpi-small">pagamenti registrati</div></div>
-    </div>
-
-    <div class="section-title"><h2>Ultimi lavori</h2></div>
-    <div id="homeRecentJobs" class="list"></div>
+    <h2>Ultimi lavori</h2>
+    <div id="homeJobs" class="list"></div>
   </section>
 
   <section id="screen-new" class="screen">
     <div class="card">
-      <h2>Nuovo lavoro / preventivo</h2>
-      <div class="form-grid">
-        <label><span>Cliente</span><input id="fClient" placeholder="Es. Mario Rossi" /></label>
-        <label><span>Telefono cliente</span><input id="fPhone" placeholder="Es. 333 1234567" /></label>
-        <label><span>Luogo / località</span><input id="fPlace" placeholder="Es. Località San Pietro, Imperia" /></label>
-        <div class="grid grid-2">
-          <label><span>Data prevista inizio</span><input id="fDate" type="date" /></label>
-          <label><span>Totale ulivi</span><input id="fTotalTrees" type="number" min="0" placeholder="Es. 120" /></label>
-        </div>
-
-        <h3>Dati oliveto</h3>
-        <div class="grid grid-2">
-          <label><span>Cultivar / tipo olivo</span><select id="fCultivar"><option value="">Non indicato</option><option>Taggiasca</option><option>Leccino</option><option>Frantoio</option><option>Moraiolo</option><option>Pendolino</option><option>Coratina</option><option>Ogliarola</option><option>Arbequina</option><option>Nocellara</option><option>Altro / misto</option></select></label>
-          <label><span>Età stimata</span><select id="fAge"><option value="">Non indicata</option><option>Giovane</option><option>Adulta</option><option>Vecchia</option><option>Secolare</option></select></label>
-        </div>
-        <div class="grid grid-2">
-          <label><span>Vigoria</span><select id="fVigor"><option value="">Non indicata</option><option>Bassa</option><option>Media</option><option>Alta</option></select></label>
-          <label><span>Forma pianta</span><select id="fShape"><option value="">Non indicata</option><option>Vaso</option><option>Vaso policonico</option><option>Cespuglio</option><option>Abbandonato / da recupero</option><option>Altro</option></select></label>
-        </div>
-
-        <div class="grid grid-2">
-          <label><span>Tipo prezzo</span><select id="fPriceMode" onchange="updatePriceLabels()"><option value="tree">Prezzo a ulivo</option><option value="day">Prezzo a giornata</option><option value="fixed">Prezzo a corpo</option></select></label>
-          <label><span id="priceValueLabel">Prezzo a ulivo €</span><input id="fPriceValue" type="number" min="0" step="0.01" placeholder="Es. 5" /></label>
-        </div>
-        <div class="grid grid-2">
-          <label><span>Giorni stimati, se prezzo a giornata</span><input id="fEstimatedDays" type="number" min="0" placeholder="Es. 4" /></label>
-          <label><span>Acconto ricevuto €</span><input id="fDeposit" type="number" min="0" step="0.01" placeholder="Es. 100" /></label>
-        </div>
-
-        <label><span>Tipo lavoro</span><select id="fWorkType"><option>Potatura ordinaria</option><option>Potatura di recupero</option><option>Potatura di riforma</option><option>Potatura leggera</option><option>Potatura pesante</option><option>Sopralluogo / preventivo</option></select></label>
-        <label><span>Stato</span><select id="fStatus"><option value="preventivo">Preventivo</option><option value="attivo">Lavoro attivo</option><option value="finito">Finito</option><option value="pagato">Pagato</option></select></label>
-
-        <label><span>Tipo foto iniziale</span><select id="fPhotoType"><option value="sopralluogo">Sopralluogo</option><option value="prima">Prima</option><option value="durante">Durante</option><option value="dopo">Dopo</option><option value="salute">Salute olivo</option><option value="altro">Altro</option></select></label>
-        <label><span>Foto del terreno / sopralluogo</span><input id="fPhoto" type="file" accept="image/*" onchange="previewFile(this,'fPhotoPreview')" /></label>
-        <div id="fPhotoPreview" class="preview-box"></div>
-        <label><span>Note</span><textarea id="fNotes" placeholder="Es. terreno scosceso, alberi molto alti, serve motosega..."></textarea></label>
-        <button class="btn-main btn-full" onclick="createJob()">Salva lavoro</button>
+      <h2>Nuovo lavoro</h2>
+      <label><span>Cliente</span><input id="fClient" placeholder="Es. Pippo" /></label>
+      <label><span>Telefono</span><input id="fPhone" placeholder="Es. 3331234567" /></label>
+      <label><span>Luogo</span><input id="fPlace" placeholder="Es. Posillipo" /></label>
+      <div class="grid grid2">
+        <label><span>Data prevista</span><input id="fDate" type="date" /></label>
+        <label><span>Totale ulivi</span><input id="fTrees" type="number" min="0" placeholder="Es. 120" /></label>
       </div>
+      <div class="grid grid2">
+        <label><span>Cultivar / tipo olivo</span>
+          <select id="fCultivar">
+            <option value="">Non indicata</option><option>Taggiasca</option><option>Leccino</option><option>Frantoio</option><option>Moraiolo</option><option>Pendolino</option><option>Coratina</option><option>Ogliarola</option><option>Nocellara</option><option>Arbequina</option><option>Altro / misto</option>
+          </select>
+        </label>
+        <label><span>Stato</span>
+          <select id="fStatus"><option value="preventivo">Preventivo</option><option value="attivo">Attivo</option><option value="finito">Finito</option><option value="pagato">Pagato</option></select>
+        </label>
+      </div>
+      <div class="grid grid2">
+        <label><span>Tipo prezzo</span>
+          <select id="fPriceMode" onchange="priceLabel()"><option value="tree">Prezzo a ulivo</option><option value="day">Prezzo a giornata</option><option value="fixed">Prezzo a corpo</option></select>
+        </label>
+        <label><span id="fPriceLabel">Prezzo a ulivo €</span><input id="fPrice" type="number" min="0" step="0.01" /></label>
+      </div>
+      <div class="grid grid2">
+        <label><span>Giorni stimati</span><input id="fDays" type="number" min="0" /></label>
+        <label><span>Acconto €</span><input id="fDeposit" type="number" min="0" step="0.01" /></label>
+      </div>
+      <label><span>Tipo lavoro</span><select id="fWork"><option>Potatura ordinaria</option><option>Potatura di recupero</option><option>Potatura di riforma</option><option>Potatura leggera</option><option>Potatura pesante</option><option>Sopralluogo / preventivo</option></select></label>
+      <label><span>Foto iniziale</span><input id="fPhoto" type="file" accept="image/*" onchange="preview(this,'fPreview')" /></label>
+      <div id="fPreview" class="preview"></div>
+      <label><span>Note</span><textarea id="fNotes"></textarea></label>
+      <button class="btn-main btn-full" onclick="createJob()">Salva lavoro</button>
     </div>
   </section>
 
   <section id="screen-clients" class="screen">
-    <div class="section-title">
-      <h2>Archivio clienti</h2>
-      <button class="btn-main" onclick="showScreen('new')">➕ Nuovo</button>
+    <div class="section-head"><h2>Clienti</h2><button class="btn-main" onclick="showScreen('new')">➕ Nuovo</button></div>
+    <input id="clientSearch" oninput="renderClients()" placeholder="Cerca cliente, telefono, luogo..." />
+    <div class="btn-row" style="margin:12px 0">
+      <button onclick="clientSort='name';renderClients()">Nome</button>
+      <button onclick="clientSort='due';renderClients()">Da incassare</button>
+      <button onclick="clientSort='paid';renderClients()">Incassato</button>
+      <button onclick="clientSort='health';renderClients()">Salute</button>
     </div>
-
-    <input class="search" id="clientSearch" oninput="renderClients()" placeholder="Cerca cliente, telefono, luogo..." />
-
-    <div class="btn-row" style="margin-bottom:12px;">
-      <button class="btn-soft" onclick="setClientSort('name')">Nome</button>
-      <button class="btn-soft" onclick="setClientSort('balance')">Da incassare</button>
-      <button class="btn-soft" onclick="setClientSort('paid')">Incassato</button>
-      <button class="btn-soft" onclick="setClientSort('health')">Problemi salute</button>
-    </div>
-
     <div id="clientsList" class="list"></div>
   </section>
 
   <section id="screen-jobs" class="screen">
-    <div class="section-title"><h2>Lavori</h2><button class="btn-main" onclick="showScreen('new')">➕ Nuovo</button></div>
-    <input class="search" id="jobSearch" oninput="renderJobs()" placeholder="Cerca cliente, luogo, telefono, cultivar, pagamenti, anno olio..." />
-
-    <div class="btn-row" style="margin-bottom:12px;">
-      <button class="btn-soft" onclick="setJobFilter('all')">Tutti</button>
-      <button class="btn-soft" onclick="setJobFilter('preventivo')">Preventivi</button>
-      <button class="btn-soft" onclick="setJobFilter('attivo')">Attivi</button>
-      <button class="btn-soft" onclick="setJobFilter('finito')">Finiti</button>
-      <button class="btn-soft" onclick="setJobFilter('pagato')">Pagati</button>
-      <button class="btn-soft" onclick="setJobFilter('saldo')">Da incassare</button>
-      <button class="btn-soft" onclick="setJobFilter('partial')">Pagati parziale</button>
-      <button class="btn-soft" onclick="setJobFilter('health')">Problemi salute</button>
-      <button class="btn-soft" onclick="setJobFilter('oil')">Con olio</button>
+    <div class="section-head"><h2>Lavori</h2><button class="btn-main" onclick="showScreen('new')">➕ Nuovo</button></div>
+    <input id="jobSearch" oninput="renderJobs()" placeholder="Cerca cliente, luogo, telefono, cultivar..." />
+    <div class="btn-row" style="margin:12px 0">
+      <button onclick="jobFilter='all';renderJobs()">Tutti</button>
+      <button onclick="jobFilter='preventivo';renderJobs()">Preventivi</button>
+      <button onclick="jobFilter='attivo';renderJobs()">Attivi</button>
+      <button onclick="jobFilter='finito';renderJobs()">Finiti</button>
+      <button onclick="jobFilter='pagato';renderJobs()">Pagati</button>
+      <button onclick="jobFilter='due';renderJobs()">Da incassare</button>
+      <button onclick="jobFilter='health';renderJobs()">Problemi salute</button>
+      <button onclick="jobFilter='oil';renderJobs()">Con olio</button>
     </div>
-
     <div id="jobsList" class="list"></div>
   </section>
 
-  <section id="screen-calendar" class="screen">
-    <div class="section-title"><h2>Calendario lavori</h2></div>
-    <div class="card"><p class="muted small">Qui vedi lavori, giornate, pagamenti, controlli salute e annate olio.</p></div>
-    <div id="calendarList" class="list" style="margin-top:12px;"></div>
-  </section>
-
   <section id="screen-stats" class="screen">
-    <div class="section-title"><h2>Statistiche</h2></div>
-    <div class="grid grid-3">
-      <div class="card kpi"><div class="kpi-label">Clienti</div><div class="kpi-value" id="statClients">0</div></div>
-      <div class="card kpi"><div class="kpi-label">Ulivi totali registrati</div><div class="kpi-value" id="statTotalTrees">0</div></div>
-      <div class="card kpi"><div class="kpi-label">Ulivi già potati</div><div class="kpi-value" id="statDoneTrees">0</div></div>
+    <h2>Statistiche</h2>
+    <div class="grid grid3">
+      <div class="card"><div class="kpi-label">Clienti</div><div class="kpi-value" id="sClients">0</div></div>
+      <div class="card"><div class="kpi-label">Ulivi totali</div><div class="kpi-value" id="sTrees">0</div></div>
+      <div class="card"><div class="kpi-label">Ulivi potati</div><div class="kpi-value" id="sDone">0</div></div>
     </div>
-    <div class="grid grid-3" style="margin-top:12px;">
-      <div class="card kpi"><div class="kpi-label">Incassato</div><div class="kpi-value paid" id="statPaid">0 €</div></div>
-      <div class="card kpi"><div class="kpi-label">Da incassare</div><div class="kpi-value expense" id="statBalance">0 €</div></div>
-      <div class="card kpi"><div class="kpi-label">Olio registrato</div><div class="kpi-value money" id="statOilLiters">0 L</div></div>
+    <div class="grid grid3" style="margin-top:12px">
+      <div class="card"><div class="kpi-label">Incassato</div><div class="kpi-value paid" id="sPaid">0 €</div></div>
+      <div class="card"><div class="kpi-label">Da incassare</div><div class="kpi-value due" id="sDue">0 €</div></div>
+      <div class="card"><div class="kpi-label">Olio</div><div class="kpi-value money" id="sOil">0 L</div></div>
     </div>
-    <div class="card" style="margin-top:12px;"><h3>Riepilogo generale</h3><div id="statsDetails"></div></div>
   </section>
 
   <section id="screen-backup" class="screen">
-    <div class="section-title"><h2>Backup e memoria</h2></div>
-
+    <h2>Backup e memoria</h2>
     <div class="card">
       <h3>Memoria ApPiero</h3>
-      <p class="muted small" id="memoryInfo">Calcolo memoria...</p>
+      <p class="muted small" id="memoryInfo">Calcolo...</p>
       <div class="btn-row">
-        <button class="btn-main" onclick="cleanOldStorage()">🧹 Pulisci vecchie versioni</button>
-        <button class="btn-gold" onclick="makePhotosLighter()">🖼 Alleggerisci foto salvate</button>
+        <button class="btn-main" onclick="cleanOld()">🧹 Pulisci vecchie versioni</button>
+        <button class="btn-gold" onclick="lightenPhotos()">🖼 Alleggerisci foto</button>
       </div>
     </div>
-
-    <div class="card" style="margin-top:12px;">
+    <div class="card" style="margin-top:12px">
       <h3>Esporta backup completo</h3>
-      <p class="muted small">Scarica un file JSON con tutti i lavori e le foto salvate.</p>
+      <p class="muted small">Salva lavori e foto.</p>
       <button class="btn-main btn-full" onclick="exportBackup(true)">📤 Esporta backup completo</button>
     </div>
-
-    <div class="card" style="margin-top:12px;">
-      <h3>Esporta backup leggero</h3>
-      <p class="muted small">Salva tutti i dati ma senza foto. Utile se la memoria è piena.</p>
+    <div class="card" style="margin-top:12px">
+      <h3>Backup leggero</h3>
+      <p class="muted small">Salva i dati senza foto.</p>
       <button class="btn-blue btn-full" onclick="exportBackup(false)">📤 Backup leggero senza foto</button>
     </div>
-
-    <div class="card" style="margin-top:12px;">
+    <div class="card" style="margin-top:12px">
       <h3>Importa backup</h3>
-      <p class="muted small">Carica un backup JSON già esportato.</p>
       <input id="backupFile" type="file" accept="application/json" />
-      <button class="btn-gold btn-full" style="margin-top:10px;" onclick="importBackup()">📥 Importa backup</button>
+      <button class="btn-gold btn-full" style="margin-top:10px" onclick="importBackup()">📥 Importa backup</button>
     </div>
-
-    <div class="card danger-zone" style="margin-top:12px;">
+    <div class="card" style="margin-top:12px;border-color:rgba(216,75,58,.55)">
       <h3>Zona pericolosa</h3>
-      <p class="muted small">Cancella tutti i dati salvati su questo telefono/browser.</p>
-      <button class="btn-red btn-full" onclick="clearAllData()">🗑 Cancella tutto</button>
+      <button class="btn-red btn-full" onclick="clearAll()">🗑 Cancella tutto</button>
     </div>
   </section>
 </main>
 
-<div id="jobModal" class="modal"><div class="modal-box"><div class="modal-head"><h2 id="modalTitle">Dettaglio</h2><button class="close-btn" onclick="closeModal()">✕</button></div><div id="modalContent"></div></div></div>
+<div id="modal" class="modal">
+  <div class="modalbox">
+    <div class="modalhead"><h2 id="modalTitle">Dettaglio</h2><button class="close" onclick="closeModal()">✕</button></div>
+    <div id="modalBody"></div>
+  </div>
+</div>
 
-<div id="photoViewer" class="photo-viewer"><div class="photo-viewer-head"><div class="photo-viewer-title" id="photoViewerTitle">Foto</div><button class="btn-red" onclick="closePhotoViewer()">Chiudi foto</button></div><img id="photoViewerImg" src="" alt="Foto ingrandita" /></div>
+<div id="viewer" class="viewer">
+  <div class="modalhead"><h2 id="viewerTitle">Foto</h2><button class="btn-red" onclick="closeViewer()">Chiudi</button></div>
+  <img id="viewerImg" src="" />
+</div>
 
-<div id="savingOverlay" class="saving-overlay"><div class="saving-box" id="savingText">Sto salvando...<br>Attendi qualche secondo.</div></div>
-
-<nav class="bottom-nav">
-  <button class="nav-btn active" id="nav-home" onclick="showScreen('home')"><span class="nav-icon">🏠</span>Home</button>
-  <button class="nav-btn" id="nav-new" onclick="showScreen('new')"><span class="nav-icon">➕</span>Nuovo</button>
-  <button class="nav-btn" id="nav-clients" onclick="showScreen('clients')"><span class="nav-icon">👥</span>Clienti</button>
-  <button class="nav-btn" id="nav-jobs" onclick="showScreen('jobs')"><span class="nav-icon">🌳</span>Lavori</button>
-  <button class="nav-btn" id="nav-backup" onclick="showScreen('backup')"><span class="nav-icon">💾</span>Backup</button>
+<nav class="bottom">
+  <button class="nav active" id="nav-home" onclick="showScreen('home')"><span class="ico">🏠</span>Home</button>
+  <button class="nav" id="nav-new" onclick="showScreen('new')"><span class="ico">➕</span>Nuovo</button>
+  <button class="nav" id="nav-clients" onclick="showScreen('clients')"><span class="ico">👥</span>Clienti</button>
+  <button class="nav" id="nav-jobs" onclick="showScreen('jobs')"><span class="ico">🌳</span>Lavori</button>
+  <button class="nav" id="nav-backup" onclick="showScreen('backup')"><span class="ico">💾</span>Backup</button>
 </nav>
 
 <div id="toast" class="toast"></div>
 
 <script>
-const STORAGE_KEY="appiero_v84_jobs";
-const OLD_STORAGE_KEYS=["appiero_v83_jobs","appiero_v82_jobs","appiero_v81_jobs","appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
-let jobs=[],currentFilter="all",openedJobId=null,clientSort="name";
+const STORAGE_KEY="appiero_v85_jobs";
+const OLD_KEYS=["appiero_v84_jobs","appiero_v83_jobs","appiero_v82_jobs","appiero_v81_jobs","appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
+let jobs=[],jobFilter="all",clientSort="name";
 const euro=new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"});
 
-function todayISO(){return new Date().toISOString().slice(0,10)}
-function formatDate(iso){if(!iso)return"Senza data";const d=new Date(iso+"T12:00:00");return d.toLocaleDateString("it-IT",{weekday:"short",day:"2-digit",month:"2-digit",year:"numeric"})}
+function n(x){return Number(x||0)}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
-function money(n){return euro.format(Number(n||0))}
-function num(n){return Number(n||0)}
+function todayISO(){return new Date().toISOString().slice(0,10)}
+function money(x){return euro.format(n(x))}
+function esc(s){return String(s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function dateIt(s){if(!s)return"Senza data";return new Date(s+"T12:00:00").toLocaleDateString("it-IT",{weekday:"short",day:"2-digit",month:"2-digit",year:"numeric"})}
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)}
-function escapeHtml(str){return String(str||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
-function escapeAttr(str){return escapeHtml(str).replaceAll("\n"," ")}
-function showSaving(show,msg){document.getElementById("savingText").innerHTML=msg||"Sto salvando...<br>Attendi qualche secondo.";document.getElementById("savingOverlay").classList.toggle("active",!!show)}
-function storageKB(){try{return Math.round((localStorage.getItem(STORAGE_KEY)||"").length/1024)}catch(e){return 0}}
-function totalStorageKB(){let t=0;try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("appiero_"))t+=(localStorage.getItem(k)||"").length}}catch(e){}return Math.round(t/1024)}
-function safeSetStorage(key,value){try{localStorage.setItem(key,value);return true}catch(e){console.error(e);toast("Memoria piena: esporta backup, poi pulisci vecchie versioni o alleggerisci foto");return false}}
-function save(){const ok=safeSetStorage(STORAGE_KEY,JSON.stringify(jobs));if(ok)renderAll()}
-
-function previewFile(input,boxId){
-  const box=document.getElementById(boxId);if(!box)return;
-  const file=input.files&&input.files[0];
-  if(!file){box.style.display="none";box.innerHTML="";return}
-  const reader=new FileReader();
-  reader.onload=e=>{box.innerHTML=`<img src="${e.target.result}" alt="Anteprima foto"><p>ANTEPRIMA FOTO CARICATA. La foto viene compressa prima del salvataggio.</p>`;box.style.display="block";toast("Foto caricata")};
-  reader.onerror=()=>{box.innerHTML="<p>Errore: foto non letta. Prova con un'altra foto.</p>";box.style.display="block";toast("Errore caricamento foto")};
-  reader.readAsDataURL(file);
-}
-function compressImage(file,maxWidth=560,quality=.45){
-  return new Promise((resolve,reject)=>{
-    if(!file)return resolve("");
-    const reader=new FileReader();
-    reader.onload=e=>{
-      const img=new Image();
-      img.onload=()=>{
-        try{
-          let width=img.width,height=img.height;
-          if(width>maxWidth){height=Math.round(height*(maxWidth/width));width=maxWidth}
-          const canvas=document.createElement("canvas");canvas.width=width;canvas.height=height;
-          canvas.getContext("2d").drawImage(img,0,0,width,height);
-          resolve(canvas.toDataURL("image/jpeg",quality));
-        }catch(err){reject(err)}
-      };
-      img.onerror=()=>reject(new Error("Impossibile leggere immagine"));
-      img.src=e.target.result;
-    };
-    reader.onerror=()=>reject(new Error("Impossibile leggere file"));
-    reader.readAsDataURL(file);
-  });
-}
-function recompressDataUrl(dataUrl,maxWidth=520,quality=.42){
-  return new Promise((resolve)=>{
-    if(!dataUrl || !String(dataUrl).startsWith("data:image"))return resolve(dataUrl||"");
-    const img=new Image();
-    img.onload=()=>{
-      try{
-        let width=img.width,height=img.height;
-        if(width>maxWidth){height=Math.round(height*(maxWidth/width));width=maxWidth}
-        const canvas=document.createElement("canvas");canvas.width=width;canvas.height=height;
-        canvas.getContext("2d").drawImage(img,0,0,width,height);
-        resolve(canvas.toDataURL("image/jpeg",quality));
-      }catch(e){resolve(dataUrl)}
-    };
-    img.onerror=()=>resolve(dataUrl);
-    img.src=dataUrl;
-  });
-}
-async function fileToCompressedDataURL(file){if(!file)return"";try{return await compressImage(file,560,.45)}catch(e){console.error(e);toast("Errore foto: prova a sceglierne un'altra");return""}}
-function openPhotoViewer(src,title){if(!src){toast("Foto non disponibile");return}document.getElementById("photoViewerImg").src=src;document.getElementById("photoViewerTitle").textContent=title||"Foto";document.getElementById("photoViewer").classList.add("active")}
-function closePhotoViewer(){document.getElementById("photoViewer").classList.remove("active");document.getElementById("photoViewerImg").src=""}
-
-function cleanPhone(phone){let p=String(phone||"").replace(/[^\d+]/g,"");p=p.replace(/^\+/,"");if(p.startsWith("00"))p=p.slice(2);if(p.startsWith("39"))return p;if(p.startsWith("3"))return"39"+p;if(p.startsWith("0"))return"39"+p;return p}
-function callClient(id){const job=jobs.find(j=>j.id===id);if(!job)return;if(!job.phone){toast("Telefono cliente mancante");return}window.location.href="tel:"+job.phone}
-function openWhatsAppToClient(id,type){
-  const job=jobs.find(j=>j.id===id);if(!job)return;
-  const phone=cleanPhone(job.phone);if(!phone){toast("Telefono cliente mancante");return}
-  let text="";
-  if(type==="estimate")text=buildEstimateText(job);
-  else if(type==="summary")text=buildSummaryText(job);
-  else if(type==="health")text=buildHealthText(job);
-  else if(type==="oil")text=buildOilText(job);
-  else if(type==="payment")text=buildPaymentText(job);
-  else text=`Ciao ${job.client}, ti scrivo per il lavoro di potatura ulivi in ${job.place||"oliveto"}.`;
-  window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(text),"_blank");
-}
-
-function normalizePayment(p){return {id:p.id||uid(),date:p.date||todayISO(),amount:num(p.amount),method:p.method||"Contanti",type:p.type||"Pagamento",note:p.note||""}}
-function normalizeJob(job){
-  if(!job.deposit)job.deposit=0;if(!job.cultivar)job.cultivar="";if(!job.age)job.age="";if(!job.vigor)job.vigor="";if(!job.shape)job.shape="";
-  if(!Array.isArray(job.photos))job.photos=[];if(!Array.isArray(job.photoItems))job.photoItems=[];if(!Array.isArray(job.healthChecks))job.healthChecks=[];if(!Array.isArray(job.days))job.days=[];if(!Array.isArray(job.oilRecords))job.oilRecords=[];
-  if(!Array.isArray(job.payments))job.payments=[];
-  if(job.deposit>0 && job.payments.length===0)job.payments.push({id:uid(),date:job.createdAt?String(job.createdAt).slice(0,10):todayISO(),amount:num(job.deposit),method:"Contanti",type:"Acconto",note:"Acconto iniziale importato"});
-  job.payments=job.payments.map(normalizePayment);
-  if(job.photos.length&&job.photoItems.length===0)job.photoItems=job.photos.map(src=>({id:uid(),type:"altro",src,createdAt:new Date().toISOString()}));
-  job.days=job.days.map(d=>({id:d.id||uid(),date:d.date||todayISO(),trees:num(d.trees),hours:num(d.hours),dayMoney:num(d.dayMoney),expenseFuel:num(d.expenseFuel),expenseFood:num(d.expenseFood),expenseTools:num(d.expenseTools),expenseOther:num(d.expenseOther),notes:d.notes||"",photo:d.photo||""}));
-  job.healthChecks=job.healthChecks.map(h=>({id:h.id||uid(),date:h.date||todayISO(),treeRef:h.treeRef||"",photoPart:h.photoPart||"",condition:h.condition||"Da controllare",priority:h.priority||"Media",symptoms:Array.isArray(h.symptoms)?h.symptoms:[],diseases:Array.isArray(h.diseases)?h.diseases:[],guideAnswers:h.guideAnswers||{},suggestedProblems:Array.isArray(h.suggestedProblems)?h.suggestedProblems:[],guideLevel:h.guideLevel||"",guideAdvice:h.guideAdvice||"",cureAdvice:h.cureAdvice||"",agronomistAdvice:h.agronomistAdvice||"",note:h.note||"",photo:h.photo||""}));
-  job.oilRecords=job.oilRecords.map(o=>({id:o.id||uid(),year:o.year||new Date().getFullYear(),productiveTrees:num(o.productiveTrees),oliveKg:num(o.oliveKg),yieldPercent:num(o.yieldPercent),oilLiters:num(o.oilLiters),mill:o.mill||"",harvestPeriod:o.harvestPeriod||"",oliveQuality:o.oliveQuality||"",notes:o.notes||"",createdAt:o.createdAt||new Date().toISOString()}));
-  return job;
+function showScreen(name){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById("screen-"+name).classList.add("active");document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));const nav=document.getElementById("nav-"+name);if(nav)nav.classList.add("active");renderAll();scrollTo(0,0)}
+function storageKB(key=STORAGE_KEY){try{return Math.round((localStorage.getItem(key)||"").length/1024)}catch(e){return 0}}
+function totalKB(){let t=0;try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("appiero_"))t+=(localStorage.getItem(k)||"").length}}catch(e){}return Math.round(t/1024)}
+function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(jobs));renderAll()}catch(e){toast("Memoria piena: fai backup, poi pulisci o alleggerisci foto")}}
+function normalize(j){
+  j.id=j.id||uid();j.client=j.client||"Senza nome";j.phone=j.phone||"";j.place=j.place||"";j.startDate=j.startDate||todayISO();
+  j.totalTrees=n(j.totalTrees);j.cultivar=j.cultivar||"";j.priceMode=j.priceMode||"tree";j.priceValue=n(j.priceValue);j.estimatedDays=n(j.estimatedDays);
+  j.status=j.status||"preventivo";j.workType=j.workType||"Potatura ordinaria";j.notes=j.notes||"";
+  j.days=Array.isArray(j.days)?j.days:[];j.payments=Array.isArray(j.payments)?j.payments:[];j.healthChecks=Array.isArray(j.healthChecks)?j.healthChecks:[];j.oilRecords=Array.isArray(j.oilRecords)?j.oilRecords:[];
+  j.photos=Array.isArray(j.photos)?j.photos:[];j.photoItems=Array.isArray(j.photoItems)?j.photoItems:[];
+  if(j.deposit&&j.payments.length===0)j.payments.push({id:uid(),date:j.startDate,amount:n(j.deposit),method:"Contanti",type:"Acconto",note:"Acconto iniziale"});
+  if(j.photos.length&&!j.photoItems.length)j.photoItems=j.photos.map(src=>({id:uid(),type:"altro",src}));
+  return j;
 }
 function load(){
-  try{
-    let raw=localStorage.getItem(STORAGE_KEY);
-    if(!raw){for(const k of OLD_STORAGE_KEYS){raw=localStorage.getItem(k);if(raw)break}}
-    jobs=JSON.parse(raw||"[]").map(normalizeJob);
-    safeSetStorage(STORAGE_KEY,JSON.stringify(jobs));
-  }catch(e){console.error(e);jobs=[]}
+  let raw=localStorage.getItem(STORAGE_KEY);
+  if(!raw){for(const k of OLD_KEYS){raw=localStorage.getItem(k);if(raw)break}}
+  try{jobs=JSON.parse(raw||"[]").map(normalize)}catch(e){jobs=[]}
+  save();
 }
-function showScreen(name){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-  document.getElementById("screen-"+name).classList.add("active");
-  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
-  const nav=document.getElementById("nav-"+name);if(nav)nav.classList.add("active");
-  renderAll();window.scrollTo({top:0,behavior:"smooth"});
+function priceLabel(){const m=document.getElementById("fPriceMode").value;document.getElementById("fPriceLabel").textContent=m==="tree"?"Prezzo a ulivo €":m==="day"?"Prezzo a giornata €":"Prezzo a corpo €"}
+function compressFile(file,maxW=560,q=.45){
+  return new Promise((resolve)=>{
+    if(!file)return resolve("");
+    const r=new FileReader();
+    r.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;if(w>maxW){h=Math.round(h*(maxW/w));w=maxW}
+        const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);
+        resolve(c.toDataURL("image/jpeg",q));
+      };
+      img.onerror=()=>resolve("");
+      img.src=e.target.result;
+    };
+    r.onerror=()=>resolve("");
+    r.readAsDataURL(file);
+  });
 }
-function updatePriceLabels(){const mode=document.getElementById("fPriceMode").value,label=document.getElementById("priceValueLabel");if(mode==="tree")label.textContent="Prezzo a ulivo €";if(mode==="day")label.textContent="Prezzo a giornata €";if(mode==="fixed")label.textContent="Prezzo totale a corpo €"}
+function recompressDataUrl(src,maxW=520,q=.42){
+  return new Promise(resolve=>{
+    if(!src||!String(src).startsWith("data:image"))return resolve(src||"");
+    const img=new Image();
+    img.onload=()=>{let w=img.width,h=img.height;if(w>maxW){h=Math.round(h*(maxW/w));w=maxW}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);resolve(c.toDataURL("image/jpeg",q))};
+    img.onerror=()=>resolve(src);img.src=src;
+  });
+}
+function preview(input,id){
+  const box=document.getElementById(id),file=input.files&&input.files[0];if(!file){box.style.display="none";box.innerHTML="";return}
+  const r=new FileReader();r.onload=e=>{box.innerHTML=`<img src="${e.target.result}"><p class="muted small">Anteprima foto caricata.</p>`;box.style.display="block"};r.readAsDataURL(file);
+}
+function openViewer(src,title){if(!src)return toast("Foto non disponibile");document.getElementById("viewerImg").src=src;document.getElementById("viewerTitle").textContent=title||"Foto";document.getElementById("viewer").classList.add("active")}
+function closeViewer(){document.getElementById("viewer").classList.remove("active");document.getElementById("viewerImg").src=""}
 
 async function createJob(){
-  const client=document.getElementById("fClient").value.trim();if(!client){toast("Inserisci il cliente");return}
-  showSaving(true);
-  const photoFile=document.getElementById("fPhoto").files[0],photo=await fileToCompressedDataURL(photoFile),photoType=document.getElementById("fPhotoType").value;
-  const deposit=num(document.getElementById("fDeposit").value);
-  const job={
+  const client=document.getElementById("fClient").value.trim();if(!client)return toast("Inserisci cliente");
+  const file=document.getElementById("fPhoto").files[0],photo=await compressFile(file);
+  const dep=n(document.getElementById("fDeposit").value);
+  const j=normalize({
     id:uid(),createdAt:new Date().toISOString(),client,
-    phone:document.getElementById("fPhone").value.trim(),place:document.getElementById("fPlace").value.trim(),startDate:document.getElementById("fDate").value||todayISO(),
-    totalTrees:num(document.getElementById("fTotalTrees").value),cultivar:document.getElementById("fCultivar").value,age:document.getElementById("fAge").value,vigor:document.getElementById("fVigor").value,shape:document.getElementById("fShape").value,
-    priceMode:document.getElementById("fPriceMode").value,priceValue:num(document.getElementById("fPriceValue").value),estimatedDays:num(document.getElementById("fEstimatedDays").value),
-    deposit,workType:document.getElementById("fWorkType").value,status:document.getElementById("fStatus").value,notes:document.getElementById("fNotes").value.trim(),
-    photos:photo?[photo]:[],photoItems:photo?[{id:uid(),type:photoType,src:photo,createdAt:new Date().toISOString()}]:[],
-    days:[],healthChecks:[],oilRecords:[],payments:deposit>0?[{id:uid(),date:todayISO(),amount:deposit,method:"Contanti",type:"Acconto",note:"Acconto iniziale"}]:[]
-  };
-  jobs.unshift(job);clearForm();save();showSaving(false);toast("Lavoro salvato");showScreen("jobs");
-}
-function clearForm(){
-  ["fClient","fPhone","fPlace","fTotalTrees","fPriceValue","fEstimatedDays","fDeposit","fNotes"].forEach(id=>document.getElementById(id).value="");
-  document.getElementById("fDate").value=todayISO();document.getElementById("fCultivar").value="";document.getElementById("fAge").value="";document.getElementById("fVigor").value="";document.getElementById("fShape").value="";document.getElementById("fPriceMode").value="tree";document.getElementById("fStatus").value="preventivo";document.getElementById("fPhotoType").value="sopralluogo";document.getElementById("fPhoto").value="";document.getElementById("fPhotoPreview").style.display="none";document.getElementById("fPhotoPreview").innerHTML="";updatePriceLabels();
-}
-
-function jobDoneTrees(job){return job.days.reduce((s,d)=>s+num(d.trees),0)}
-function dayExpenses(day){return num(day.expenseFuel)+num(day.expenseFood)+num(day.expenseTools)+num(day.expenseOther)}
-function jobExpenses(job){return job.days.reduce((s,d)=>s+dayExpenses(d),0)}
-function jobDayGross(job,day){const trees=num(day.trees);if(job.priceMode==="tree")return trees*num(job.priceValue);if(job.priceMode==="day")return num(day.dayMoney||job.priceValue);if(job.priceMode==="fixed"){if(!job.totalTrees)return 0;return trees*(num(job.priceValue)/num(job.totalTrees||1))}return 0}
-function jobDayNet(job,day){return jobDayGross(job,day)-dayExpenses(day)}
-function jobGross(job){return job.days.reduce((s,d)=>s+jobDayGross(job,d),0)}
-function jobNet(job){return job.days.reduce((s,d)=>s+jobDayNet(job,d),0)}
-function jobEstimate(job){if(job.priceMode==="tree")return num(job.totalTrees)*num(job.priceValue);if(job.priceMode==="day")return num(job.estimatedDays)*num(job.priceValue);if(job.priceMode==="fixed")return num(job.priceValue);return 0}
-function jobPaid(job){return (job.payments||[]).reduce((s,p)=>s+num(p.amount),0)}
-function jobBalance(job){return Math.max(0,jobEstimate(job)-jobPaid(job))}
-function paymentStatus(job){const estimate=jobEstimate(job),paid=jobPaid(job);if(estimate>0 && paid>=estimate)return"Pagato completo";if(paid>0)return"Pagato parziale";return"Non pagato"}
-function jobRemaining(job){return Math.max(0,num(job.totalTrees)-jobDoneTrees(job))}
-function jobProgress(job){if(!job.totalTrees)return 0;return Math.min(100,Math.round((jobDoneTrees(job)/job.totalTrees)*100))}
-function statusLabel(s){return s==="preventivo"?"Preventivo":s==="attivo"?"Attivo":s==="finito"?"Finito":s==="pagato"?"Pagato":s}
-function statusClass(s){return s==="preventivo"?"badge-open":s==="attivo"?"badge-work":s==="finito"?"badge-done":s==="pagato"?"badge-paid":""}
-function priceModeLabel(job){return job.priceMode==="tree"?"Prezzo a ulivo":job.priceMode==="day"?"Prezzo a giornata":job.priceMode==="fixed"?"Prezzo a corpo":"Prezzo"}
-function oilEstimatedLiters(o){if(!o.oliveKg||!o.yieldPercent)return 0;return num(o.oliveKg)*num(o.yieldPercent)/100}
-function jobHasHealthProblem(job){return (job.healthChecks||[]).some(h=>["Da controllare","Grave"].includes(h.condition)||["Alta","Urgente"].includes(h.priority)||h.guideLevel==="Alto"||h.guideLevel==="Medio")}
-function jobSearchText(job){return [job.client,job.place,job.phone,job.notes,job.workType,job.status,job.cultivar,job.age,job.vigor,job.shape,paymentStatus(job),(job.payments||[]).map(p=>p.method+" "+p.type+" "+p.note+" "+p.amount).join(" "),(job.oilRecords||[]).map(o=>o.year+" "+o.mill+" "+o.notes).join(" "),(job.healthChecks||[]).map(h=>(h.symptoms||[]).join(" ")+" "+(h.suggestedProblems||[]).join(" ")+" "+h.note).join(" ")].join(" ").toLowerCase()}
-
-function clientKey(name){return String(name||"Senza nome").trim().toLowerCase()}
-function getClients(){
-  const map=new Map();
-  jobs.forEach(job=>{
-    const key=clientKey(job.client);
-    if(!map.has(key)){
-      map.set(key,{
-        key,
-        name:job.client||"Senza nome",
-        phone:job.phone||"",
-        places:new Set(),
-        jobs:[],
-        totalTrees:0,
-        doneTrees:0,
-        estimate:0,
-        paid:0,
-        balance:0,
-        net:0,
-        health:0,
-        healthProblems:0,
-        oil:0,
-        oilLiters:0
-      });
-    }
-    const c=map.get(key);
-    c.jobs.push(job);
-    if(job.phone && !c.phone)c.phone=job.phone;
-    if(job.place)c.places.add(job.place);
-    c.totalTrees+=num(job.totalTrees);
-    c.doneTrees+=jobDoneTrees(job);
-    c.estimate+=jobEstimate(job);
-    c.paid+=jobPaid(job);
-    c.balance+=jobBalance(job);
-    c.net+=jobNet(job);
-    c.health+=(job.healthChecks||[]).length;
-    if(jobHasHealthProblem(job))c.healthProblems++;
-    c.oil+=(job.oilRecords||[]).length;
-    c.oilLiters+=(job.oilRecords||[]).reduce((s,o)=>s+num(o.oilLiters),0);
+    phone:document.getElementById("fPhone").value.trim(),
+    place:document.getElementById("fPlace").value.trim(),
+    startDate:document.getElementById("fDate").value||todayISO(),
+    totalTrees:n(document.getElementById("fTrees").value),
+    cultivar:document.getElementById("fCultivar").value,
+    priceMode:document.getElementById("fPriceMode").value,
+    priceValue:n(document.getElementById("fPrice").value),
+    estimatedDays:n(document.getElementById("fDays").value),
+    status:document.getElementById("fStatus").value,
+    workType:document.getElementById("fWork").value,
+    notes:document.getElementById("fNotes").value.trim(),
+    payments:dep>0?[{id:uid(),date:todayISO(),amount:dep,method:"Contanti",type:"Acconto",note:"Acconto iniziale"}]:[],
+    photos:photo?[photo]:[],photoItems:photo?[{id:uid(),type:"sopralluogo",src:photo}]:[]
   });
-  return [...map.values()];
+  jobs.unshift(j);clearForm();save();toast("Lavoro salvato");showScreen("jobs");
 }
-function setClientSort(s){clientSort=s;renderClients()}
-function renderClients(){
-  const q=(document.getElementById("clientSearch")?.value||"").toLowerCase().trim();
-  let list=getClients().filter(c=>{
-    const text=[c.name,c.phone,[...c.places].join(" ")].join(" ").toLowerCase();
-    return !q || text.includes(q);
-  });
-  if(clientSort==="name")list.sort((a,b)=>a.name.localeCompare(b.name));
-  if(clientSort==="balance")list.sort((a,b)=>b.balance-a.balance);
-  if(clientSort==="paid")list.sort((a,b)=>b.paid-a.paid);
-  if(clientSort==="health")list.sort((a,b)=>b.healthProblems-a.healthProblems);
-  const box=document.getElementById("clientsList");
-  if(!box)return;
-  box.innerHTML=list.length?list.map(renderClientCard).join(""):`<div class="empty">Nessun cliente trovato.</div>`;
-}
-function renderClientCard(c){
-  return `<div class="client-card">
-    <div class="job-top">
+function clearForm(){["fClient","fPhone","fPlace","fTrees","fPrice","fDays","fDeposit","fNotes"].forEach(id=>document.getElementById(id).value="");document.getElementById("fDate").value=todayISO();document.getElementById("fPhoto").value="";document.getElementById("fPreview").style.display="none"}
+
+function doneTrees(j){return j.days.reduce((s,d)=>s+n(d.trees),0)}
+function expenses(d){return n(d.expenseFuel)+n(d.expenseFood)+n(d.expenseTools)+n(d.expenseOther)}
+function dayGross(j,d){if(j.priceMode==="tree")return n(d.trees)*n(j.priceValue);if(j.priceMode==="day")return n(d.dayMoney||j.priceValue);if(j.priceMode==="fixed")return j.totalTrees?n(d.trees)*(n(j.priceValue)/n(j.totalTrees)):0;return 0}
+function gross(j){return j.days.reduce((s,d)=>s+dayGross(j,d),0)}
+function jobExpenses(j){return j.days.reduce((s,d)=>s+expenses(d),0)}
+function net(j){return gross(j)-jobExpenses(j)}
+function estimate(j){if(j.priceMode==="tree")return n(j.totalTrees)*n(j.priceValue);if(j.priceMode==="day")return n(j.estimatedDays)*n(j.priceValue);if(j.priceMode==="fixed")return n(j.priceValue);return 0}
+function paid(j){return j.payments.reduce((s,p)=>s+n(p.amount),0)}
+function due(j){return Math.max(0,estimate(j)-paid(j))}
+function progress(j){return j.totalTrees?Math.min(100,Math.round(doneTrees(j)/j.totalTrees*100)):0}
+function hasHealthProblem(j){return j.healthChecks.some(h=>["Da controllare","Grave"].includes(h.condition)||["Alta","Urgente"].includes(h.priority)||["Medio","Alto"].includes(h.guideLevel))}
+function statusText(s){return s==="preventivo"?"Preventivo":s==="attivo"?"Attivo":s==="finito"?"Finito":"Pagato"}
+function statusClass(s){return s==="preventivo"?"b-prev":s==="attivo"?"b-att":s==="finito"?"b-fin":"b-pag"}
+function searchText(j){return [j.client,j.phone,j.place,j.cultivar,j.workType,j.notes,j.status].join(" ").toLowerCase()}
+
+function jobCard(j){
+  const p=progress(j);
+  return `<div class="job">
+    <div class="topline">
       <div>
-        <div class="client-title">${escapeHtml(c.name)}</div>
-        <div class="muted small">${escapeHtml(c.phone||"Telefono non inserito")}</div>
-        <div class="muted small">${escapeHtml([...c.places].join(" · ")||"Luogo non indicato")}</div>
+        <div class="job-title">${esc(j.client)}</div>
+        <div class="muted">${esc(j.place||"Luogo non indicato")}</div>
+        <div class="muted small">${j.phone?("Tel: "+esc(j.phone)):"Telefono non inserito"}</div>
+        <div class="muted small">${dateIt(j.startDate)} · ${esc(j.workType)}</div>
+        <div class="muted small">Cultivar: ${esc(j.cultivar||"non indicata")} · Salute: ${j.healthChecks.length}${hasHealthProblem(j)?" ⚠️":""} · Olio: ${j.oilRecords.length}</div>
       </div>
-      <span class="badge badge-open">${c.jobs.length} lavori</span>
+      <span class="badge ${statusClass(j.status)}">${statusText(j.status)}</span>
     </div>
-
-    <div class="mini-grid">
-      <div class="mini-box"><b>${c.totalTrees}</b><span>ulivi gestiti</span></div>
-      <div class="mini-box"><b>${c.doneTrees}</b><span>ulivi potati</span></div>
-      <div class="mini-box"><b>${c.healthProblems}</b><span>problemi salute</span></div>
+    <div class="bar"><span style="width:${p}%"></span></div>
+    <div class="mini">
+      <div><b>${doneTrees(j)}</b><span>potati</span></div>
+      <div><b>${Math.max(0,j.totalTrees-doneTrees(j))}</b><span>restanti</span></div>
+      <div><b>${p}%</b><span>avanzamento</span></div>
     </div>
-
-    <div class="mini-grid">
-      <div class="mini-box"><b class="paid">${money(c.paid)}</b><span>incassato</span></div>
-      <div class="mini-box"><b class="expense">${money(c.balance)}</b><span>da incassare</span></div>
-      <div class="mini-box"><b class="money">${c.oilLiters.toFixed(1)} L</b><span>olio registrato</span></div>
+    <div class="mini">
+      <div><b>${money(estimate(j))}</b><span>preventivo</span></div>
+      <div><b class="paid">${money(paid(j))}</b><span>incassato</span></div>
+      <div><b class="due">${money(due(j))}</b><span>saldo</span></div>
     </div>
-
     <div class="btn-row">
-      <button class="btn-main" onclick="openClient('${escapeAttr(c.key)}')">Apri cliente</button>
-      ${c.phone?`<button class="btn-blue" onclick="callClientFromPhone('${escapeAttr(c.phone)}')">Chiama</button>`:""}
-      ${c.phone?`<button class="btn-whatsapp" onclick="whatsappClient('${escapeAttr(c.phone)}','${escapeAttr(c.name)}')">WhatsApp</button>`:""}
+      <button class="btn-main" onclick="openJob('${j.id}')">Apri</button>
+      <button class="btn-blue" onclick="showHealth('${j.id}')">🩺 Salute guidata</button>
+      <button class="btn-gold" onclick="showOil('${j.id}')">🫒 Olio</button>
+      <button class="btn-gold" onclick="showPayment('${j.id}')">💶 Pagamento</button>
+      <button class="btn-wa" onclick="whatsJob('${j.id}')">WhatsApp</button>
     </div>
-  </div>`;
-}
-function callClientFromPhone(phone){window.location.href="tel:"+phone}
-function whatsappClient(phone,name){
-  const p=cleanPhone(phone);
-  if(!p){toast("Telefono mancante");return}
-  window.open("https://wa.me/"+p+"?text="+encodeURIComponent(`Ciao ${name}, ti scrivo per i lavori di potatura ulivi.`),"_blank");
-}
-function openClient(key){
-  const c=getClients().find(x=>x.key===key);
-  if(!c)return;
-  document.getElementById("modalTitle").textContent=c.name;
-  const jobsHtml=c.jobs.map(renderJobCard).join("");
-  document.getElementById("modalContent").innerHTML=`
-    <div class="card">
-      <h3>${escapeHtml(c.name)}</h3>
-      <p class="muted small">${escapeHtml(c.phone||"Telefono non inserito")}</p>
-      <p class="muted small">${escapeHtml([...c.places].join(" · ")||"Luogo non indicato")}</p>
-
-      <div class="mini-grid">
-        <div class="mini-box"><b>${c.jobs.length}</b><span>lavori</span></div>
-        <div class="mini-box"><b>${c.totalTrees}</b><span>ulivi gestiti</span></div>
-        <div class="mini-box"><b>${c.doneTrees}</b><span>ulivi potati</span></div>
-      </div>
-
-      <div class="mini-grid">
-        <div class="mini-box"><b class="paid">${money(c.paid)}</b><span>incassato</span></div>
-        <div class="mini-box"><b class="expense">${money(c.balance)}</b><span>da incassare</span></div>
-        <div class="mini-box"><b class="netto">${money(c.net)}</b><span>netto lavori</span></div>
-      </div>
-
-      <div class="mini-grid">
-        <div class="mini-box"><b>${c.health}</b><span>schede salute</span></div>
-        <div class="mini-box"><b class="expense">${c.healthProblems}</b><span>problemi salute</span></div>
-        <div class="mini-box"><b class="money">${c.oilLiters.toFixed(1)} L</b><span>olio registrato</span></div>
-      </div>
-
-      <div class="btn-row">
-        ${c.phone?`<button class="btn-blue" onclick="callClientFromPhone('${escapeAttr(c.phone)}')">Chiama</button>`:""}
-        ${c.phone?`<button class="btn-whatsapp" onclick="whatsappClient('${escapeAttr(c.phone)}','${escapeAttr(c.name)}')">WhatsApp</button>`:""}
-      </div>
-    </div>
-
-    <div class="section-title"><h2>Lavori del cliente</h2></div>
-    ${jobsHtml || `<div class="empty">Nessun lavoro.</div>`}
-  `;
-  document.getElementById("jobModal").classList.add("active");
-}
-
-function renderJobCard(job){
-  const done=jobDoneTrees(job),remaining=jobRemaining(job),progress=jobProgress(job),gross=jobGross(job),expenses=jobExpenses(job),net=jobNet(job),estimate=jobEstimate(job),paid=jobPaid(job),balance=jobBalance(job);
-  const healthCount=(job.healthChecks||[]).length,oilCount=(job.oilRecords||[]).length,hasProblem=jobHasHealthProblem(job);
-  return `<div class="job-card">
-    <div class="job-top"><div><div class="job-title">${escapeHtml(job.client)}</div><div class="muted small">${escapeHtml(job.place||"Luogo non indicato")}</div><div class="muted small">${job.phone?"Tel: "+escapeHtml(job.phone):"Telefono non inserito"}</div><div class="muted small">${formatDate(job.startDate)} · ${escapeHtml(job.workType||"")}</div><div class="muted small">Cultivar: ${escapeHtml(job.cultivar||"non indicata")} · Salute: ${healthCount} ${hasProblem?"⚠️":""} · Olio: ${oilCount}</div></div><span class="badge ${statusClass(job.status)}">${statusLabel(job.status)}</span></div>
-    <div class="progress-wrap"><div class="progress-bar" style="width:${progress}%"></div></div>
-    <div class="mini-grid"><div class="mini-box"><b>${done}</b><span>potati</span></div><div class="mini-box"><b>${remaining}</b><span>restanti</span></div><div class="mini-box"><b>${progress}%</b><span>avanzamento</span></div></div>
-    <div class="mini-grid"><div class="mini-box"><b class="money">${money(gross)}</b><span>lordo</span></div><div class="mini-box"><b class="expense">${money(expenses)}</b><span>spese</span></div><div class="mini-box"><b class="netto">${money(net)}</b><span>netto</span></div></div>
-    <div class="mini-grid"><div class="mini-box"><b>${money(estimate)}</b><span>preventivo</span></div><div class="mini-box"><b class="paid">${money(paid)}</b><span>${paymentStatus(job)}</span></div><div class="mini-box"><b class="expense">${money(balance)}</b><span>saldo</span></div></div>
-    <div class="btn-row"><button class="btn-main" onclick="openJob('${job.id}')">Apri</button><button class="btn-gold" onclick="quickPayment('${job.id}')">Pagamento</button><button class="btn-whatsapp" onclick="openWhatsAppToClient('${job.id}','message')">WhatsApp</button><button class="btn-blue" onclick="callClient('${job.id}')">Chiama</button></div>
   </div>`;
 }
 function renderJobs(){
   const q=(document.getElementById("jobSearch")?.value||"").toLowerCase().trim();
-  const filtered=jobs.filter(job=>{
-    const text=jobSearchText(job);
-    const matchQ=!q||text.includes(q);
-    const paid=jobPaid(job),balance=jobBalance(job);
-    const matchFilter=currentFilter==="all"||job.status===currentFilter||(currentFilter==="saldo"&&balance>0&&job.status!=="pagato")||(currentFilter==="partial"&&paid>0&&balance>0)||(currentFilter==="health"&&jobHasHealthProblem(job))||(currentFilter==="oil"&&(job.oilRecords||[]).length>0);
-    return matchQ&&matchFilter;
+  let list=jobs.filter(j=>{
+    const fq=!q||searchText(j).includes(q);
+    const ff=jobFilter==="all"||j.status===jobFilter||(jobFilter==="due"&&due(j)>0)||(jobFilter==="health"&&hasHealthProblem(j))||(jobFilter==="oil"&&j.oilRecords.length);
+    return fq&&ff;
   });
-  const box=document.getElementById("jobsList");
-  if(box)box.innerHTML=filtered.length?filtered.map(renderJobCard).join(""):`<div class="empty">Nessun lavoro trovato.</div>`;
+  document.getElementById("jobsList").innerHTML=list.length?list.map(jobCard).join(""):`<div class="empty">Nessun lavoro trovato.</div>`;
 }
-function setJobFilter(f){currentFilter=f;renderJobs()}
 
-function renderHome(){
-  const totalPaid=jobs.reduce((s,j)=>s+jobPaid(j),0),balanceDue=jobs.filter(j=>j.status!=="pagato").reduce((s,j)=>s+jobBalance(j),0);
-  document.getElementById("kpiClients").textContent=getClients().length;
-  document.getElementById("kpiBalanceDue").textContent=money(balanceDue);
-  document.getElementById("kpiMemory").textContent=totalStorageKB();
-  document.getElementById("kpiActiveJobs").textContent=jobs.filter(j=>j.status==="attivo").length;
-  document.getElementById("kpiHealthProblems").textContent=jobs.filter(jobHasHealthProblem).length;
-  document.getElementById("kpiPaidTotal").textContent=money(totalPaid);
-  const recent=jobs.slice(0,4);document.getElementById("homeRecentJobs").innerHTML=recent.length?recent.map(renderJobCard).join(""):`<div class="empty">Ancora nessun lavoro. Premi “Nuovo lavoro”.</div>`;
-  updateMemoryInfo();
-}
-function renderCalendar(){
-  const events=[];
-  jobs.forEach(job=>{
-    events.push({date:job.startDate||"",html:`<div class="calendar-day"><b>${formatDate(job.startDate)}</b><br><strong>${escapeHtml(job.client)}</strong> — ${escapeHtml(job.place||"Luogo non indicato")}<br><span class="muted small">${statusLabel(job.status)} · saldo ${money(jobBalance(job))}</span><div style="margin-top:8px;"><button class="btn-soft" onclick="openJob('${job.id}')">Apri lavoro</button></div></div>`});
-    job.days.forEach(d=>events.push({date:d.date,html:`<div class="calendar-day"><b>${formatDate(d.date)}</b><br><strong>${escapeHtml(job.client)}</strong> — giornata registrata<br><span class="muted small">${num(d.trees)} ulivi · netto ${money(jobDayNet(job,d))}</span></div>`}));
-    (job.payments||[]).forEach(p=>events.push({date:p.date,html:`<div class="calendar-day"><b>${formatDate(p.date)}</b><br><strong>${escapeHtml(job.client)}</strong> — pagamento<br><span class="muted small">${escapeHtml(p.type)} · ${escapeHtml(p.method)} · ${money(p.amount)}</span></div>`}));
-    (job.healthChecks||[]).forEach(h=>events.push({date:h.date,html:`<div class="calendar-day"><b>${formatDate(h.date)}</b><br><strong>${escapeHtml(job.client)}</strong> — controllo salute olivo<br><span class="muted small">${escapeHtml(h.condition)} · priorità ${escapeHtml(h.priority)} · ${(h.suggestedProblems||[]).join(", ")}</span></div>`}));
-    (job.oilRecords||[]).forEach(o=>events.push({date:String(o.year)+"-12-31",html:`<div class="calendar-day"><b>Anno ${escapeHtml(o.year)}</b><br><strong>${escapeHtml(job.client)}</strong> — produzione olio<br><span class="muted small">${num(o.productiveTrees)} piante · resa ${num(o.yieldPercent)}% · olio ${num(o.oilLiters)} L</span></div>`}));
+function getClients(){
+  const m=new Map();
+  jobs.forEach(j=>{
+    const k=(j.client||"Senza nome").trim().toLowerCase();
+    if(!m.has(k))m.set(k,{key:k,name:j.client,phone:j.phone,places:new Set(),jobs:[],trees:0,done:0,paid:0,due:0,health:0,hp:0,oil:0,liters:0});
+    const c=m.get(k);c.jobs.push(j);if(j.phone&&!c.phone)c.phone=j.phone;if(j.place)c.places.add(j.place);
+    c.trees+=n(j.totalTrees);c.done+=doneTrees(j);c.paid+=paid(j);c.due+=due(j);c.health+=j.healthChecks.length;if(hasHealthProblem(j))c.hp++;c.oil+=j.oilRecords.length;c.liters+=j.oilRecords.reduce((s,o)=>s+n(o.oilLiters),0);
   });
-  events.sort((a,b)=>(a.date||"").localeCompare(b.date||""));
-  const box=document.getElementById("calendarList");
-  if(box)box.innerHTML=events.length?events.map(e=>e.html).join(""):`<div class="empty">Nessuna data in calendario.</div>`;
+  return [...m.values()];
 }
-function renderStats(){
-  const totalTrees=jobs.reduce((s,j)=>s+num(j.totalTrees),0),doneTrees=jobs.reduce((s,j)=>s+jobDoneTrees(j),0),net=jobs.reduce((s,j)=>s+jobNet(j),0),oilLiters=jobs.reduce((s,j)=>s+(j.oilRecords||[]).reduce((x,o)=>x+num(o.oilLiters),0),0);
-  const totalPaid=jobs.reduce((s,j)=>s+jobPaid(j),0),balanceDue=jobs.filter(j=>j.status!=="pagato").reduce((s,j)=>s+jobBalance(j),0);
-  document.getElementById("statClients").textContent=getClients().length;document.getElementById("statTotalTrees").textContent=totalTrees;document.getElementById("statDoneTrees").textContent=doneTrees;document.getElementById("statPaid").textContent=money(totalPaid);document.getElementById("statBalance").textContent=money(balanceDue);document.getElementById("statOilLiters").textContent=oilLiters.toFixed(1)+" L";
-  const active=jobs.filter(j=>j.status==="attivo").length,estimates=jobs.filter(j=>j.status==="preventivo").length,paidFull=jobs.filter(j=>jobEstimate(j)>0&&jobPaid(j)>=jobEstimate(j)).length,partial=jobs.filter(j=>jobPaid(j)>0&&jobBalance(j)>0).length;
-  document.getElementById("statsDetails").innerHTML=`<div class="mini-grid"><div class="mini-box"><b>${jobs.length}</b><span>lavori totali</span></div><div class="mini-box"><b>${active}</b><span>attivi</span></div><div class="mini-box"><b>${estimates}</b><span>preventivi</span></div><div class="mini-box"><b>${paidFull}</b><span>pagati completo</span></div><div class="mini-box"><b>${partial}</b><span>pagati parziale</span></div><div class="mini-box"><b>${money(balanceDue)}</b><span>saldo da incassare</span></div><div class="mini-box"><b>${money(net)}</b><span>netto registrato</span></div><div class="mini-box"><b>${oilLiters.toFixed(1)} L</b><span>olio totale registrato</span></div></div>`;
+function renderClients(){
+  const q=(document.getElementById("clientSearch")?.value||"").toLowerCase().trim();
+  let list=getClients().filter(c=>!q||[c.name,c.phone,[...c.places].join(" ")].join(" ").toLowerCase().includes(q));
+  if(clientSort==="name")list.sort((a,b)=>a.name.localeCompare(b.name));if(clientSort==="due")list.sort((a,b)=>b.due-a.due);if(clientSort==="paid")list.sort((a,b)=>b.paid-a.paid);if(clientSort==="health")list.sort((a,b)=>b.hp-a.hp);
+  document.getElementById("clientsList").innerHTML=list.length?list.map(c=>`<div class="client">
+    <div class="topline"><div><div class="client-title">${esc(c.name)}</div><div class="muted">${esc(c.phone||"Telefono non inserito")}</div><div class="muted small">${esc([...c.places].join(" · ")||"Luogo non indicato")}</div></div><span class="badge b-prev">${c.jobs.length} lavori</span></div>
+    <div class="mini"><div><b>${c.trees}</b><span>ulivi</span></div><div><b class="paid">${money(c.paid)}</b><span>incassato</span></div><div><b class="due">${money(c.due)}</b><span>saldo</span></div></div>
+    <div class="mini"><div><b>${c.health}</b><span>schede salute</span></div><div><b>${c.hp}</b><span>problemi</span></div><div><b class="money">${c.liters.toFixed(1)} L</b><span>olio</span></div></div>
+    <button class="btn-main" onclick="openClient('${esc(c.key)}')">Apri cliente</button>
+  </div>`).join(""):`<div class="empty">Nessun cliente trovato.</div>`;
 }
-
-function renderPayments(job){
-  const list=job.payments||[];
-  if(!list.length)return`<div class="empty">Nessun pagamento registrato.</div>`;
-  return list.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")).map(p=>`<div class="pay-row"><b>${formatDate(p.date)}</b> <span class="badge badge-paid">${escapeHtml(p.type)}</span><br>Importo: <strong class="paid">${money(p.amount)}</strong><br>Metodo: <strong>${escapeHtml(p.method)}</strong><br><span class="muted small">${escapeHtml(p.note||"")}</span></div>`).join("");
-}
-function renderPhotos(job){
-  const items=Array.isArray(job.photoItems)?job.photoItems:[];
-  if(!items.length)return`<div class="empty">Nessuna foto salvata.</div>`;
-  const groups=[["sopralluogo","Foto sopralluogo"],["prima","Foto prima"],["durante","Foto durante"],["dopo","Foto dopo"],["salute","Foto salute olivo"],["altro","Altre foto"]];
-  return groups.map(([type,label])=>{const list=items.filter(p=>p.type===type);if(!list.length)return"";return `<div class="photo-section"><h3>${label}</h3><div class="photo-grid">${list.map(p=>`<div class="photo-card"><img class="photo-thumb" src="${p.src}" onclick="openPhotoViewer('${p.src}','${escapeAttr(label)}')"><button class="btn-blue btn-full" onclick="openPhotoViewer('${p.src}','${escapeAttr(label)}')">Apri foto</button></div>`).join("")}</div></div>`}).join("")||`<div class="empty">Nessuna foto salvata.</div>`;
-}
-function renderHealthChecks(job){
-  const list=job.healthChecks||[];if(!list.length)return`<div class="empty">Nessuna scheda salute salvata.</div>`;
-  return list.slice().reverse().map(h=>{
-    const suggested=(h.suggestedProblems||[]).map(x=>`<span class="diagnosis-tag">${escapeHtml(x)}</span>`).join("");
-    const badge=(h.guideLevel==="Alto"||h.condition==="Grave"||h.priority==="Urgente")?"badge-danger":"badge-health";
-    return `<div class="health-row">
-      <b>${formatDate(h.date)}</b> <span class="badge ${badge}">${escapeHtml(h.condition)} · ${escapeHtml(h.guideLevel||"Livello non indicato")}</span><br>
-      Pianta/zona: <strong>${escapeHtml(h.treeRef||"non indicata")}</strong><br>
-      Foto: <strong>${escapeHtml(h.photoPart||"non indicata")}</strong> · Priorità: <strong>${escapeHtml(h.priority)}</strong><br>
-      Sintomi: <span class="muted small">${escapeHtml((h.symptoms||[]).join(", ")||"nessuno")}</span><br>
-      Problemi selezionati: <span class="muted small">${escapeHtml((h.diseases||[]).join(", ")||"nessuno")}</span>
-      <div class="advice-box"><h3>Analisi guidata PRO</h3><div>${suggested||"<span class='muted small'>Nessun sospetto calcolato.</span>"}</div><p class="muted small"><strong>Valutazione:</strong> ${escapeHtml(h.guideAdvice||"")}</p><p class="muted small"><strong>Prime cure:</strong> ${escapeHtml(h.cureAdvice||"")}</p><p class="muted small"><strong>Agronomo:</strong> ${escapeHtml(h.agronomistAdvice||"")}</p></div>
-      <span class="muted small">${escapeHtml(h.note||"")}</span>
-      ${h.photo?`<div class="photo-card" style="margin-top:10px;"><img class="photo-thumb" src="${h.photo}" onclick="openPhotoViewer('${h.photo}','Foto salute olivo')"><button class="btn-blue btn-full" onclick="openPhotoViewer('${h.photo}','Foto salute olivo')">Apri foto salute grande</button></div>`:"<div class='empty'>Questa scheda non contiene foto.</div>"}
-    </div>`;
-  }).join("");
-}
-function renderOilRecords(job){
-  const list=job.oilRecords||[];if(!list.length)return`<div class="empty">Nessuna annata olio salvata.</div>`;
-  return list.slice().sort((a,b)=>num(b.year)-num(a.year)).map(o=>`<div class="oil-row"><b>Anno ${escapeHtml(o.year)}</b> <span class="badge badge-oil">Resa ${num(o.yieldPercent)}%</span><br>Piante produttive: <strong>${num(o.productiveTrees)}</strong><br>Olive raccolte: <strong>${num(o.oliveKg)} kg</strong><br>Olio prodotto reale: <strong class="money">${num(o.oilLiters)} L</strong><br>Olio stimato da resa: <strong>${oilEstimatedLiters(o).toFixed(1)} L</strong><br>Frantoio: <span class="muted small">${escapeHtml(o.mill||"non indicato")}</span><br>Raccolta: <span class="muted small">${escapeHtml(o.harvestPeriod||"non indicata")}</span><br>Qualità olive: <span class="muted small">${escapeHtml(o.oliveQuality||"non indicata")}</span><br>Note: <span class="muted small">${escapeHtml(o.notes||"nessuna nota")}</span></div>`).join("");
-}
-
-function buildEstimateText(job){
-  const estimate=jobEstimate(job),paid=jobPaid(job),balance=jobBalance(job);
-  let priceLine=job.priceMode==="tree"?`Prezzo a ulivo: ${money(job.priceValue)}\nTotale preventivo: ${money(estimate)}`:job.priceMode==="day"?`Prezzo a giornata: ${money(job.priceValue)}\nGiorni stimati: ${job.estimatedDays||0}\nTotale preventivo: ${money(estimate)}`:`Prezzo a corpo: ${money(estimate)}`;
-  return `PREVENTIVO POTATURA ULIVI\n\nCliente: ${job.client}\nLocalità: ${job.place||"Non indicata"}\nTipo lavoro: ${job.workType||"Potatura ulivi"}\nData prevista: ${formatDate(job.startDate)}\n\nCultivar/tipo olivo: ${job.cultivar||"Non indicato"}\nEtà stimata: ${job.age||"Non indicata"}\nVigoria: ${job.vigor||"Non indicata"}\nForma: ${job.shape||"Non indicata"}\n\nTotale ulivi: ${job.totalTrees||0}\n${priceLine}\n\nPagato: ${money(paid)}\nSaldo da incassare: ${money(balance)}\nStato pagamento: ${paymentStatus(job)}\n\nNote:\n${job.notes||"Nessuna nota"}\n\nApPiero`;
-}
-function buildSummaryText(job){
-  const done=jobDoneTrees(job),remaining=jobRemaining(job),progress=jobProgress(job),net=jobNet(job),estimate=jobEstimate(job),paid=jobPaid(job),balance=jobBalance(job);
-  const daysText=job.days.length?job.days.map(d=>`- ${formatDate(d.date)}: ${d.trees} ulivi, netto ${money(jobDayNet(job,d))}`).join("\n"):"Nessuna giornata registrata.";
-  return `RIEPILOGO LAVORO POTATURA ULIVI\n\nCliente: ${job.client}\nLocalità: ${job.place||"Non indicata"}\nStato lavoro: ${statusLabel(job.status)}\n\nTotale ulivi: ${job.totalTrees||0}\nUlivi potati: ${done}\nUlivi restanti: ${remaining}\nAvanzamento: ${progress}%\n\nPreventivo: ${money(estimate)}\nPagato: ${money(paid)}\nSaldo da incassare: ${money(balance)}\nStato pagamento: ${paymentStatus(job)}\nNetto registrato: ${money(net)}\n\nGiornate:\n${daysText}\n\nNote:\n${job.notes||"Nessuna nota"}\n\nApPiero`;
-}
-function buildPaymentText(job){
-  const rows=(job.payments||[]).length?(job.payments||[]).map(p=>`- ${formatDate(p.date)} | ${p.type} | ${p.method} | ${money(p.amount)} ${p.note?("| "+p.note):""}`).join("\n"):"Nessun pagamento registrato.";
-  return `SITUAZIONE PAGAMENTI\n\nCliente: ${job.client}\nLocalità: ${job.place||"Non indicata"}\n\nPreventivo: ${money(jobEstimate(job))}\nPagato: ${money(jobPaid(job))}\nSaldo da incassare: ${money(jobBalance(job))}\nStato: ${paymentStatus(job)}\n\nPagamenti:\n${rows}\n\nApPiero`;
-}
-function buildHealthText(job){
-  const list=job.healthChecks||[];
-  const rows=list.length?list.map(h=>`- ${formatDate(h.date)} | ${h.treeRef||"pianta/zona non indicata"} | stato: ${h.condition} | priorità: ${h.priority}\n  Sintomi: ${(h.symptoms||[]).join(", ")||"nessuno"}\n  Analisi guidata: ${(h.suggestedProblems||[]).join(", ")||"nessun sospetto calcolato"}\n  Livello: ${h.guideLevel||"non indicato"}\n  Valutazione: ${h.guideAdvice||"nessuna"}\n  Prime cure: ${h.cureAdvice||"nessuna"}\n  Agronomo: ${h.agronomistAdvice||"non indicato"}\n  Note: ${h.note||"nessuna"}`).join("\n\n"):"Nessun controllo salute registrato.";
-  return `SCHEDA SALUTE OLIVO\n\nCliente: ${job.client}\nLocalità: ${job.place||"Non indicata"}\nCultivar/tipo olivo: ${job.cultivar||"Non indicato"}\n\nControlli:\n${rows}\n\nNota: indicazioni di campo da verificare con tecnico/agronomo in caso di sintomi gravi.\n\nApPiero`;
-}
-function buildOilText(job){
-  const list=(job.oilRecords||[]).slice().sort((a,b)=>num(b.year)-num(a.year));
-  const rows=list.length?list.map(o=>`- Anno ${o.year}\n  Piante produttive: ${o.productiveTrees}\n  Olive raccolte: ${o.oliveKg} kg\n  Resa: ${o.yieldPercent}%\n  Olio prodotto reale: ${o.oilLiters} L\n  Olio stimato da resa: ${oilEstimatedLiters(o).toFixed(1)} L\n  Frantoio: ${o.mill||"non indicato"}\n  Raccolta: ${o.harvestPeriod||"non indicata"}\n  Qualità olive: ${o.oliveQuality||"non indicata"}\n  Note: ${o.notes||"nessuna"}`).join("\n\n"):"Nessuna annata olio registrata.";
-  return `REGISTRO PRODUZIONE OLIO\n\nCliente: ${job.client}\nLocalità: ${job.place||"Non indicata"}\nCultivar/tipo olivo: ${job.cultivar||"Non indicato"}\nTotale ulivi: ${job.totalTrees||0}\n\nAnnate:\n${rows}\n\nApPiero`;
-}
-async function copyText(text,msg){
-  try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);toast(msg);return}}catch(e){}
-  const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.focus();ta.select();
-  try{document.execCommand("copy");toast(msg)}catch(e){toast("Copia non riuscita")}document.body.removeChild(ta);
-}
-function showPreview(id,type){
-  const job=jobs.find(j=>j.id===id);if(!job)return;
-  let title="Riepilogo",text=buildSummaryText(job),msg="Riepilogo copiato";
-  if(type==="estimate"){title="Preventivo";text=buildEstimateText(job);msg="Preventivo copiato"} if(type==="health"){title="Salute";text=buildHealthText(job);msg="Scheda salute copiata"} if(type==="oil"){title="Produzione olio";text=buildOilText(job);msg="Registro olio copiato"} if(type==="payment"){title="Pagamenti";text=buildPaymentText(job);msg="Situazione pagamenti copiata"}
-  document.getElementById("modalContent").innerHTML=`<div class="card"><h3>${title}</h3><div class="quote-box">${escapeHtml(text)}</div><div class="btn-row" style="margin-top:12px;"><button class="btn-main" onclick="copyText(\`${text.replaceAll("`","'")}\`,'${msg}')">📋 Copia testo</button><button class="btn-whatsapp" onclick="openWhatsAppToClient('${id}','${type}')">Invia WhatsApp</button><button class="btn-soft" onclick="openJob('${id}')">Torna</button></div></div>`;
+function openClient(key){
+  const c=getClients().find(x=>x.key===key);if(!c)return;
+  document.getElementById("modalTitle").textContent=c.name;
+  document.getElementById("modalBody").innerHTML=`<div class="card"><h3>${esc(c.name)}</h3><p class="muted">${esc(c.phone||"Telefono non inserito")}</p><p class="muted small">${esc([...c.places].join(" · ")||"Luogo non indicato")}</p>
+  <div class="mini"><div><b>${c.jobs.length}</b><span>lavori</span></div><div><b>${c.trees}</b><span>ulivi</span></div><div><b class="due">${money(c.due)}</b><span>saldo</span></div></div></div>
+  <h2>Lavori cliente</h2>${c.jobs.map(jobCard).join("")}`;
+  openModal();
 }
 
 function openJob(id){
-  openedJobId=id;const job=jobs.find(j=>j.id===id);if(!job)return;
-  const done=jobDoneTrees(job),remaining=jobRemaining(job),progress=jobProgress(job),gross=jobGross(job),expenses=jobExpenses(job),net=jobNet(job),estimate=jobEstimate(job),paid=jobPaid(job),balance=jobBalance(job);
-  document.getElementById("modalTitle").textContent=job.client;
-  const daysHtml=job.days.length?job.days.slice().reverse().map(d=>`<div class="day-row"><b>${formatDate(d.date)}</b><br>Ulivi potati: <strong>${num(d.trees)}</strong><br>Ore: <strong>${num(d.hours)}</strong><br>Lordo: <span class="money">${money(jobDayGross(job,d))}</span><br>Spese: <span class="expense">${money(dayExpenses(d))}</span><br>Netto: <span class="netto">${money(jobDayNet(job,d))}</span><br><span class="muted small">${escapeHtml(d.notes||"")}</span>${d.photo?`<div class="photo-card" style="margin-top:10px;"><img class="photo-thumb" src="${d.photo}" onclick="openPhotoViewer('${d.photo}','Foto giornata')"><button class="btn-blue btn-full" onclick="openPhotoViewer('${d.photo}','Foto giornata')">Apri foto giornata</button></div>`:""}</div>`).join(""):`<div class="empty">Ancora nessuna giornata registrata.</div>`;
-  document.getElementById("modalContent").innerHTML=`
-    <div class="card">
-      <div class="job-top"><div><h3>${escapeHtml(job.client)}</h3><div class="muted small">${escapeHtml(job.place||"Luogo non indicato")}</div><div class="muted small">${job.phone?"Tel: "+escapeHtml(job.phone):"Telefono cliente non inserito"}</div></div><span class="badge ${statusClass(job.status)}">${statusLabel(job.status)}</span></div>
-      <div class="progress-wrap"><div class="progress-bar" style="width:${progress}%"></div></div>
-      <div class="mini-grid"><div class="mini-box"><b>${num(job.totalTrees)}</b><span>ulivi totali</span></div><div class="mini-box"><b>${done}</b><span>potati</span></div><div class="mini-box"><b>${remaining}</b><span>restanti</span></div></div>
-      <div class="mini-grid"><div class="mini-box"><b class="money">${money(gross)}</b><span>lordo</span></div><div class="mini-box"><b class="expense">${money(expenses)}</b><span>spese</span></div><div class="mini-box"><b class="netto">${money(net)}</b><span>netto</span></div></div>
-      <div class="mini-grid"><div class="mini-box"><b>${money(estimate)}</b><span>preventivo</span></div><div class="mini-box"><b class="paid">${money(paid)}</b><span>${paymentStatus(job)}</span></div><div class="mini-box"><b class="expense">${money(balance)}</b><span>saldo</span></div></div>
-      <p class="muted small"><strong>Cultivar:</strong> ${escapeHtml(job.cultivar||"Non indicata")} · <strong>Età:</strong> ${escapeHtml(job.age||"Non indicata")} · <strong>Vigoria:</strong> ${escapeHtml(job.vigor||"Non indicata")}</p>
-      <p class="muted small"><strong>Forma:</strong> ${escapeHtml(job.shape||"Non indicata")}</p><p class="muted small"><strong>Tipo lavoro:</strong> ${escapeHtml(job.workType||"")}</p><p class="muted small"><strong>Tipo prezzo:</strong> ${priceModeLabel(job)} · ${money(job.priceValue||0)}</p><p class="muted small"><strong>Note:</strong> ${escapeHtml(job.notes||"Nessuna nota")}</p>
-      <div class="section-title"><h2>Cliente rapido</h2></div><div class="btn-row"><button class="btn-blue" onclick="callClient('${job.id}')">📞 Chiama</button><button class="btn-whatsapp" onclick="openWhatsAppToClient('${job.id}','message')">💬 WhatsApp</button><button class="btn-whatsapp" onclick="openWhatsAppToClient('${job.id}','estimate')">Invia preventivo</button><button class="btn-whatsapp" onclick="openWhatsAppToClient('${job.id}','summary')">Invia riepilogo</button></div>
-      <div class="section-title"><h2>Azioni lavoro</h2></div><div class="btn-row"><button class="btn-main" onclick="showAddDayForm('${job.id}')">➕ Giornata</button><button class="btn-gold" onclick="showPaymentForm('${job.id}')">💶 Pagamento</button><button class="btn-blue" onclick="showHealthForm('${job.id}')">🩺 Salute</button><button class="btn-gold" onclick="showOilForm('${job.id}')">🫒 Olio</button><button class="btn-soft" onclick="showAddPhotoForm('${job.id}')">📷 Foto</button><button class="btn-soft" onclick="showEditJobForm('${job.id}')">✏️ Modifica</button></div>
-      <div class="btn-row" style="margin-top:9px;"><button class="btn-gold" onclick="showPreview('${job.id}','estimate')">Preview preventivo</button><button class="btn-blue" onclick="showPreview('${job.id}','summary')">Preview riepilogo</button><button class="btn-soft" onclick="showPreview('${job.id}','payment')">Preview pagamenti</button><button class="btn-soft" onclick="showPreview('${job.id}','health')">Preview salute</button><button class="btn-gold" onclick="showPreview('${job.id}','oil')">Preview olio</button></div>
-      <div class="btn-row" style="margin-top:9px;"><button class="btn-soft" onclick="changeStatus('${job.id}','preventivo')">Preventivo</button><button class="btn-soft" onclick="changeStatus('${job.id}','attivo')">Attivo</button><button class="btn-soft" onclick="changeStatus('${job.id}','finito')">Finito</button><button class="btn-soft" onclick="changeStatus('${job.id}','pagato')">Pagato</button></div>
+  const j=jobs.find(x=>x.id===id);if(!j)return;
+  document.getElementById("modalTitle").textContent=j.client;
+  document.getElementById("modalBody").innerHTML=`<div class="card">
+    <h3>${esc(j.client)}</h3><p class="muted">${esc(j.place||"Luogo non indicato")}</p>
+    <div class="mini"><div><b>${j.totalTrees}</b><span>ulivi</span></div><div><b>${doneTrees(j)}</b><span>potati</span></div><div><b>${progress(j)}%</b><span>avanzamento</span></div></div>
+    <div class="mini"><div><b>${money(estimate(j))}</b><span>preventivo</span></div><div><b class="paid">${money(paid(j))}</b><span>incassato</span></div><div><b class="due">${money(due(j))}</b><span>saldo</span></div></div>
+    <p class="muted small"><b>Cultivar:</b> ${esc(j.cultivar||"Non indicata")} · <b>Tipo:</b> ${esc(j.workType)}</p>
+    <p class="muted small">${esc(j.notes||"Nessuna nota")}</p>
+    <div class="btn-row">
+      <button class="btn-main" onclick="showDay('${j.id}')">➕ Giornata</button>
+      <button class="btn-blue" onclick="showHealth('${j.id}')">🩺 Salute guidata</button>
+      <button class="btn-gold" onclick="showOil('${j.id}')">🫒 Olio</button>
+      <button class="btn-gold" onclick="showPayment('${j.id}')">💶 Pagamento</button>
+      <button onclick="showPhoto('${j.id}')">📷 Foto</button>
+      <button onclick="showEdit('${j.id}')">✏️ Modifica</button>
     </div>
-    <div class="section-title"><h2>Pagamenti</h2></div>${renderPayments(job)}
-    <div class="section-title"><h2>Produzione olio</h2></div>${renderOilRecords(job)}
-    <div class="section-title"><h2>Salute olivo</h2></div>${renderHealthChecks(job)}
-    <div class="section-title"><h2>Foto ordinate</h2></div>${renderPhotos(job)}
-    <div class="section-title"><h2>Giornate</h2></div>${daysHtml}
-    <div class="card danger-zone" style="margin-top:12px;"><h3>Elimina lavoro</h3><p class="muted small">Cancella definitivamente questo lavoro.</p><button class="btn-red btn-full" onclick="deleteJob('${job.id}')">Elimina lavoro</button></div>`;
-  document.getElementById("jobModal").classList.add("active");
+  </div>
+  <h2>Pagamenti</h2>${renderPayments(j)}
+  <h2>Salute olivo</h2>${renderHealth(j)}
+  <h2>Olio</h2>${renderOil(j)}
+  <h2>Foto</h2>${renderPhotos(j)}
+  <h2>Giornate</h2>${renderDays(j)}
+  <div class="card" style="margin-top:12px;border-color:rgba(216,75,58,.55)"><button class="btn-red btn-full" onclick="deleteJob('${j.id}')">Elimina lavoro</button></div>`;
+  openModal();
 }
-function closeModal(){document.getElementById("jobModal").classList.remove("active");openedJobId=null}
+function openModal(){document.getElementById("modal").classList.add("active")}
+function closeModal(){document.getElementById("modal").classList.remove("active")}
+function renderPayments(j){return j.payments.length?j.payments.slice().reverse().map(p=>`<div class="rowbox"><b>${dateIt(p.date)}</b> · ${esc(p.type||"Pagamento")}<br><span class="paid">${money(p.amount)}</span> · ${esc(p.method||"")}${p.note?`<br><span class="muted small">${esc(p.note)}</span>`:""}</div>`).join(""):`<div class="empty">Nessun pagamento.</div>`}
+function renderHealth(j){return j.healthChecks.length?j.healthChecks.slice().reverse().map(h=>`<div class="rowbox"><b>${dateIt(h.date)}</b> · ${esc(h.condition)}</div>`).join(""):`<div class="empty">Nessuna scheda salute.</div>`}
+function renderOil(j){return j.oilRecords.length?j.oilRecords.slice().reverse().map(o=>`<div class="rowbox"><b>Anno ${o.year}</b><br>Resa ${o.yieldPercent||0}% · Olio ${o.oilLiters||0} L</div>`).join(""):`<div class="empty">Nessuna annata olio.</div>`}
+function renderDays(j){return j.days.length?j.days.slice().reverse().map(d=>`<div class="rowbox"><b>${dateIt(d.date)}</b><br>${d.trees} ulivi · netto ${money(dayGross(j,d)-expenses(d))}</div>`).join(""):`<div class="empty">Nessuna giornata.</div>`}
+function renderPhotos(j){return j.photoItems.length?`<div class="photo-grid">${j.photoItems.filter(p=>p.src).map(p=>`<div class="rowbox"><img class="thumb" src="${p.src}" onclick="openViewer('${p.src}','Foto')"><button class="btn-blue btn-full" onclick="openViewer('${p.src}','Foto')">Apri foto</button></div>`).join("")}</div>`:`<div class="empty">Nessuna foto.</div>`}
 
-function showPaymentForm(id){
-  const job=jobs.find(j=>j.id===id);if(!job)return;
-  const balance=jobBalance(job);
-  document.getElementById("modalContent").innerHTML=`<div class="card"><h3>Aggiungi pagamento</h3>
-    <div class="mini-grid"><div class="mini-box"><b>${money(jobEstimate(job))}</b><span>preventivo</span></div><div class="mini-box"><b class="paid">${money(jobPaid(job))}</b><span>pagato</span></div><div class="mini-box"><b class="expense">${money(balance)}</b><span>saldo</span></div></div>
-    <label><span>Data pagamento</span><input id="pDate" type="date" value="${todayISO()}"></label>
-    <label><span>Importo €</span><input id="pAmount" type="number" min="0" step="0.01" value="${balance || ""}" placeholder="Es. 150"></label>
-    <label><span>Tipo pagamento</span><select id="pType"><option>Acconto</option><option>Saldo</option><option>Pagamento parziale</option><option>Pagamento completo</option><option>Rimborso spese</option></select></label>
+function showPayment(id){
+  const j=jobs.find(x=>x.id===id);if(!j)return;
+  document.getElementById("modalTitle").textContent="Pagamento";
+  document.getElementById("modalBody").innerHTML=`<div class="card">
+    <div class="mini"><div><b>${money(estimate(j))}</b><span>preventivo</span></div><div><b class="paid">${money(paid(j))}</b><span>pagato</span></div><div><b class="due">${money(due(j))}</b><span>saldo</span></div></div>
+    <label><span>Data</span><input id="pDate" type="date" value="${todayISO()}"></label>
+    <label><span>Importo €</span><input id="pAmount" type="number" step="0.01" value="${due(j)||""}"></label>
+    <label><span>Tipo</span><select id="pType"><option>Acconto</option><option>Saldo</option><option>Pagamento parziale</option><option>Pagamento completo</option></select></label>
     <label><span>Metodo</span><select id="pMethod"><option>Contanti</option><option>Bonifico</option><option>Postepay</option><option>Assegno</option><option>Altro</option></select></label>
-    <label><span>Note pagamento</span><textarea id="pNote" placeholder="Es. ricevuto saldo a fine lavoro..."></textarea></label>
-    <div class="btn-row"><button class="btn-main" onclick="addPayment('${id}')">Salva pagamento</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div>
+    <label><span>Note</span><textarea id="pNote"></textarea></label>
+    <button class="btn-main btn-full" onclick="addPayment('${id}')">Salva pagamento</button>
   </div>`;
+  openModal();
 }
-function addPayment(id){
-  const job=jobs.find(j=>j.id===id);if(!job)return;
-  const amount=num(document.getElementById("pAmount").value);
-  if(amount<=0){toast("Inserisci importo pagamento");return}
-  job.payments.push({id:uid(),date:document.getElementById("pDate").value||todayISO(),amount,method:document.getElementById("pMethod").value,type:document.getElementById("pType").value,note:document.getElementById("pNote").value.trim()});
-  if(jobEstimate(job)>0 && jobPaid(job)>=jobEstimate(job))job.status="pagato";
-  save();toast("Pagamento salvato");openJob(id);
-}
-function quickPayment(id){openJob(id);setTimeout(()=>showPaymentForm(id),50)}
+function addPayment(id){const j=jobs.find(x=>x.id===id);const amount=n(document.getElementById("pAmount").value);if(!amount)return toast("Inserisci importo");j.payments.push({id:uid(),date:document.getElementById("pDate").value||todayISO(),amount,type:document.getElementById("pType").value,method:document.getElementById("pMethod").value,note:document.getElementById("pNote").value.trim()});if(estimate(j)>0&&paid(j)>=estimate(j))j.status="pagato";save();toast("Pagamento salvato");openJob(id)}
 
-function showAddDayForm(id){
-  const job=jobs.find(j=>j.id===id);if(!job)return;
-  document.getElementById("modalContent").innerHTML=`<div class="card"><h3>Aggiungi giornata</h3><label><span>Data</span><input id="dDate" type="date" value="${todayISO()}"></label><label><span>Ulivi potati oggi</span><input id="dTrees" type="number" min="0" placeholder="Es. 35"></label><label><span>Ore lavorate</span><input id="dHours" type="number" min="0" step="0.5" placeholder="Es. 7"></label>${job.priceMode==="day"?`<label><span>Guadagno lordo giornata €</span><input id="dDayMoney" type="number" min="0" step="0.01" value="${job.priceValue||0}"></label>`:`<input id="dDayMoney" type="hidden" value="0">`}<h3>Spese giornata</h3><div class="grid grid-2"><label><span>Carburante €</span><input id="dExpenseFuel" type="number" min="0" step="0.01" placeholder="Es. 15"></label><label><span>Pranzo €</span><input id="dExpenseFood" type="number" min="0" step="0.01" placeholder="Es. 10"></label></div><div class="grid grid-2"><label><span>Attrezzatura / materiali €</span><input id="dExpenseTools" type="number" min="0" step="0.01" placeholder="Es. 5"></label><label><span>Altre spese €</span><input id="dExpenseOther" type="number" min="0" step="0.01" placeholder="Es. 0"></label></div><label><span>Tipo foto giornata</span><select id="dPhotoType"><option value="durante">Durante</option><option value="prima">Prima</option><option value="dopo">Dopo</option><option value="sopralluogo">Sopralluogo</option><option value="salute">Salute olivo</option><option value="altro">Altro</option></select></label><label><span>Foto giornata</span><input id="dPhoto" type="file" accept="image/*" onchange="previewFile(this,'dPhotoPreview')"></label><div id="dPhotoPreview" class="preview-box"></div><label><span>Note giornata</span><textarea id="dNotes" placeholder="Es. parte alta finita, restano alberi vicino strada..."></textarea></label><div class="btn-row"><button class="btn-main" onclick="addDay('${id}')">Salva giornata</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div></div>`;
+function showDay(id){
+  document.getElementById("modalTitle").textContent="Aggiungi giornata";
+  document.getElementById("modalBody").innerHTML=`<div class="card">
+    <label><span>Data</span><input id="dDate" type="date" value="${todayISO()}"></label>
+    <label><span>Ulivi potati</span><input id="dTrees" type="number"></label>
+    <label><span>Ore</span><input id="dHours" type="number" step="0.5"></label>
+    <label><span>Spese carburante €</span><input id="dFuel" type="number" step="0.01"></label>
+    <label><span>Spese pranzo €</span><input id="dFood" type="number" step="0.01"></label>
+    <label><span>Spese attrezzi €</span><input id="dTools" type="number" step="0.01"></label>
+    <label><span>Altre spese €</span><input id="dOther" type="number" step="0.01"></label>
+    <label><span>Note</span><textarea id="dNotes"></textarea></label>
+    <button class="btn-main btn-full" onclick="addDay('${id}')">Salva giornata</button>
+  </div>`;openModal();
 }
-async function addDay(id){
-  const job=jobs.find(j=>j.id===id);if(!job)return;
-  const trees=num(document.getElementById("dTrees").value);if(trees<=0){toast("Inserisci gli ulivi potati");return}
-  showSaving(true);
-  const photoFile=document.getElementById("dPhoto").files[0],photo=await fileToCompressedDataURL(photoFile),photoType=document.getElementById("dPhotoType").value;
-  const day={id:uid(),date:document.getElementById("dDate").value||todayISO(),trees,hours:num(document.getElementById("dHours").value),dayMoney:num(document.getElementById("dDayMoney").value),expenseFuel:num(document.getElementById("dExpenseFuel").value),expenseFood:num(document.getElementById("dExpenseFood").value),expenseTools:num(document.getElementById("dExpenseTools").value),expenseOther:num(document.getElementById("dExpenseOther").value),notes:document.getElementById("dNotes").value.trim(),photo};
-  job.days.push(day);if(photo){job.photos.push(photo);job.photoItems.push({id:uid(),type:photoType,src:photo,createdAt:new Date().toISOString()})}if(job.status==="preventivo")job.status="attivo";
-  save();showSaving(false);toast("Giornata salvata");openJob(id);
-}
-function quickAddDay(id){openJob(id);setTimeout(()=>showAddDayForm(id),50)}
-function checkItem(label){return `<label class="check-item"><input type="checkbox" value="${escapeAttr(label)}"><span>${escapeHtml(label)}</span></label>`}
-function checkedValues(boxId){return Array.from(document.querySelectorAll("#"+boxId+" input:checked")).map(i=>i.value)}
-function yesNoQuestion(id,label){return `<label><span>${escapeHtml(label)}</span><select id="${id}"><option value="">Non so / non controllato</option><option value="yes">Sì</option><option value="no">No</option></select></label>`}
+function addDay(id){const j=jobs.find(x=>x.id===id);const trees=n(document.getElementById("dTrees").value);if(!trees)return toast("Inserisci ulivi potati");j.days.push({id:uid(),date:document.getElementById("dDate").value||todayISO(),trees,hours:n(document.getElementById("dHours").value),expenseFuel:n(document.getElementById("dFuel").value),expenseFood:n(document.getElementById("dFood").value),expenseTools:n(document.getElementById("dTools").value),expenseOther:n(document.getElementById("dOther").value),notes:document.getElementById("dNotes").value.trim()});if(j.status==="preventivo")j.status="attivo";save();toast("Giornata salvata");openJob(id)}
 
-function showHealthForm(id){
-  document.getElementById("modalContent").innerHTML=`<div class="card">
-    <h3>Salute olivo / analisi guidata PRO</h3>
-    <p class="muted small">Questa non sostituisce l’agronomo. Serve per una prima valutazione di campo: sintomi, possibili problemi, prime cure e urgenza.</p>
-    <div class="grid grid-2"><label><span>Data controllo</span><input id="hDate" type="date" value="${todayISO()}"></label><label><span>Pianta / zona / numero</span><input id="hTreeRef" placeholder="Es. fila 2, pianta 14"></label></div>
-    <div class="grid grid-2"><label><span>Parte fotografata</span><select id="hPhotoPart"><option>Chioma intera</option><option>Foglie</option><option>Rami</option><option>Tronco</option><option>Corteccia</option><option>Olive/frutti</option><option>Terreno</option></select></label><label><span>Condizione generale</span><select id="hCondition"><option>Buona</option><option>Media</option><option>Da controllare</option><option>Grave</option></select></label></div>
-    <label><span>Priorità intervento</span><select id="hPriority"><option>Bassa</option><option>Media</option><option>Alta</option><option>Urgente</option></select></label>
-    <h3>Foto salute olivo</h3><label><span>Scegli / scatta foto</span><input id="hPhoto" type="file" accept="image/*" onchange="previewFile(this,'hPhotoPreview')"></label><div id="hPhotoPreview" class="preview-box"></div>
-    <h3>Sintomi osservati</h3><div class="check-grid" id="symptomsBox">${checkItem("Foglie macchiate")}${checkItem("Macchie tonde scure sulle foglie")}${checkItem("Foglie gialle")}${checkItem("Caduta foglie")}${checkItem("Rami secchi")}${checkItem("Disseccamento da un solo lato")}${checkItem("Chioma rada")}${checkItem("Corteccia spaccata")}${checkItem("Noduli / tumori su rami")}${checkItem("Frutti rovinati")}${checkItem("Presenza insetti")}${checkItem("Patina bianca / scudetti su rami")}${checkItem("Stress idrico")}${checkItem("Ferite da potatura")}${checkItem("Marciume / carie del legno")}${checkItem("Disseccamento rapido sospetto")}${checkItem("Foglie bruciate ai bordi")}${checkItem("Pianta poco produttiva")}</div>
-    <h3>Domande guidate</h3><div class="grid grid-2">${yesNoQuestion("qRoundSpots","Le foglie hanno macchie tonde scure?")}${yesNoQuestion("qLeafFall","Le foglie cadono molto?")}${yesNoQuestion("qOneSideDry","Il seccume è soprattutto da un lato della pianta?")}${yesNoQuestion("qInsects","Si vedono insetti, scudetti o patine sui rami/foglie?")}${yesNoQuestion("qNodules","Ci sono noduli o tumori sui rami?")}${yesNoQuestion("qFruitDamage","Le olive/frutti sono rovinati o bucati?")}${yesNoQuestion("qWaterStress","Il terreno è molto secco o la pianta sembra assetata?")}${yesNoQuestion("qFastDry","C’è un disseccamento rapido e anomalo?")}</div>
-    <h3>Problemi selezionati manualmente</h3><div class="check-grid" id="diseasesBox">${checkItem("Occhio di pavone")}${checkItem("Rogna dell’olivo")}${checkItem("Verticilliosi")}${checkItem("Cocciniglia")}${checkItem("Mosca dell’olivo")}${checkItem("Xylella / disseccamento sospetto")}${checkItem("Carenza nutrizionale")}${checkItem("Stress idrico")}${checkItem("Danni da gelo")}${checkItem("Danni da potatura")}${checkItem("Carie del legno")}${checkItem("Altro")}</div>
-    <label><span>Note del potatore</span><textarea id="hNote" placeholder="Es. foglie con macchie tonde, ramo secco lato nord, controllare tra 15 giorni..."></textarea></label>
-    <div class="btn-row"><button class="btn-main" onclick="addHealthCheck('${id}')">Salva analisi salute</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div>
-  </div>`;
+function check(label){return `<label class="check"><input type="checkbox" value="${esc(label)}"><span>${esc(label)}</span></label>`}
+function checked(id){return [...document.querySelectorAll("#"+id+" input:checked")].map(x=>x.value)}
+function showHealth(id){
+  document.getElementById("modalTitle").textContent="Salute guidata olivo";
+  document.getElementById("modalBody").innerHTML=`<div class="card">
+    <p class="muted small">Analisi guidata di campo. Non sostituisce l’agronomo.</p>
+    <label><span>Data</span><input id="hDate" type="date" value="${todayISO()}"></label>
+    <label><span>Pianta / zona</span><input id="hTree" placeholder="Es. fila 2, pianta 14"></label>
+    <label><span>Parte fotografata</span><select id="hPart"><option>Chioma intera</option><option>Foglie</option><option>Rami</option><option>Tronco</option><option>Olive/frutti</option><option>Terreno</option></select></label>
+    <label><span>Condizione generale</span><select id="hCond"><option>Buona</option><option>Media</option><option>Da controllare</option><option>Grave</option></select></label>
+    <label><span>Priorità</span><select id="hPri"><option>Bassa</option><option>Media</option><option>Alta</option><option>Urgente</option></select></label>
+    <label><span>Foto salute</span><input id="hPhoto" type="file" accept="image/*" onchange="preview(this,'hPrev')"></label><div id="hPrev" class="preview"></div>
+    <h3>Sintomi</h3><div id="symptoms" class="checkgrid">
+      ${check("Foglie macchiate")}${check("Macchie tonde scure sulle foglie")}${check("Foglie gialle")}${check("Caduta foglie")}${check("Rami secchi")}${check("Disseccamento da un solo lato")}${check("Noduli / tumori su rami")}${check("Presenza insetti")}${check("Patina bianca / scudetti su rami")}${check("Stress idrico")}${check("Ferite da potatura")}${check("Marciume / carie del legno")}${check("Disseccamento rapido sospetto")}${check("Frutti rovinati")}
+    </div>
+    <label><span>Note</span><textarea id="hNote" placeholder="Es. foglie con macchie, ramo secco lato nord..."></textarea></label>
+    <button class="btn-main btn-full" onclick="addHealth('${id}')">Salva analisi salute</button>
+  </div>`;openModal();
 }
-function guideAnswer(id){return document.getElementById(id)?.value||""}
-function calculateGuidedDiagnosis(symptoms,answers,condition,priority){
-  const s=new Set(symptoms),problems=[],advice=[],cures=[],agro=[];
+function diagnose(sym,cond,pri){
+  const s=new Set(sym),problems=[],advice=[];
   let level="Basso";
-  function add(a,p){if(!a.includes(p))a.push(p)}
-  function medium(){if(level==="Basso")level="Medio"}
-  function high(){level="Alto"}
-  if(s.has("Macchie tonde scure sulle foglie")||s.has("Foglie macchiate")||answers.qRoundSpots==="yes"){add(problems,"Sospetto occhio di pavone");add(advice,"Macchie fogliari compatibili con problema fungino: controllare foglie sopra e sotto e presenza di caduta fogliare.");add(cures,"Arieggiare la chioma con potatura equilibrata; evitare chiome troppo fitte; valutare trattamento con tecnico se il problema è diffuso.");medium()}
-  if(answers.qRoundSpots==="yes"&&(answers.qLeafFall==="yes"||s.has("Caduta foglie"))){add(problems,"Occhio di pavone più probabile");add(cures,"Raccogliere foto ravvicinate delle foglie e monitorare defogliazione; non fare potature eccessive su piante già stressate.");medium()}
-  if(s.has("Noduli / tumori su rami")||answers.qNodules==="yes"){add(problems,"Sospetta rogna dell’olivo");add(advice,"Noduli o tumori sui rami possono indicare rogna, spesso legata a ferite e tagli.");add(cures,"Disinfettare gli attrezzi; evitare potatura con pioggia o piante bagnate; eliminare con prudenza parti molto colpite se indicato da tecnico.");medium()}
-  if(s.has("Presenza insetti")||s.has("Patina bianca / scudetti su rami")||answers.qInsects==="yes"){add(problems,"Possibile cocciniglia o insetti parassiti");add(advice,"La presenza di scudetti, patine o insetti richiede foto ravvicinate di rami e pagina inferiore delle foglie.");add(cures,"Valutare pulizia della chioma e monitoraggio; trattamento solo dopo riconoscimento preciso dell’insetto.");medium()}
-  if(s.has("Frutti rovinati")||answers.qFruitDamage==="yes"){add(problems,"Possibile mosca dell’olivo o danno su frutto");add(advice,"Frutti bucati o rovinati possono dipendere da insetti o andamento stagionale.");add(cures,"Controllare olive cadute e punture; segnare periodo e zona dell’uliveto.");medium()}
-  if(s.has("Disseccamento da un solo lato")||answers.qOneSideDry==="yes"){add(problems,"Possibile verticilliosi / problema radicale");add(advice,"Il seccume localizzato su una branca o un lato può indicare problema vascolare o radicale.");add(cures,"Segnare la pianta e osservare evoluzione; evitare tagli drastici finché non è chiara la causa.");medium()}
-  if(s.has("Stress idrico")||answers.qWaterStress==="yes"||s.has("Foglie bruciate ai bordi")){add(problems,"Possibile stress idrico");add(advice,"Foglie bruciate, terreno secco e chioma sofferente indicano possibile stress da acqua/caldo.");add(cures,"Evitare potatura pesante; mantenere vegetazione utile; controllare terreno, esposizione e disponibilità idrica.")}
-  if(s.has("Foglie gialle")&&!s.has("Macchie tonde scure sulle foglie")){add(problems,"Possibile carenza nutrizionale o stress generale");add(advice,"Ingiallimento diffuso può dipendere da nutrizione, acqua, radici o stress stagionale.");add(cures,"Osservare se l’ingiallimento è uniforme o localizzato; valutare analisi terreno/foglia se ricorrente.")}
-  if(s.has("Marciume / carie del legno")){add(problems,"Possibile carie del legno");add(advice,"Cavità, legno molle o marcio richiedono attenzione sulla stabilità della branca.");add(cures,"Evitare tagli casuali; valutare stabilità; intervenire solo con tagli puliti e ragionati.");medium()}
-  if(s.has("Ferite da potatura")){add(problems,"Danno da potatura / ferite da monitorare");add(advice,"Tagli grandi o ferite possono diventare ingresso per patogeni.");add(cures,"Migliorare qualità del taglio; evitare monconi; disinfettare attrezzi se ci sono piante sospette.")}
-  if(s.has("Pianta poco produttiva")){add(problems,"Bassa produttività da valutare");add(advice,"Produzione bassa può dipendere da potatura, alternanza produttiva, nutrizione, acqua o salute generale.");add(cures,"Registrare resa olio annuale e confrontare gli anni; evitare di giudicare da un solo anno.")}
-  if(s.has("Disseccamento rapido sospetto")||answers.qFastDry==="yes"){add(problems,"Disseccamento grave da verificare");add(problems,"Xylella / disseccamento sospetto da escludere con tecnico");add(advice,"Disseccamento rapido e anomalo non va interpretato solo dall’app.");add(cures,"Fare foto complete di chioma, rami, tronco e foglie; non spostare materiale sospetto senza indicazioni tecniche.");add(agro,"Sentire agronomo o servizio fitosanitario se il disseccamento è rapido, diffuso o colpisce più piante.");high()}
-  if(condition==="Grave"||priority==="Urgente"){high();add(agro,"Priorità alta: chiedere verifica tecnica/agronomica, soprattutto se il problema aumenta o riguarda più piante.")}
-  if(priority==="Alta"){medium();add(agro,"Se non migliora o se il sintomo si ripete su molte piante, far controllare da un agronomo.")}
-  if(!problems.length){add(problems,"Nessun sospetto forte dai dati inseriti");add(advice,"Dai sintomi inseriti non emerge un problema chiaro. Salvare foto e ricontrollare nel tempo.");add(cures,"Monitorare la pianta; aggiungere nuove foto se compaiono macchie, seccume, insetti o caduta foglie.")}
-  if(!agro.length)add(agro,"Agronomo consigliato se il problema peggiora, si diffonde, o se servono trattamenti specifici.");
-  return {problems,level,advice:[...new Set(advice)].join(" "),cures:[...new Set(cures)].join(" "),agro:[...new Set(agro)].join(" ")};
+  const add=x=>{if(!problems.includes(x))problems.push(x)};
+  const adv=x=>{if(!advice.includes(x))advice.push(x)};
+  const med=()=>{if(level==="Basso")level="Medio"};const high=()=>level="Alto";
+  if(s.has("Macchie tonde scure sulle foglie")||s.has("Foglie macchiate")){add("Sospetto occhio di pavone");adv("Controllare foglie sopra/sotto e caduta fogliare. Arieggiare la chioma.");med()}
+  if(s.has("Noduli / tumori su rami")){add("Sospetta rogna dell’olivo");adv("Disinfettare attrezzi. Evitare potatura con pioggia o piante bagnate.");med()}
+  if(s.has("Presenza insetti")||s.has("Patina bianca / scudetti su rami")){add("Possibile cocciniglia o insetti");adv("Fare foto ravvicinate e verificare pagina inferiore foglie/rami.");med()}
+  if(s.has("Disseccamento da un solo lato")){add("Possibile verticilliosi / problema radicale");adv("Segnare la pianta e osservare evoluzione prima di tagli drastici.");med()}
+  if(s.has("Stress idrico")||s.has("Foglie gialle")){add("Possibile stress idrico o carenza");adv("Evitare potatura pesante su pianta stressata; controllare terreno e vigoria.")}
+  if(s.has("Disseccamento rapido sospetto")){add("Disseccamento grave da verificare");add("Xylella / disseccamento sospetto da escludere con tecnico");adv("Sentire agronomo o servizio fitosanitario se rapido o diffuso.");high()}
+  if(cond==="Grave"||pri==="Urgente")high();if(pri==="Alta")med();
+  if(!problems.length){add("Nessun sospetto forte dai dati inseriti");adv("Monitorare e salvare nuove foto se compaiono sintomi.")}
+  return {problems,level,advice:advice.join(" ")};
 }
-async function addHealthCheck(id){
-  const job=jobs.find(j=>j.id===id);if(!job)return;
-  showSaving(true);
-  const file=document.getElementById("hPhoto").files[0],photo=await fileToCompressedDataURL(file);
-  const symptoms=checkedValues("symptomsBox"),diseases=checkedValues("diseasesBox");
-  const guideAnswers={qRoundSpots:guideAnswer("qRoundSpots"),qLeafFall:guideAnswer("qLeafFall"),qOneSideDry:guideAnswer("qOneSideDry"),qInsects:guideAnswer("qInsects"),qNodules:guideAnswer("qNodules"),qFruitDamage:guideAnswer("qFruitDamage"),qWaterStress:guideAnswer("qWaterStress"),qFastDry:guideAnswer("qFastDry")};
-  const condition=document.getElementById("hCondition").value,priority=document.getElementById("hPriority").value,guided=calculateGuidedDiagnosis(symptoms,guideAnswers,condition,priority);
-  const h={id:uid(),date:document.getElementById("hDate").value||todayISO(),treeRef:document.getElementById("hTreeRef").value.trim(),photoPart:document.getElementById("hPhotoPart").value,condition,priority,symptoms,diseases,guideAnswers,suggestedProblems:guided.problems,guideLevel:guided.level,guideAdvice:guided.advice,cureAdvice:guided.cures,agronomistAdvice:guided.agro,note:document.getElementById("hNote").value.trim(),photo};
-  job.healthChecks.push(h);if(photo){job.photos.push(photo);job.photoItems.push({id:uid(),type:"salute",src:photo,createdAt:new Date().toISOString()})}
-  save();showSaving(false);toast(photo?"Analisi salute salvata con foto":"Analisi salvata senza foto");openJob(id);
-}
-function quickHealth(id){openJob(id);setTimeout(()=>showHealthForm(id),50)}
-
-function showOilForm(id){
-  const job=jobs.find(j=>j.id===id);if(!job)return;const currentYear=new Date().getFullYear();
-  document.getElementById("modalContent").innerHTML=`<div class="card"><h3>Produzione olio annuale</h3><p class="muted small">Qui registri anno per anno quanto rende l’uliveto.</p><div class="grid grid-2"><label><span>Anno</span><input id="oYear" type="number" value="${currentYear}"></label><label><span>Piante produttive</span><input id="oTrees" type="number" min="0" value="${job.totalTrees||""}" placeholder="Es. 50"></label></div><div class="grid grid-2"><label><span>Kg olive raccolte</span><input id="oOliveKg" type="number" min="0" step="0.1" placeholder="Es. 800"></label><label><span>Resa frantoio %</span><input id="oYield" type="number" min="0" step="0.1" placeholder="Es. 22"></label></div><div class="grid grid-2"><label><span>Olio prodotto reale L</span><input id="oLiters" type="number" min="0" step="0.1" placeholder="Es. 176"></label><label><span>Frantoio</span><input id="oMill" placeholder="Es. Frantoio Rossi"></label></div><label><span>Periodo raccolta</span><input id="oHarvest" placeholder="Es. ottobre 2026"></label><label><span>Qualità olive</span><select id="oQuality"><option value="">Non indicata</option><option>Ottima</option><option>Buona</option><option>Media</option><option>Scarsa</option><option>Problemi di mosca</option><option>Olive asciutte / stress</option></select></label><label><span>Note annata</span><textarea id="oNotes" placeholder="Es. annata buona, olive sane, poca mosca, resa alta..."></textarea></label><div class="btn-row"><button class="btn-main" onclick="addOilRecord('${id}')">Salva annata olio</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div></div>`;
-}
-function addOilRecord(id){
-  const job=jobs.find(j=>j.id===id);if(!job)return;const year=num(document.getElementById("oYear").value);if(!year){toast("Inserisci l’anno");return}
-  const record={id:uid(),year,productiveTrees:num(document.getElementById("oTrees").value),oliveKg:num(document.getElementById("oOliveKg").value),yieldPercent:num(document.getElementById("oYield").value),oilLiters:num(document.getElementById("oLiters").value),mill:document.getElementById("oMill").value.trim(),harvestPeriod:document.getElementById("oHarvest").value.trim(),oliveQuality:document.getElementById("oQuality").value,notes:document.getElementById("oNotes").value.trim(),createdAt:new Date().toISOString()};
-  job.oilRecords.push(record);save();toast("Annata olio salvata");openJob(id);
-}
-function quickOil(id){openJob(id);setTimeout(()=>showOilForm(id),50)}
-
-function showAddPhotoForm(id){
-  document.getElementById("modalContent").innerHTML=`<div class="card"><h3>Aggiungi foto</h3><p class="muted small">Le foto vengono salvate compresse per non riempire la memoria.</p><label><span>Tipo foto</span><select id="extraPhotoType"><option value="sopralluogo">Sopralluogo</option><option value="prima">Prima</option><option value="durante">Durante</option><option value="dopo">Dopo</option><option value="salute">Salute olivo</option><option value="altro">Altro</option></select></label><label><span>Foto lavoro / terreno / ulivi</span><input id="extraPhoto" type="file" accept="image/*" onchange="previewFile(this,'extraPhotoPreview')"></label><div id="extraPhotoPreview" class="preview-box"></div><div class="btn-row"><button class="btn-main" onclick="addPhoto('${id}')">Salva foto</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div></div>`;
-}
-async function addPhoto(id){
-  const job=jobs.find(j=>j.id===id);if(!job)return;const file=document.getElementById("extraPhoto").files[0],type=document.getElementById("extraPhotoType").value;if(!file){toast("Scegli una foto");return}
-  showSaving(true);const photo=await fileToCompressedDataURL(file);if(photo){job.photos.push(photo);job.photoItems.push({id:uid(),type,src:photo,createdAt:new Date().toISOString()})}
-  save();showSaving(false);toast(photo?"Foto salvata":"Foto non salvata");openJob(id);
+async function addHealth(id){
+  const j=jobs.find(x=>x.id===id);const file=document.getElementById("hPhoto").files[0],photo=await compressFile(file);
+  const sym=checked("symptoms"),cond=document.getElementById("hCond").value,pri=document.getElementById("hPri").value,d=diagnose(sym,cond,pri);
+  j.healthChecks.push({id:uid(),date:document.getElementById("hDate").value||todayISO(),treeRef:document.getElementById("hTree").value.trim(),photoPart:document.getElementById("hPart").value,condition:cond,priority:pri,symptoms:sym,suggestedProblems:d.problems,guideLevel:d.level,guideAdvice:d.advice,note:document.getElementById("hNote").value.trim(),photo});
+  if(photo)j.photoItems.push({id:uid(),type:"salute",src:photo});
+  save();toast("Analisi salute salvata");openJob(id);
 }
 
-function showEditJobForm(id){
-  const job=jobs.find(j=>j.id===id);if(!job)return;
-  document.getElementById("modalContent").innerHTML=`<div class="card"><h3>Modifica lavoro</h3><label><span>Cliente</span><input id="eClient" value="${escapeAttr(job.client)}"></label><label><span>Telefono</span><input id="ePhone" value="${escapeAttr(job.phone||"")}"></label><label><span>Luogo</span><input id="ePlace" value="${escapeAttr(job.place||"")}"></label><div class="grid grid-2"><label><span>Data prevista</span><input id="eDate" type="date" value="${job.startDate||todayISO()}"></label><label><span>Totale ulivi</span><input id="eTotalTrees" type="number" value="${job.totalTrees||0}"></label></div><div class="grid grid-2"><label><span>Cultivar / tipo olivo</span><input id="eCultivar" value="${escapeAttr(job.cultivar||"")}"></label><label><span>Età stimata</span><input id="eAge" value="${escapeAttr(job.age||"")}"></label></div><div class="grid grid-2"><label><span>Vigoria</span><input id="eVigor" value="${escapeAttr(job.vigor||"")}"></label><label><span>Forma pianta</span><input id="eShape" value="${escapeAttr(job.shape||"")}"></label></div><div class="grid grid-2"><label><span>Tipo prezzo</span><select id="ePriceMode"><option value="tree" ${job.priceMode==="tree"?"selected":""}>Prezzo a ulivo</option><option value="day" ${job.priceMode==="day"?"selected":""}>Prezzo a giornata</option><option value="fixed" ${job.priceMode==="fixed"?"selected":""}>Prezzo a corpo</option></select></label><label><span>Valore €</span><input id="ePriceValue" type="number" step="0.01" value="${job.priceValue||0}"></label></div><div class="grid grid-2"><label><span>Giorni stimati</span><input id="eEstimatedDays" type="number" value="${job.estimatedDays||0}"></label><label><span>Vecchio campo acconto €</span><input id="eDeposit" type="number" step="0.01" value="${job.deposit||0}"></label></div><label><span>Stato</span><select id="eStatus"><option value="preventivo" ${job.status==="preventivo"?"selected":""}>Preventivo</option><option value="attivo" ${job.status==="attivo"?"selected":""}>Attivo</option><option value="finito" ${job.status==="finito"?"selected":""}>Finito</option><option value="pagato" ${job.status==="pagato"?"selected":""}>Pagato</option></select></label><label><span>Tipo lavoro</span><input id="eWorkType" value="${escapeAttr(job.workType||"")}"></label><label><span>Note</span><textarea id="eNotes">${escapeHtml(job.notes||"")}</textarea></label><div class="btn-row"><button class="btn-main" onclick="saveEditJob('${id}')">Salva modifiche</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div></div>`;
+function showOil(id){
+  document.getElementById("modalTitle").textContent="Produzione olio";
+  document.getElementById("modalBody").innerHTML=`<div class="card">
+    <label><span>Anno</span><input id="oYear" type="number" value="${new Date().getFullYear()}"></label>
+    <label><span>Piante produttive</span><input id="oTrees" type="number"></label>
+    <label><span>Kg olive raccolte</span><input id="oKg" type="number" step="0.1"></label>
+    <label><span>Resa frantoio %</span><input id="oYield" type="number" step="0.1"></label>
+    <label><span>Olio prodotto reale L</span><input id="oLiters" type="number" step="0.1"></label>
+    <label><span>Frantoio</span><input id="oMill"></label>
+    <label><span>Note</span><textarea id="oNotes"></textarea></label>
+    <button class="btn-main btn-full" onclick="addOil('${id}')">Salva annata olio</button>
+  </div>`;openModal();
 }
-function saveEditJob(id){
-  const job=jobs.find(j=>j.id===id);if(!job)return;
-  job.client=document.getElementById("eClient").value.trim()||"Senza nome";job.phone=document.getElementById("ePhone").value.trim();job.place=document.getElementById("ePlace").value.trim();job.startDate=document.getElementById("eDate").value||todayISO();job.totalTrees=num(document.getElementById("eTotalTrees").value);job.cultivar=document.getElementById("eCultivar").value.trim();job.age=document.getElementById("eAge").value.trim();job.vigor=document.getElementById("eVigor").value.trim();job.shape=document.getElementById("eShape").value.trim();job.priceMode=document.getElementById("ePriceMode").value;job.priceValue=num(document.getElementById("ePriceValue").value);job.estimatedDays=num(document.getElementById("eEstimatedDays").value);job.deposit=num(document.getElementById("eDeposit").value);job.status=document.getElementById("eStatus").value;job.workType=document.getElementById("eWorkType").value.trim();job.notes=document.getElementById("eNotes").value.trim();
-  save();toast("Modifiche salvate");openJob(id);
-}
-function changeStatus(id,status){const job=jobs.find(j=>j.id===id);if(!job)return;job.status=status;save();toast("Stato aggiornato");openJob(id)}
-function deleteJob(id){if(!confirm("Vuoi eliminare questo lavoro?"))return;jobs=jobs.filter(j=>j.id!==id);save();closeModal();toast("Lavoro eliminato")}
-function renderAll(){renderHome();renderClients();renderJobs();renderCalendar();renderStats()}
+function addOil(id){const j=jobs.find(x=>x.id===id);j.oilRecords.push({id:uid(),year:n(document.getElementById("oYear").value),productiveTrees:n(document.getElementById("oTrees").value),oliveKg:n(document.getElementById("oKg").value),yieldPercent:n(document.getElementById("oYield").value),oilLiters:n(document.getElementById("oLiters").value),mill:document.getElementById("oMill").value.trim(),notes:document.getElementById("oNotes").value.trim()});save();toast("Annata olio salvata");openJob(id)}
 
-function cloneForBackup(includePhotos){
-  return jobs.map(j=>{
-    const x=JSON.parse(JSON.stringify(j));
-    if(!includePhotos){
-      x.photos=[];
-      x.photoItems=(x.photoItems||[]).map(p=>({...p,src:""}));
-      x.days=(x.days||[]).map(d=>({...d,photo:""}));
-      x.healthChecks=(x.healthChecks||[]).map(h=>({...h,photo:""}));
-    }
-    return x;
-  });
+function showPhoto(id){document.getElementById("modalTitle").textContent="Aggiungi foto";document.getElementById("modalBody").innerHTML=`<div class="card"><label><span>Tipo foto</span><select id="xType"><option value="sopralluogo">Sopralluogo</option><option value="prima">Prima</option><option value="durante">Durante</option><option value="dopo">Dopo</option><option value="salute">Salute olivo</option><option value="altro">Altro</option></select></label><label><span>Foto</span><input id="xPhoto" type="file" accept="image/*" onchange="preview(this,'xPrev')"></label><div id="xPrev" class="preview"></div><button class="btn-main btn-full" onclick="addPhoto('${id}')">Salva foto</button></div>`;openModal()}
+async function addPhoto(id){const j=jobs.find(x=>x.id===id),file=document.getElementById("xPhoto").files[0];if(!file)return toast("Scegli foto");const src=await compressFile(file);if(src)j.photoItems.push({id:uid(),type:document.getElementById("xType").value,src});save();toast("Foto salvata");openJob(id)}
+
+function showEdit(id){
+  const j=jobs.find(x=>x.id===id);
+  document.getElementById("modalTitle").textContent="Modifica lavoro";
+  document.getElementById("modalBody").innerHTML=`<div class="card">
+    <label><span>Cliente</span><input id="eClient" value="${esc(j.client)}"></label>
+    <label><span>Telefono</span><input id="ePhone" value="${esc(j.phone)}"></label>
+    <label><span>Luogo</span><input id="ePlace" value="${esc(j.place)}"></label>
+    <label><span>Totale ulivi</span><input id="eTrees" type="number" value="${j.totalTrees}"></label>
+    <label><span>Cultivar</span><input id="eCultivar" value="${esc(j.cultivar)}"></label>
+    <label><span>Stato</span><select id="eStatus"><option value="preventivo">Preventivo</option><option value="attivo">Attivo</option><option value="finito">Finito</option><option value="pagato">Pagato</option></select></label>
+    <button class="btn-main btn-full" onclick="saveEdit('${id}')">Salva modifiche</button>
+  </div>`;document.getElementById("eStatus").value=j.status;openModal();
 }
-function exportBackup(includePhotos=true){
-  const data={app:"ApPiero",version:"8.4",photos:includePhotos,exportedAt:new Date().toISOString(),jobs:cloneForBackup(includePhotos)};
+function saveEdit(id){const j=jobs.find(x=>x.id===id);j.client=document.getElementById("eClient").value.trim()||"Senza nome";j.phone=document.getElementById("ePhone").value.trim();j.place=document.getElementById("ePlace").value.trim();j.totalTrees=n(document.getElementById("eTrees").value);j.cultivar=document.getElementById("eCultivar").value.trim();j.status=document.getElementById("eStatus").value;save();toast("Modifiche salvate");openJob(id)}
+function deleteJob(id){if(!confirm("Eliminare questo lavoro?"))return;jobs=jobs.filter(x=>x.id!==id);save();closeModal();toast("Lavoro eliminato")}
+
+function whatsJob(id){const j=jobs.find(x=>x.id===id);const p=cleanPhone(j.phone);if(!p)return toast("Telefono mancante");const txt=`Ciao ${j.client}, ti scrivo per il lavoro di potatura ulivi in ${j.place||"oliveto"}.`;window.open("https://wa.me/"+p+"?text="+encodeURIComponent(txt),"_blank")}
+function cleanPhone(phone){let p=String(phone||"").replace(/[^\d+]/g,"");p=p.replace(/^\+/,"");if(p.startsWith("00"))p=p.slice(2);if(p.startsWith("39"))return p;if(p.startsWith("3"))return"39"+p;if(p.startsWith("0"))return"39"+p;return p}
+
+function renderHome(){
+  const clients=getClients().length,totalPaid=jobs.reduce((s,j)=>s+paid(j),0),totalDue=jobs.reduce((s,j)=>s+due(j),0);
+  document.getElementById("kpiClients").textContent=clients;document.getElementById("kpiDue").textContent=money(totalDue);document.getElementById("kpiMem").textContent=totalKB();
+  document.getElementById("homeJobs").innerHTML=jobs.length?jobs.slice(0,4).map(jobCard).join(""):`<div class="empty">Ancora nessun lavoro.</div>`;
+  document.getElementById("memoryInfo").textContent=`Memoria V8.5: circa ${storageKB()} KB. Totale versioni ApPiero: circa ${totalKB()} KB.`;
+}
+function renderStats(){
+  document.getElementById("sClients").textContent=getClients().length;
+  document.getElementById("sTrees").textContent=jobs.reduce((s,j)=>s+n(j.totalTrees),0);
+  document.getElementById("sDone").textContent=jobs.reduce((s,j)=>s+doneTrees(j),0);
+  document.getElementById("sPaid").textContent=money(jobs.reduce((s,j)=>s+paid(j),0));
+  document.getElementById("sDue").textContent=money(jobs.reduce((s,j)=>s+due(j),0));
+  document.getElementById("sOil").textContent=jobs.reduce((s,j)=>s+j.oilRecords.reduce((a,o)=>a+n(o.oilLiters),0),0).toFixed(1)+" L";
+}
+function renderAll(){renderHome();renderClients();renderJobs();renderStats()}
+
+function backupData(includePhotos){
+  return jobs.map(j=>{const x=JSON.parse(JSON.stringify(j));if(!includePhotos){x.photos=[];x.photoItems=(x.photoItems||[]).map(p=>({...p,src:""}));x.days=(x.days||[]).map(d=>({...d,photo:""}));x.healthChecks=(x.healthChecks||[]).map(h=>({...h,photo:""}))}return x});
+}
+function exportBackup(includePhotos){
+  const data={app:"ApPiero",version:"8.5",photos:includePhotos,exportedAt:new Date().toISOString(),jobs:backupData(includePhotos)};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
-  a.href=url;a.download=(includePhotos?"appiero-v8-4-backup-completo-":"appiero-v8-4-backup-leggero-")+todayISO()+".json";a.click();URL.revokeObjectURL(url);
-  toast(includePhotos?"Backup completo esportato":"Backup leggero senza foto esportato");
+  a.href=url;a.download=(includePhotos?"appiero-v8-5-backup-completo-":"appiero-v8-5-backup-leggero-")+todayISO()+".json";a.click();URL.revokeObjectURL(url);toast("Backup esportato");
 }
-function importBackup(){
-  const file=document.getElementById("backupFile").files[0];if(!file){toast("Scegli un file backup");return}
-  const reader=new FileReader();
-  reader.onload=()=>{try{const data=JSON.parse(reader.result);if(!Array.isArray(data.jobs))throw new Error("Formato non valido");if(!confirm("Vuoi sostituire i dati attuali con questo backup?"))return;jobs=data.jobs.map(normalizeJob);save();toast("Backup importato");showScreen("home")}catch(e){toast("Backup non valido")}};
-  reader.readAsText(file);
-}
-function clearAllData(){if(!confirm("Vuoi cancellare TUTTI i dati di ApPiero?"))return;if(!confirm("Confermi? Questa operazione non si può annullare."))return;jobs=[];localStorage.removeItem(STORAGE_KEY);renderAll();toast("Dati cancellati")}
-function cleanOldStorage(){
-  if(!confirm("Pulisco solo i dati delle vecchie versioni. La V8.4 resta. Procedo?"))return;
-  OLD_STORAGE_KEYS.forEach(k=>localStorage.removeItem(k));
-  toast("Vecchie versioni pulite");
-  updateMemoryInfo();renderAll();
-}
-async function makePhotosLighter(){
-  if(!confirm("Ricomprimo le foto già salvate. Prima è consigliato fare backup completo. Procedo?"))return;
-  showSaving(true,"Sto alleggerendo le foto già salvate...<br>Attendi qualche secondo.");
-  for(const job of jobs){
-    for(const p of (job.photoItems||[])){if(p.src)p.src=await recompressDataUrl(p.src,520,.42)}
-    job.photos=(job.photoItems||[]).filter(p=>p.src).map(p=>p.src);
-    for(const d of (job.days||[])){if(d.photo)d.photo=await recompressDataUrl(d.photo,520,.42)}
-    for(const h of (job.healthChecks||[])){if(h.photo)h.photo=await recompressDataUrl(h.photo,520,.42)}
-  }
-  save();showSaving(false);toast("Foto alleggerite");
-}
-function updateMemoryInfo(){
-  const el=document.getElementById("memoryInfo");
-  if(el)el.textContent=`Memoria V8.4: circa ${storageKB()} KB. Totale vecchie versioni incluse: circa ${totalStorageKB()} KB.`;
-}
+function importBackup(){const file=document.getElementById("backupFile").files[0];if(!file)return toast("Scegli file backup");const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);if(!Array.isArray(data.jobs))throw new Error();if(!confirm("Sostituire i dati attuali?"))return;jobs=data.jobs.map(normalize);save();toast("Backup importato");showScreen("home")}catch(e){toast("Backup non valido")}};r.readAsText(file)}
+function cleanOld(){if(!confirm("Pulisco vecchie versioni, V8.5 resta. Procedo?"))return;OLD_KEYS.forEach(k=>localStorage.removeItem(k));toast("Vecchie versioni pulite");renderAll()}
+async function lightenPhotos(){if(!confirm("Alleggerisco le foto già salvate. Procedo?"))return;for(const j of jobs){for(const p of j.photoItems){if(p.src)p.src=await recompressDataUrl(p.src)}for(const h of j.healthChecks){if(h.photo)h.photo=await recompressDataUrl(h.photo)}j.photos=j.photoItems.filter(p=>p.src).map(p=>p.src)}save();toast("Foto alleggerite")}
+function clearAll(){if(!confirm("Cancellare tutti i dati?"))return;if(!confirm("Confermi definitivamente?"))return;jobs=[];localStorage.removeItem(STORAGE_KEY);save();toast("Dati cancellati")}
 
-function init(){
-  load();
-  document.getElementById("todayText").textContent=new Date().toLocaleDateString("it-IT",{weekday:"long",day:"2-digit",month:"long"});
-  document.getElementById("fDate").value=todayISO();
-  updatePriceLabels();
-  renderAll();
-}
+function init(){document.getElementById("todayText").textContent=new Date().toLocaleDateString("it-IT",{weekday:"long",day:"2-digit",month:"long"});document.getElementById("fDate").value=todayISO();load();priceLabel()}
 init();
 </script>
 </body>
