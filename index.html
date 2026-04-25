@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ApPiero V8.1 - Potatura Ulivi</title>
+  <title>ApPiero V8.2 - Potatura Ulivi</title>
   <meta name="theme-color" content="#18230f" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="ApPiero" />
@@ -22,7 +22,7 @@
       linear-gradient(180deg,#050804,var(--bg));
       color:var(--text);min-height:100vh;padding-bottom:96px;
     }
-    header{position:sticky;top:0;z-index:50;padding:18px 16px 14px;background:rgba(8,14,6,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    header{position:sticky;top:0;z-index:50;padding:18px 16px 14px;background:rgba(8,14,6,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
     .brand{display:flex;justify-content:space-between;align-items:center;gap:12px}
     .logo-box{display:flex;align-items:center;gap:12px}
     .logo{width:52px;height:52px;border-radius:18px;background:radial-gradient(circle at 35% 25%,#dfffb1,transparent 25%),linear-gradient(145deg,#6b8f33,#263d18 52%,#111d0d);border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 0 18px rgba(255,255,255,.08),0 12px 25px rgba(0,0,0,.45);display:grid;place-items:center;font-size:25px}
@@ -59,7 +59,7 @@
     .mini-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}
     @media(max-width:600px){.mini-grid{grid-template-columns:1fr}}
     .mini-box{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.10);padding:9px;border-radius:15px}.mini-box b{display:block;font-size:19px;margin-bottom:2px}.mini-box span{color:var(--muted);font-size:12px}
-    .money{color:var(--gold);font-weight:950}.netto{color:var(--green2);font-weight:950}.expense{color:#ffb199;font-weight:950}
+    .money{color:var(--gold);font-weight:950}.netto{color:var(--green2);font-weight:950}.expense{color:#ffb199;font-weight:950}.paid{color:#d6b2ff;font-weight:950}
     .photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}@media(min-width:760px){.photo-grid{grid-template-columns:repeat(3,1fr)}}
     .photo-card{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.13);border-radius:18px;padding:8px}
     .photo-thumb{width:100%;height:130px;object-fit:cover;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:#050805;display:block;margin-bottom:8px}
@@ -70,7 +70,7 @@
     .modal{position:fixed;inset:0;background:rgba(0,0,0,.74);display:none;align-items:flex-end;justify-content:center;z-index:120;padding:12px}.modal.active{display:flex}
     .modal-box{width:100%;max-width:780px;max-height:92vh;overflow:auto;background:radial-gradient(circle at top left,rgba(164,214,94,.12),transparent 28%),linear-gradient(180deg,#1a2711,#0d1509);border:1px solid rgba(255,255,255,.16);border-radius:28px;box-shadow:0 30px 80px rgba(0,0,0,.55);padding:16px}
     .modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.modal-head h2{margin:0}.close-btn{width:44px;height:44px;border-radius:50%;padding:0;background:rgba(255,255,255,.10)}
-    .day-row,.health-row,.oil-row{border:1px solid rgba(255,255,255,.10);border-radius:18px;padding:12px;background:rgba(0,0,0,.18);margin-bottom:8px}.day-row b,.health-row b,.oil-row b{color:var(--green2)}
+    .day-row,.health-row,.oil-row,.pay-row{border:1px solid rgba(255,255,255,.10);border-radius:18px;padding:12px;background:rgba(0,0,0,.18);margin-bottom:8px}.day-row b,.health-row b,.oil-row b,.pay-row b{color:var(--green2)}
     .calendar-day{border-left:4px solid var(--green);padding:12px;border-radius:16px;background:rgba(255,255,255,.06);margin-bottom:9px}
     .empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed rgba(255,255,255,.16);border-radius:22px;background:rgba(255,255,255,.035)}
     .danger-zone{border-color:rgba(216,75,58,.45);background:linear-gradient(145deg,rgba(216,75,58,.12),rgba(255,255,255,.03))}
@@ -93,7 +93,7 @@
       <div class="brand-title">
         <h1>ApPiero</h1>
         <p>Gestione potatura ulivi</p>
-        <div class="version">V8.1 · ricerca + salute guidata PRO</div>
+        <div class="version">V8.2 · pagamenti chiari</div>
       </div>
     </div>
     <div class="today-pill" id="todayText">Oggi</div>
@@ -105,7 +105,7 @@
     <div class="grid grid-3">
       <div class="card kpi"><div class="kpi-label">Ulivi potati oggi</div><div class="kpi-value" id="kpiTodayTrees">0</div><div class="kpi-small" id="kpiTodayJobs">0 giornate registrate</div></div>
       <div class="card kpi"><div class="kpi-label">Netto oggi</div><div class="kpi-value netto" id="kpiTodayNet">0 €</div><div class="kpi-small" id="kpiTodayExpenses">spese: 0 €</div></div>
-      <div class="card kpi"><div class="kpi-label">Problemi salute</div><div class="kpi-value expense" id="kpiHealthProblems">0</div><div class="kpi-small">schede da controllare</div></div>
+      <div class="card kpi"><div class="kpi-label">Da incassare</div><div class="kpi-value expense" id="kpiBalanceDue">0 €</div><div class="kpi-small">saldo lavori aperti</div></div>
     </div>
 
     <div class="section-title"><h2>Azioni rapide</h2></div>
@@ -119,8 +119,8 @@
     <div class="section-title"><h2>Situazione</h2></div>
     <div class="grid grid-3">
       <div class="card kpi"><div class="kpi-label">Lavori attivi</div><div class="kpi-value" id="kpiActiveJobs">0</div><div class="kpi-small">da completare</div></div>
-      <div class="card kpi"><div class="kpi-label">Preventivi aperti</div><div class="kpi-value" id="kpiOpenEstimates">0</div><div class="kpi-small">da confermare</div></div>
-      <div class="card kpi"><div class="kpi-label">Annate olio</div><div class="kpi-value money" id="kpiOilYears">0</div><div class="kpi-small">registri produzione</div></div>
+      <div class="card kpi"><div class="kpi-label">Problemi salute</div><div class="kpi-value expense" id="kpiHealthProblems">0</div><div class="kpi-small">schede da controllare</div></div>
+      <div class="card kpi"><div class="kpi-label">Incassato</div><div class="kpi-value paid" id="kpiPaidTotal">0 €</div><div class="kpi-small">pagamenti registrati</div></div>
     </div>
 
     <div class="section-title"><h2>Ultimi lavori</h2></div>
@@ -160,6 +160,7 @@
 
         <label><span>Tipo lavoro</span><select id="fWorkType"><option>Potatura ordinaria</option><option>Potatura di recupero</option><option>Potatura di riforma</option><option>Potatura leggera</option><option>Potatura pesante</option><option>Sopralluogo / preventivo</option></select></label>
         <label><span>Stato</span><select id="fStatus"><option value="preventivo">Preventivo</option><option value="attivo">Lavoro attivo</option><option value="finito">Finito</option><option value="pagato">Pagato</option></select></label>
+
         <label><span>Tipo foto iniziale</span><select id="fPhotoType"><option value="sopralluogo">Sopralluogo</option><option value="prima">Prima</option><option value="durante">Durante</option><option value="dopo">Dopo</option><option value="salute">Salute olivo</option><option value="altro">Altro</option></select></label>
         <label><span>Foto del terreno / sopralluogo</span><input id="fPhoto" type="file" accept="image/*" onchange="previewFile(this,'fPhotoPreview')" /></label>
         <div id="fPhotoPreview" class="preview-box"></div>
@@ -171,7 +172,7 @@
 
   <section id="screen-jobs" class="screen">
     <div class="section-title"><h2>Lavori</h2><button class="btn-main" onclick="showScreen('new')">➕ Nuovo</button></div>
-    <input class="search" id="jobSearch" oninput="renderJobs()" placeholder="Cerca cliente, luogo, telefono, cultivar, note, anno olio..." />
+    <input class="search" id="jobSearch" oninput="renderJobs()" placeholder="Cerca cliente, luogo, telefono, cultivar, pagamenti, anno olio..." />
 
     <div class="btn-row" style="margin-bottom:12px;">
       <button class="btn-soft" onclick="setJobFilter('all')">Tutti</button>
@@ -180,6 +181,7 @@
       <button class="btn-soft" onclick="setJobFilter('finito')">Finiti</button>
       <button class="btn-soft" onclick="setJobFilter('pagato')">Pagati</button>
       <button class="btn-soft" onclick="setJobFilter('saldo')">Da incassare</button>
+      <button class="btn-soft" onclick="setJobFilter('partial')">Pagati parziale</button>
       <button class="btn-soft" onclick="setJobFilter('health')">Problemi salute</button>
       <button class="btn-soft" onclick="setJobFilter('oil')">Con olio</button>
     </div>
@@ -189,7 +191,7 @@
 
   <section id="screen-calendar" class="screen">
     <div class="section-title"><h2>Calendario lavori</h2></div>
-    <div class="card"><p class="muted small">Qui vedi lavori, giornate, controlli salute e annate olio.</p></div>
+    <div class="card"><p class="muted small">Qui vedi lavori, giornate, pagamenti, controlli salute e annate olio.</p></div>
     <div id="calendarList" class="list" style="margin-top:12px;"></div>
   </section>
 
@@ -201,8 +203,8 @@
       <div class="card kpi"><div class="kpi-label">Netto registrato</div><div class="kpi-value netto" id="statNet">0 €</div></div>
     </div>
     <div class="grid grid-3" style="margin-top:12px;">
-      <div class="card kpi"><div class="kpi-label">Schede salute</div><div class="kpi-value" id="statHealth">0</div></div>
-      <div class="card kpi"><div class="kpi-label">Problemi salute</div><div class="kpi-value expense" id="statHealthProblems">0</div></div>
+      <div class="card kpi"><div class="kpi-label">Incassato</div><div class="kpi-value paid" id="statPaid">0 €</div></div>
+      <div class="card kpi"><div class="kpi-label">Da incassare</div><div class="kpi-value expense" id="statBalance">0 €</div></div>
       <div class="card kpi"><div class="kpi-label">Olio registrato</div><div class="kpi-value money" id="statOilLiters">0 L</div></div>
     </div>
     <div class="card" style="margin-top:12px;"><h3>Riepilogo generale</h3><div id="statsDetails"></div></div>
@@ -233,8 +235,8 @@
 <div id="toast" class="toast"></div>
 
 <script>
-const STORAGE_KEY="appiero_v81_jobs";
-const OLD_STORAGE_KEYS=["appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
+const STORAGE_KEY="appiero_v82_jobs";
+const OLD_STORAGE_KEYS=["appiero_v81_jobs","appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
 let jobs=[],currentFilter="all",openedJobId=null;
 const euro=new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"});
 
@@ -295,13 +297,20 @@ function openWhatsAppToClient(id,type){
   else if(type==="summary")text=buildSummaryText(job);
   else if(type==="health")text=buildHealthText(job);
   else if(type==="oil")text=buildOilText(job);
+  else if(type==="payment")text=buildPaymentText(job);
   else text=`Ciao ${job.client}, ti scrivo per il lavoro di potatura ulivi in ${job.place||"oliveto"}.`;
   window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(text),"_blank");
 }
 
+function normalizePayment(p){
+  return {id:p.id||uid(),date:p.date||todayISO(),amount:num(p.amount),method:p.method||"Contanti",type:p.type||"Pagamento",note:p.note||""};
+}
 function normalizeJob(job){
   if(!job.deposit)job.deposit=0;if(!job.cultivar)job.cultivar="";if(!job.age)job.age="";if(!job.vigor)job.vigor="";if(!job.shape)job.shape="";
   if(!Array.isArray(job.photos))job.photos=[];if(!Array.isArray(job.photoItems))job.photoItems=[];if(!Array.isArray(job.healthChecks))job.healthChecks=[];if(!Array.isArray(job.days))job.days=[];if(!Array.isArray(job.oilRecords))job.oilRecords=[];
+  if(!Array.isArray(job.payments))job.payments=[];
+  if(job.deposit>0 && job.payments.length===0)job.payments.push({id:uid(),date:job.createdAt?String(job.createdAt).slice(0,10):todayISO(),amount:num(job.deposit),method:"Contanti",type:"Acconto",note:"Acconto iniziale importato"});
+  job.payments=job.payments.map(normalizePayment);
   if(job.photos.length&&job.photoItems.length===0)job.photoItems=job.photos.map(src=>({id:uid(),type:"altro",src,createdAt:new Date().toISOString()}));
   job.days=job.days.map(d=>({id:d.id||uid(),date:d.date||todayISO(),trees:num(d.trees),hours:num(d.hours),dayMoney:num(d.dayMoney),expenseFuel:num(d.expenseFuel),expenseFood:num(d.expenseFood),expenseTools:num(d.expenseTools),expenseOther:num(d.expenseOther),notes:d.notes||"",photo:d.photo||""}));
   job.healthChecks=job.healthChecks.map(h=>({id:h.id||uid(),date:h.date||todayISO(),treeRef:h.treeRef||"",photoPart:h.photoPart||"",condition:h.condition||"Da controllare",priority:h.priority||"Media",symptoms:Array.isArray(h.symptoms)?h.symptoms:[],diseases:Array.isArray(h.diseases)?h.diseases:[],guideAnswers:h.guideAnswers||{},suggestedProblems:Array.isArray(h.suggestedProblems)?h.suggestedProblems:[],guideLevel:h.guideLevel||"",guideAdvice:h.guideAdvice||"",cureAdvice:h.cureAdvice||"",agronomistAdvice:h.agronomistAdvice||"",note:h.note||"",photo:h.photo||""}));
@@ -329,7 +338,16 @@ async function createJob(){
   const client=document.getElementById("fClient").value.trim();if(!client){toast("Inserisci il cliente");return}
   showSaving(true);
   const photoFile=document.getElementById("fPhoto").files[0],photo=await fileToCompressedDataURL(photoFile),photoType=document.getElementById("fPhotoType").value;
-  const job={id:uid(),createdAt:new Date().toISOString(),client,phone:document.getElementById("fPhone").value.trim(),place:document.getElementById("fPlace").value.trim(),startDate:document.getElementById("fDate").value||todayISO(),totalTrees:num(document.getElementById("fTotalTrees").value),cultivar:document.getElementById("fCultivar").value,age:document.getElementById("fAge").value,vigor:document.getElementById("fVigor").value,shape:document.getElementById("fShape").value,priceMode:document.getElementById("fPriceMode").value,priceValue:num(document.getElementById("fPriceValue").value),estimatedDays:num(document.getElementById("fEstimatedDays").value),deposit:num(document.getElementById("fDeposit").value),workType:document.getElementById("fWorkType").value,status:document.getElementById("fStatus").value,notes:document.getElementById("fNotes").value.trim(),photos:photo?[photo]:[],photoItems:photo?[{id:uid(),type:photoType,src:photo,createdAt:new Date().toISOString()}]:[],days:[],healthChecks:[],oilRecords:[]};
+  const deposit=num(document.getElementById("fDeposit").value);
+  const job={
+    id:uid(),createdAt:new Date().toISOString(),client,
+    phone:document.getElementById("fPhone").value.trim(),place:document.getElementById("fPlace").value.trim(),startDate:document.getElementById("fDate").value||todayISO(),
+    totalTrees:num(document.getElementById("fTotalTrees").value),cultivar:document.getElementById("fCultivar").value,age:document.getElementById("fAge").value,vigor:document.getElementById("fVigor").value,shape:document.getElementById("fShape").value,
+    priceMode:document.getElementById("fPriceMode").value,priceValue:num(document.getElementById("fPriceValue").value),estimatedDays:num(document.getElementById("fEstimatedDays").value),
+    deposit,workType:document.getElementById("fWorkType").value,status:document.getElementById("fStatus").value,notes:document.getElementById("fNotes").value.trim(),
+    photos:photo?[photo]:[],photoItems:photo?[{id:uid(),type:photoType,src:photo,createdAt:new Date().toISOString()}]:[],
+    days:[],healthChecks:[],oilRecords:[],payments:deposit>0?[{id:uid(),date:todayISO(),amount:deposit,method:"Contanti",type:"Acconto",note:"Acconto iniziale"}]:[]
+  };
   jobs.unshift(job);clearForm();save();showSaving(false);toast("Lavoro salvato");showScreen("jobs");
 }
 function clearForm(){
@@ -345,7 +363,9 @@ function jobDayNet(job,day){return jobDayGross(job,day)-dayExpenses(day)}
 function jobGross(job){return job.days.reduce((s,d)=>s+jobDayGross(job,d),0)}
 function jobNet(job){return job.days.reduce((s,d)=>s+jobDayNet(job,d),0)}
 function jobEstimate(job){if(job.priceMode==="tree")return num(job.totalTrees)*num(job.priceValue);if(job.priceMode==="day")return num(job.estimatedDays)*num(job.priceValue);if(job.priceMode==="fixed")return num(job.priceValue);return 0}
-function jobBalance(job){return Math.max(0,jobEstimate(job)-num(job.deposit))}
+function jobPaid(job){return (job.payments||[]).reduce((s,p)=>s+num(p.amount),0)}
+function jobBalance(job){return Math.max(0,jobEstimate(job)-jobPaid(job))}
+function paymentStatus(job){const estimate=jobEstimate(job),paid=jobPaid(job);if(estimate>0 && paid>=estimate)return"Pagato completo";if(paid>0)return"Pagato parziale";return"Non pagato"}
 function jobRemaining(job){return Math.max(0,num(job.totalTrees)-jobDoneTrees(job))}
 function jobProgress(job){if(!job.totalTrees)return 0;return Math.min(100,Math.round((jobDoneTrees(job)/job.totalTrees)*100))}
 function statusLabel(s){return s==="preventivo"?"Preventivo":s==="attivo"?"Attivo":s==="finito"?"Finito":s==="pagato"?"Pagato":s}
@@ -353,18 +373,18 @@ function statusClass(s){return s==="preventivo"?"badge-open":s==="attivo"?"badge
 function priceModeLabel(job){return job.priceMode==="tree"?"Prezzo a ulivo":job.priceMode==="day"?"Prezzo a giornata":job.priceMode==="fixed"?"Prezzo a corpo":"Prezzo"}
 function oilEstimatedLiters(o){if(!o.oliveKg||!o.yieldPercent)return 0;return num(o.oliveKg)*num(o.yieldPercent)/100}
 function jobHasHealthProblem(job){return (job.healthChecks||[]).some(h=>["Da controllare","Grave"].includes(h.condition)||["Alta","Urgente"].includes(h.priority)||h.guideLevel==="Alto"||h.guideLevel==="Medio")}
-function jobSearchText(job){return [job.client,job.place,job.phone,job.notes,job.workType,job.status,job.cultivar,job.age,job.vigor,job.shape,(job.oilRecords||[]).map(o=>o.year+" "+o.mill+" "+o.notes).join(" "),(job.healthChecks||[]).map(h=>(h.symptoms||[]).join(" ")+" "+(h.suggestedProblems||[]).join(" ")+" "+h.note).join(" ")].join(" ").toLowerCase()}
+function jobSearchText(job){return [job.client,job.place,job.phone,job.notes,job.workType,job.status,job.cultivar,job.age,job.vigor,job.shape,paymentStatus(job),(job.payments||[]).map(p=>p.method+" "+p.type+" "+p.note+" "+p.amount).join(" "),(job.oilRecords||[]).map(o=>o.year+" "+o.mill+" "+o.notes).join(" "),(job.healthChecks||[]).map(h=>(h.symptoms||[]).join(" ")+" "+(h.suggestedProblems||[]).join(" ")+" "+h.note).join(" ")].join(" ").toLowerCase()}
 
 function renderJobCard(job){
-  const done=jobDoneTrees(job),remaining=jobRemaining(job),progress=jobProgress(job),gross=jobGross(job),expenses=jobExpenses(job),net=jobNet(job),estimate=jobEstimate(job),balance=jobBalance(job);
+  const done=jobDoneTrees(job),remaining=jobRemaining(job),progress=jobProgress(job),gross=jobGross(job),expenses=jobExpenses(job),net=jobNet(job),estimate=jobEstimate(job),paid=jobPaid(job),balance=jobBalance(job);
   const healthCount=(job.healthChecks||[]).length,oilCount=(job.oilRecords||[]).length,hasProblem=jobHasHealthProblem(job);
   return `<div class="job-card">
     <div class="job-top"><div><div class="job-title">${escapeHtml(job.client)}</div><div class="muted small">${escapeHtml(job.place||"Luogo non indicato")}</div><div class="muted small">${job.phone?"Tel: "+escapeHtml(job.phone):"Telefono non inserito"}</div><div class="muted small">${formatDate(job.startDate)} · ${escapeHtml(job.workType||"")}</div><div class="muted small">Cultivar: ${escapeHtml(job.cultivar||"non indicata")} · Salute: ${healthCount} ${hasProblem?"⚠️":""} · Olio: ${oilCount}</div></div><span class="badge ${statusClass(job.status)}">${statusLabel(job.status)}</span></div>
     <div class="progress-wrap"><div class="progress-bar" style="width:${progress}%"></div></div>
     <div class="mini-grid"><div class="mini-box"><b>${done}</b><span>potati</span></div><div class="mini-box"><b>${remaining}</b><span>restanti</span></div><div class="mini-box"><b>${progress}%</b><span>avanzamento</span></div></div>
     <div class="mini-grid"><div class="mini-box"><b class="money">${money(gross)}</b><span>lordo</span></div><div class="mini-box"><b class="expense">${money(expenses)}</b><span>spese</span></div><div class="mini-box"><b class="netto">${money(net)}</b><span>netto</span></div></div>
-    <div class="mini-grid"><div class="mini-box"><b>${money(estimate)}</b><span>preventivo</span></div><div class="mini-box"><b>${money(job.deposit||0)}</b><span>acconto</span></div><div class="mini-box"><b>${money(balance)}</b><span>saldo</span></div></div>
-    <div class="btn-row"><button class="btn-main" onclick="openJob('${job.id}')">Apri</button><button class="btn-whatsapp" onclick="openWhatsAppToClient('${job.id}','message')">WhatsApp</button><button class="btn-blue" onclick="callClient('${job.id}')">Chiama</button><button class="btn-gold" onclick="quickOil('${job.id}')">Olio</button></div>
+    <div class="mini-grid"><div class="mini-box"><b>${money(estimate)}</b><span>preventivo</span></div><div class="mini-box"><b class="paid">${money(paid)}</b><span>${paymentStatus(job)}</span></div><div class="mini-box"><b class="expense">${money(balance)}</b><span>saldo</span></div></div>
+    <div class="btn-row"><button class="btn-main" onclick="openJob('${job.id}')">Apri</button><button class="btn-gold" onclick="quickPayment('${job.id}')">Pagamento</button><button class="btn-whatsapp" onclick="openWhatsAppToClient('${job.id}','message')">WhatsApp</button><button class="btn-blue" onclick="callClient('${job.id}')">Chiama</button></div>
   </div>`;
 }
 function renderJobs(){
@@ -372,7 +392,8 @@ function renderJobs(){
   const filtered=jobs.filter(job=>{
     const text=jobSearchText(job);
     const matchQ=!q||text.includes(q);
-    const matchFilter=currentFilter==="all"||job.status===currentFilter||(currentFilter==="saldo"&&jobBalance(job)>0&&job.status!=="pagato")||(currentFilter==="health"&&jobHasHealthProblem(job))||(currentFilter==="oil"&&(job.oilRecords||[]).length>0);
+    const paid=jobPaid(job),balance=jobBalance(job);
+    const matchFilter=currentFilter==="all"||job.status===currentFilter||(currentFilter==="saldo"&&balance>0&&job.status!=="pagato")||(currentFilter==="partial"&&paid>0&&balance>0)||(currentFilter==="health"&&jobHasHealthProblem(job))||(currentFilter==="oil"&&(job.oilRecords||[]).length>0);
     return matchQ&&matchFilter;
   });
   document.getElementById("jobsList").innerHTML=filtered.length?filtered.map(renderJobCard).join(""):`<div class="empty">Nessun lavoro trovato.</div>`;
@@ -382,15 +403,17 @@ function setJobFilter(f){currentFilter=f;renderJobs()}
 function renderHome(){
   const today=todayISO();let todayTrees=0,todayNet=0,todayExpenses=0,todayRows=0;
   jobs.forEach(job=>job.days.forEach(d=>{if(d.date===today){todayRows++;todayTrees+=num(d.trees);todayNet+=jobDayNet(job,d);todayExpenses+=dayExpenses(d)}}));
+  const totalPaid=jobs.reduce((s,j)=>s+jobPaid(j),0),balanceDue=jobs.filter(j=>j.status!=="pagato").reduce((s,j)=>s+jobBalance(j),0);
   document.getElementById("kpiTodayTrees").textContent=todayTrees;document.getElementById("kpiTodayNet").textContent=money(todayNet);document.getElementById("kpiTodayExpenses").textContent="spese: "+money(todayExpenses);document.getElementById("kpiTodayJobs").textContent=todayRows+" giornate registrate";
-  document.getElementById("kpiActiveJobs").textContent=jobs.filter(j=>j.status==="attivo").length;document.getElementById("kpiOpenEstimates").textContent=jobs.filter(j=>j.status==="preventivo").length;document.getElementById("kpiOilYears").textContent=jobs.reduce((s,j)=>s+(j.oilRecords||[]).length,0);document.getElementById("kpiHealthProblems").textContent=jobs.filter(jobHasHealthProblem).length;
+  document.getElementById("kpiActiveJobs").textContent=jobs.filter(j=>j.status==="attivo").length;document.getElementById("kpiHealthProblems").textContent=jobs.filter(jobHasHealthProblem).length;document.getElementById("kpiPaidTotal").textContent=money(totalPaid);document.getElementById("kpiBalanceDue").textContent=money(balanceDue);
   const recent=jobs.slice(0,4);document.getElementById("homeRecentJobs").innerHTML=recent.length?recent.map(renderJobCard).join(""):`<div class="empty">Ancora nessun lavoro. Premi “Nuovo lavoro”.</div>`;
 }
 function renderCalendar(){
   const events=[];
   jobs.forEach(job=>{
-    events.push({date:job.startDate||"",html:`<div class="calendar-day"><b>${formatDate(job.startDate)}</b><br><strong>${escapeHtml(job.client)}</strong> — ${escapeHtml(job.place||"Luogo non indicato")}<br><span class="muted small">${statusLabel(job.status)} · ${jobDoneTrees(job)}/${job.totalTrees||0} ulivi · netto ${money(jobNet(job))}</span><div style="margin-top:8px;"><button class="btn-soft" onclick="openJob('${job.id}')">Apri lavoro</button></div></div>`});
+    events.push({date:job.startDate||"",html:`<div class="calendar-day"><b>${formatDate(job.startDate)}</b><br><strong>${escapeHtml(job.client)}</strong> — ${escapeHtml(job.place||"Luogo non indicato")}<br><span class="muted small">${statusLabel(job.status)} · saldo ${money(jobBalance(job))}</span><div style="margin-top:8px;"><button class="btn-soft" onclick="openJob('${job.id}')">Apri lavoro</button></div></div>`});
     job.days.forEach(d=>events.push({date:d.date,html:`<div class="calendar-day"><b>${formatDate(d.date)}</b><br><strong>${escapeHtml(job.client)}</strong> — giornata registrata<br><span class="muted small">${num(d.trees)} ulivi · netto ${money(jobDayNet(job,d))}</span></div>`}));
+    (job.payments||[]).forEach(p=>events.push({date:p.date,html:`<div class="calendar-day"><b>${formatDate(p.date)}</b><br><strong>${escapeHtml(job.client)}</strong> — pagamento<br><span class="muted small">${escapeHtml(p.type)} · ${escapeHtml(p.method)} · ${money(p.amount)}</span></div>`}));
     (job.healthChecks||[]).forEach(h=>events.push({date:h.date,html:`<div class="calendar-day"><b>${formatDate(h.date)}</b><br><strong>${escapeHtml(job.client)}</strong> — controllo salute olivo<br><span class="muted small">${escapeHtml(h.condition)} · priorità ${escapeHtml(h.priority)} · ${(h.suggestedProblems||[]).join(", ")}</span></div>`}));
     (job.oilRecords||[]).forEach(o=>events.push({date:String(o.year)+"-12-31",html:`<div class="calendar-day"><b>Anno ${escapeHtml(o.year)}</b><br><strong>${escapeHtml(job.client)}</strong> — produzione olio<br><span class="muted small">${num(o.productiveTrees)} piante · resa ${num(o.yieldPercent)}% · olio ${num(o.oilLiters)} L</span></div>`}));
   });
@@ -398,12 +421,18 @@ function renderCalendar(){
   document.getElementById("calendarList").innerHTML=events.length?events.map(e=>e.html).join(""):`<div class="empty">Nessuna data in calendario.</div>`;
 }
 function renderStats(){
-  const totalTrees=jobs.reduce((s,j)=>s+num(j.totalTrees),0),doneTrees=jobs.reduce((s,j)=>s+jobDoneTrees(j),0),net=jobs.reduce((s,j)=>s+jobNet(j),0),health=jobs.reduce((s,j)=>s+(j.healthChecks||[]).length,0),healthProblems=jobs.filter(jobHasHealthProblem).length,oilYears=jobs.reduce((s,j)=>s+(j.oilRecords||[]).length,0),oilLiters=jobs.reduce((s,j)=>s+(j.oilRecords||[]).reduce((x,o)=>x+num(o.oilLiters),0),0);
-  document.getElementById("statTotalTrees").textContent=totalTrees;document.getElementById("statDoneTrees").textContent=doneTrees;document.getElementById("statNet").textContent=money(net);document.getElementById("statHealth").textContent=health;document.getElementById("statHealthProblems").textContent=healthProblems;document.getElementById("statOilLiters").textContent=oilLiters.toFixed(1)+" L";
-  const active=jobs.filter(j=>j.status==="attivo").length,estimates=jobs.filter(j=>j.status==="preventivo").length,paid=jobs.filter(j=>j.status==="pagato").length,balanceDue=jobs.filter(j=>j.status!=="pagato").reduce((s,j)=>s+jobBalance(j),0);
-  document.getElementById("statsDetails").innerHTML=`<div class="mini-grid"><div class="mini-box"><b>${jobs.length}</b><span>lavori totali</span></div><div class="mini-box"><b>${active}</b><span>attivi</span></div><div class="mini-box"><b>${estimates}</b><span>preventivi</span></div><div class="mini-box"><b>${paid}</b><span>pagati</span></div><div class="mini-box"><b>${money(balanceDue)}</b><span>saldo da incassare</span></div><div class="mini-box"><b>${doneTrees?money(net/doneTrees):money(0)}</b><span>netto medio per ulivo</span></div><div class="mini-box"><b>${oilYears}</b><span>annate olio</span></div><div class="mini-box"><b>${oilLiters.toFixed(1)} L</b><span>olio totale registrato</span></div></div>`;
+  const totalTrees=jobs.reduce((s,j)=>s+num(j.totalTrees),0),doneTrees=jobs.reduce((s,j)=>s+jobDoneTrees(j),0),net=jobs.reduce((s,j)=>s+jobNet(j),0),oilLiters=jobs.reduce((s,j)=>s+(j.oilRecords||[]).reduce((x,o)=>x+num(o.oilLiters),0),0);
+  const totalPaid=jobs.reduce((s,j)=>s+jobPaid(j),0),balanceDue=jobs.filter(j=>j.status!=="pagato").reduce((s,j)=>s+jobBalance(j),0);
+  document.getElementById("statTotalTrees").textContent=totalTrees;document.getElementById("statDoneTrees").textContent=doneTrees;document.getElementById("statNet").textContent=money(net);document.getElementById("statPaid").textContent=money(totalPaid);document.getElementById("statBalance").textContent=money(balanceDue);document.getElementById("statOilLiters").textContent=oilLiters.toFixed(1)+" L";
+  const active=jobs.filter(j=>j.status==="attivo").length,estimates=jobs.filter(j=>j.status==="preventivo").length,paidFull=jobs.filter(j=>jobEstimate(j)>0&&jobPaid(j)>=jobEstimate(j)).length,partial=jobs.filter(j=>jobPaid(j)>0&&jobBalance(j)>0).length;
+  document.getElementById("statsDetails").innerHTML=`<div class="mini-grid"><div class="mini-box"><b>${jobs.length}</b><span>lavori totali</span></div><div class="mini-box"><b>${active}</b><span>attivi</span></div><div class="mini-box"><b>${estimates}</b><span>preventivi</span></div><div class="mini-box"><b>${paidFull}</b><span>pagati completo</span></div><div class="mini-box"><b>${partial}</b><span>pagati parziale</span></div><div class="mini-box"><b>${money(balanceDue)}</b><span>saldo da incassare</span></div><div class="mini-box"><b>${doneTrees?money(net/doneTrees):money(0)}</b><span>netto medio per ulivo</span></div><div class="mini-box"><b>${oilLiters.toFixed(1)} L</b><span>olio totale registrato</span></div></div>`;
 }
 
+function renderPayments(job){
+  const list=job.payments||[];
+  if(!list.length)return`<div class="empty">Nessun pagamento registrato.</div>`;
+  return list.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")).map(p=>`<div class="pay-row"><b>${formatDate(p.date)}</b> <span class="badge badge-paid">${escapeHtml(p.type)}</span><br>Importo: <strong class="paid">${money(p.amount)}</strong><br>Metodo: <strong>${escapeHtml(p.method)}</strong><br><span class="muted small">${escapeHtml(p.note||"")}</span></div>`).join("");
+}
 function renderPhotos(job){
   const items=Array.isArray(job.photoItems)?job.photoItems:[];if(!items.length)return`<div class="empty">Nessuna foto salvata.</div>`;
   const groups=[["sopralluogo","Foto sopralluogo"],["prima","Foto prima"],["durante","Foto durante"],["dopo","Foto dopo"],["salute","Foto salute olivo"],["altro","Altre foto"]];
@@ -432,14 +461,18 @@ function renderOilRecords(job){
 }
 
 function buildEstimateText(job){
-  const estimate=jobEstimate(job),balance=jobBalance(job);
+  const estimate=jobEstimate(job),paid=jobPaid(job),balance=jobBalance(job);
   let priceLine=job.priceMode==="tree"?`Prezzo a ulivo: ${money(job.priceValue)}\nTotale preventivo: ${money(estimate)}`:job.priceMode==="day"?`Prezzo a giornata: ${money(job.priceValue)}\nGiorni stimati: ${job.estimatedDays||0}\nTotale preventivo: ${money(estimate)}`:`Prezzo a corpo: ${money(estimate)}`;
-  return `PREVENTIVO POTATURA ULIVI\n\nCliente: ${job.client}\nLocalità: ${job.place||"Non indicata"}\nTipo lavoro: ${job.workType||"Potatura ulivi"}\nData prevista: ${formatDate(job.startDate)}\n\nCultivar/tipo olivo: ${job.cultivar||"Non indicato"}\nEtà stimata: ${job.age||"Non indicata"}\nVigoria: ${job.vigor||"Non indicata"}\nForma: ${job.shape||"Non indicata"}\n\nTotale ulivi: ${job.totalTrees||0}\n${priceLine}\n\nAcconto ricevuto: ${money(job.deposit||0)}\nSaldo da incassare: ${money(balance)}\n\nNote:\n${job.notes||"Nessuna nota"}\n\nApPiero`;
+  return `PREVENTIVO POTATURA ULIVI\n\nCliente: ${job.client}\nLocalità: ${job.place||"Non indicata"}\nTipo lavoro: ${job.workType||"Potatura ulivi"}\nData prevista: ${formatDate(job.startDate)}\n\nCultivar/tipo olivo: ${job.cultivar||"Non indicato"}\nEtà stimata: ${job.age||"Non indicata"}\nVigoria: ${job.vigor||"Non indicata"}\nForma: ${job.shape||"Non indicata"}\n\nTotale ulivi: ${job.totalTrees||0}\n${priceLine}\n\nPagato: ${money(paid)}\nSaldo da incassare: ${money(balance)}\nStato pagamento: ${paymentStatus(job)}\n\nNote:\n${job.notes||"Nessuna nota"}\n\nApPiero`;
 }
 function buildSummaryText(job){
-  const done=jobDoneTrees(job),remaining=jobRemaining(job),progress=jobProgress(job),net=jobNet(job),estimate=jobEstimate(job),balance=jobBalance(job);
+  const done=jobDoneTrees(job),remaining=jobRemaining(job),progress=jobProgress(job),net=jobNet(job),estimate=jobEstimate(job),paid=jobPaid(job),balance=jobBalance(job);
   const daysText=job.days.length?job.days.map(d=>`- ${formatDate(d.date)}: ${d.trees} ulivi, netto ${money(jobDayNet(job,d))}`).join("\n"):"Nessuna giornata registrata.";
-  return `RIEPILOGO LAVORO POTATURA ULIVI\n\nCliente: ${job.client}\nLocalità: ${job.place||"Non indicata"}\nStato: ${statusLabel(job.status)}\n\nTotale ulivi: ${job.totalTrees||0}\nUlivi potati: ${done}\nUlivi restanti: ${remaining}\nAvanzamento: ${progress}%\n\nPreventivo: ${money(estimate)}\nAcconto: ${money(job.deposit||0)}\nSaldo da incassare: ${money(balance)}\nNetto registrato: ${money(net)}\n\nGiornate:\n${daysText}\n\nNote:\n${job.notes||"Nessuna nota"}\n\nApPiero`;
+  return `RIEPILOGO LAVORO POTATURA ULIVI\n\nCliente: ${job.client}\nLocalità: ${job.place||"Non indicata"}\nStato lavoro: ${statusLabel(job.status)}\n\nTotale ulivi: ${job.totalTrees||0}\nUlivi potati: ${done}\nUlivi restanti: ${remaining}\nAvanzamento: ${progress}%\n\nPreventivo: ${money(estimate)}\nPagato: ${money(paid)}\nSaldo da incassare: ${money(balance)}\nStato pagamento: ${paymentStatus(job)}\nNetto registrato: ${money(net)}\n\nGiornate:\n${daysText}\n\nNote:\n${job.notes||"Nessuna nota"}\n\nApPiero`;
+}
+function buildPaymentText(job){
+  const rows=(job.payments||[]).length?(job.payments||[]).map(p=>`- ${formatDate(p.date)} | ${p.type} | ${p.method} | ${money(p.amount)} ${p.note?("| "+p.note):""}`).join("\n"):"Nessun pagamento registrato.";
+  return `SITUAZIONE PAGAMENTI\n\nCliente: ${job.client}\nLocalità: ${job.place||"Non indicata"}\n\nPreventivo: ${money(jobEstimate(job))}\nPagato: ${money(jobPaid(job))}\nSaldo da incassare: ${money(jobBalance(job))}\nStato: ${paymentStatus(job)}\n\nPagamenti:\n${rows}\n\nApPiero`;
 }
 function buildHealthText(job){
   const list=job.healthChecks||[];
@@ -459,13 +492,13 @@ async function copyText(text,msg){
 function showPreview(id,type){
   const job=jobs.find(j=>j.id===id);if(!job)return;
   let title="Riepilogo",text=buildSummaryText(job),msg="Riepilogo copiato";
-  if(type==="estimate"){title="Preventivo";text=buildEstimateText(job);msg="Preventivo copiato"} if(type==="health"){title="Salute";text=buildHealthText(job);msg="Scheda salute copiata"} if(type==="oil"){title="Produzione olio";text=buildOilText(job);msg="Registro olio copiato"}
+  if(type==="estimate"){title="Preventivo";text=buildEstimateText(job);msg="Preventivo copiato"} if(type==="health"){title="Salute";text=buildHealthText(job);msg="Scheda salute copiata"} if(type==="oil"){title="Produzione olio";text=buildOilText(job);msg="Registro olio copiato"} if(type==="payment"){title="Pagamenti";text=buildPaymentText(job);msg="Situazione pagamenti copiata"}
   document.getElementById("modalContent").innerHTML=`<div class="card"><h3>${title}</h3><div class="quote-box">${escapeHtml(text)}</div><div class="btn-row" style="margin-top:12px;"><button class="btn-main" onclick="copyText(\`${text.replaceAll("`","'")}\`,'${msg}')">📋 Copia testo</button><button class="btn-whatsapp" onclick="openWhatsAppToClient('${id}','${type}')">Invia WhatsApp</button><button class="btn-soft" onclick="openJob('${id}')">Torna</button></div></div>`;
 }
 
 function openJob(id){
   openedJobId=id;const job=jobs.find(j=>j.id===id);if(!job)return;
-  const done=jobDoneTrees(job),remaining=jobRemaining(job),progress=jobProgress(job),gross=jobGross(job),expenses=jobExpenses(job),net=jobNet(job),estimate=jobEstimate(job),balance=jobBalance(job);
+  const done=jobDoneTrees(job),remaining=jobRemaining(job),progress=jobProgress(job),gross=jobGross(job),expenses=jobExpenses(job),net=jobNet(job),estimate=jobEstimate(job),paid=jobPaid(job),balance=jobBalance(job);
   document.getElementById("modalTitle").textContent=job.client;
   const daysHtml=job.days.length?job.days.slice().reverse().map(d=>`<div class="day-row"><b>${formatDate(d.date)}</b><br>Ulivi potati: <strong>${num(d.trees)}</strong><br>Ore: <strong>${num(d.hours)}</strong><br>Lordo: <span class="money">${money(jobDayGross(job,d))}</span><br>Spese: <span class="expense">${money(dayExpenses(d))}</span><br>Netto: <span class="netto">${money(jobDayNet(job,d))}</span><br><span class="muted small">${escapeHtml(d.notes||"")}</span>${d.photo?`<div class="photo-card" style="margin-top:10px;"><img class="photo-thumb" src="${d.photo}" onclick="openPhotoViewer('${d.photo}','Foto giornata')"><button class="btn-blue btn-full" onclick="openPhotoViewer('${d.photo}','Foto giornata')">Apri foto giornata</button></div>`:""}</div>`).join(""):`<div class="empty">Ancora nessuna giornata registrata.</div>`;
   document.getElementById("modalContent").innerHTML=`
@@ -474,14 +507,15 @@ function openJob(id){
       <div class="progress-wrap"><div class="progress-bar" style="width:${progress}%"></div></div>
       <div class="mini-grid"><div class="mini-box"><b>${num(job.totalTrees)}</b><span>ulivi totali</span></div><div class="mini-box"><b>${done}</b><span>potati</span></div><div class="mini-box"><b>${remaining}</b><span>restanti</span></div></div>
       <div class="mini-grid"><div class="mini-box"><b class="money">${money(gross)}</b><span>lordo</span></div><div class="mini-box"><b class="expense">${money(expenses)}</b><span>spese</span></div><div class="mini-box"><b class="netto">${money(net)}</b><span>netto</span></div></div>
-      <div class="mini-grid"><div class="mini-box"><b>${money(estimate)}</b><span>preventivo</span></div><div class="mini-box"><b>${money(job.deposit||0)}</b><span>acconto</span></div><div class="mini-box"><b>${money(balance)}</b><span>saldo</span></div></div>
-      <div class="mini-grid"><div class="mini-box"><b>${escapeHtml(job.cultivar||"—")}</b><span>cultivar</span></div><div class="mini-box"><b>${escapeHtml(job.age||"—")}</b><span>età</span></div><div class="mini-box"><b>${escapeHtml(job.vigor||"—")}</b><span>vigoria</span></div></div>
+      <div class="mini-grid"><div class="mini-box"><b>${money(estimate)}</b><span>preventivo</span></div><div class="mini-box"><b class="paid">${money(paid)}</b><span>${paymentStatus(job)}</span></div><div class="mini-box"><b class="expense">${money(balance)}</b><span>saldo</span></div></div>
+      <p class="muted small"><strong>Cultivar:</strong> ${escapeHtml(job.cultivar||"Non indicata")} · <strong>Età:</strong> ${escapeHtml(job.age||"Non indicata")} · <strong>Vigoria:</strong> ${escapeHtml(job.vigor||"Non indicata")}</p>
       <p class="muted small"><strong>Forma:</strong> ${escapeHtml(job.shape||"Non indicata")}</p><p class="muted small"><strong>Tipo lavoro:</strong> ${escapeHtml(job.workType||"")}</p><p class="muted small"><strong>Tipo prezzo:</strong> ${priceModeLabel(job)} · ${money(job.priceValue||0)}</p><p class="muted small"><strong>Note:</strong> ${escapeHtml(job.notes||"Nessuna nota")}</p>
       <div class="section-title"><h2>Cliente rapido</h2></div><div class="btn-row"><button class="btn-blue" onclick="callClient('${job.id}')">📞 Chiama</button><button class="btn-whatsapp" onclick="openWhatsAppToClient('${job.id}','message')">💬 WhatsApp</button><button class="btn-whatsapp" onclick="openWhatsAppToClient('${job.id}','estimate')">Invia preventivo</button><button class="btn-whatsapp" onclick="openWhatsAppToClient('${job.id}','summary')">Invia riepilogo</button></div>
-      <div class="section-title"><h2>Azioni lavoro</h2></div><div class="btn-row"><button class="btn-main" onclick="showAddDayForm('${job.id}')">➕ Giornata</button><button class="btn-blue" onclick="showHealthForm('${job.id}')">🩺 Salute</button><button class="btn-gold" onclick="showOilForm('${job.id}')">🫒 Olio</button><button class="btn-soft" onclick="showAddPhotoForm('${job.id}')">📷 Foto</button><button class="btn-soft" onclick="showEditJobForm('${job.id}')">✏️ Modifica</button></div>
-      <div class="btn-row" style="margin-top:9px;"><button class="btn-gold" onclick="showPreview('${job.id}','estimate')">Preview preventivo</button><button class="btn-blue" onclick="showPreview('${job.id}','summary')">Preview riepilogo</button><button class="btn-soft" onclick="showPreview('${job.id}','health')">Preview salute</button><button class="btn-gold" onclick="showPreview('${job.id}','oil')">Preview olio</button></div>
+      <div class="section-title"><h2>Azioni lavoro</h2></div><div class="btn-row"><button class="btn-main" onclick="showAddDayForm('${job.id}')">➕ Giornata</button><button class="btn-gold" onclick="showPaymentForm('${job.id}')">💶 Pagamento</button><button class="btn-blue" onclick="showHealthForm('${job.id}')">🩺 Salute</button><button class="btn-gold" onclick="showOilForm('${job.id}')">🫒 Olio</button><button class="btn-soft" onclick="showAddPhotoForm('${job.id}')">📷 Foto</button><button class="btn-soft" onclick="showEditJobForm('${job.id}')">✏️ Modifica</button></div>
+      <div class="btn-row" style="margin-top:9px;"><button class="btn-gold" onclick="showPreview('${job.id}','estimate')">Preview preventivo</button><button class="btn-blue" onclick="showPreview('${job.id}','summary')">Preview riepilogo</button><button class="btn-soft" onclick="showPreview('${job.id}','payment')">Preview pagamenti</button><button class="btn-soft" onclick="showPreview('${job.id}','health')">Preview salute</button><button class="btn-gold" onclick="showPreview('${job.id}','oil')">Preview olio</button></div>
       <div class="btn-row" style="margin-top:9px;"><button class="btn-soft" onclick="changeStatus('${job.id}','preventivo')">Preventivo</button><button class="btn-soft" onclick="changeStatus('${job.id}','attivo')">Attivo</button><button class="btn-soft" onclick="changeStatus('${job.id}','finito')">Finito</button><button class="btn-soft" onclick="changeStatus('${job.id}','pagato')">Pagato</button></div>
     </div>
+    <div class="section-title"><h2>Pagamenti</h2></div>${renderPayments(job)}
     <div class="section-title"><h2>Produzione olio</h2></div>${renderOilRecords(job)}
     <div class="section-title"><h2>Salute olivo</h2></div>${renderHealthChecks(job)}
     <div class="section-title"><h2>Foto ordinate</h2></div>${renderPhotos(job)}
@@ -490,6 +524,29 @@ function openJob(id){
   document.getElementById("jobModal").classList.add("active");
 }
 function closeModal(){document.getElementById("jobModal").classList.remove("active");openedJobId=null}
+
+function showPaymentForm(id){
+  const job=jobs.find(j=>j.id===id);if(!job)return;
+  const balance=jobBalance(job);
+  document.getElementById("modalContent").innerHTML=`<div class="card"><h3>Aggiungi pagamento</h3>
+    <div class="mini-grid"><div class="mini-box"><b>${money(jobEstimate(job))}</b><span>preventivo</span></div><div class="mini-box"><b class="paid">${money(jobPaid(job))}</b><span>pagato</span></div><div class="mini-box"><b class="expense">${money(balance)}</b><span>saldo</span></div></div>
+    <label><span>Data pagamento</span><input id="pDate" type="date" value="${todayISO()}"></label>
+    <label><span>Importo €</span><input id="pAmount" type="number" min="0" step="0.01" value="${balance || ""}" placeholder="Es. 150"></label>
+    <label><span>Tipo pagamento</span><select id="pType"><option>Acconto</option><option>Saldo</option><option>Pagamento parziale</option><option>Pagamento completo</option><option>Rimborso spese</option></select></label>
+    <label><span>Metodo</span><select id="pMethod"><option>Contanti</option><option>Bonifico</option><option>Postepay</option><option>Assegno</option><option>Altro</option></select></label>
+    <label><span>Note pagamento</span><textarea id="pNote" placeholder="Es. ricevuto saldo a fine lavoro..."></textarea></label>
+    <div class="btn-row"><button class="btn-main" onclick="addPayment('${id}')">Salva pagamento</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div>
+  </div>`;
+}
+function addPayment(id){
+  const job=jobs.find(j=>j.id===id);if(!job)return;
+  const amount=num(document.getElementById("pAmount").value);
+  if(amount<=0){toast("Inserisci importo pagamento");return}
+  job.payments.push({id:uid(),date:document.getElementById("pDate").value||todayISO(),amount,method:document.getElementById("pMethod").value,type:document.getElementById("pType").value,note:document.getElementById("pNote").value.trim()});
+  if(jobEstimate(job)>0 && jobPaid(job)>=jobEstimate(job))job.status="pagato";
+  save();toast("Pagamento salvato");openJob(id);
+}
+function quickPayment(id){openJob(id);setTimeout(()=>showPaymentForm(id),50)}
 
 function showAddDayForm(id){
   const job=jobs.find(j=>j.id===id);if(!job)return;
@@ -531,83 +588,21 @@ function calculateGuidedDiagnosis(symptoms,answers,condition,priority){
   function add(a,p){if(!a.includes(p))a.push(p)}
   function medium(){if(level==="Basso")level="Medio"}
   function high(){level="Alto"}
-
-  if(s.has("Macchie tonde scure sulle foglie")||s.has("Foglie macchiate")||answers.qRoundSpots==="yes"){
-    add(problems,"Sospetto occhio di pavone");
-    add(advice,"Macchie fogliari compatibili con problema fungino: controllare foglie sopra e sotto e presenza di caduta fogliare.");
-    add(cures,"Arieggiare la chioma con potatura equilibrata; evitare chiome troppo fitte; valutare trattamento con tecnico se il problema è diffuso.");
-    medium();
-  }
-  if(answers.qRoundSpots==="yes"&&(answers.qLeafFall==="yes"||s.has("Caduta foglie"))){
-    add(problems,"Occhio di pavone più probabile");
-    add(cures,"Raccogliere foto ravvicinate delle foglie e monitorare defogliazione; non fare potature eccessive su piante già stressate.");
-    medium();
-  }
-  if(s.has("Noduli / tumori su rami")||answers.qNodules==="yes"){
-    add(problems,"Sospetta rogna dell’olivo");
-    add(advice,"Noduli o tumori sui rami possono indicare rogna, spesso legata a ferite e tagli.");
-    add(cures,"Disinfettare gli attrezzi; evitare potatura con pioggia o piante bagnate; eliminare con prudenza parti molto colpite se indicato da tecnico.");
-    medium();
-  }
-  if(s.has("Presenza insetti")||s.has("Patina bianca / scudetti su rami")||answers.qInsects==="yes"){
-    add(problems,"Possibile cocciniglia o insetti parassiti");
-    add(advice,"La presenza di scudetti, patine o insetti richiede foto ravvicinate di rami e pagina inferiore delle foglie.");
-    add(cures,"Valutare pulizia della chioma e monitoraggio; trattamento solo dopo riconoscimento preciso dell’insetto.");
-    medium();
-  }
-  if(s.has("Frutti rovinati")||answers.qFruitDamage==="yes"){
-    add(problems,"Possibile mosca dell’olivo o danno su frutto");
-    add(advice,"Frutti bucati o rovinati possono dipendere da insetti o andamento stagionale.");
-    add(cures,"Controllare olive cadute e punture; segnare periodo e zona dell’uliveto.");
-    medium();
-  }
-  if(s.has("Disseccamento da un solo lato")||answers.qOneSideDry==="yes"){
-    add(problems,"Possibile verticilliosi / problema radicale");
-    add(advice,"Il seccume localizzato su una branca o un lato può indicare problema vascolare o radicale.");
-    add(cures,"Segnare la pianta e osservare evoluzione; evitare tagli drastici finché non è chiara la causa.");
-    medium();
-  }
-  if(s.has("Stress idrico")||answers.qWaterStress==="yes"||s.has("Foglie bruciate ai bordi")){
-    add(problems,"Possibile stress idrico");
-    add(advice,"Foglie bruciate, terreno secco e chioma sofferente indicano possibile stress da acqua/caldo.");
-    add(cures,"Evitare potatura pesante; mantenere vegetazione utile; controllare terreno, esposizione e disponibilità idrica.");
-  }
-  if(s.has("Foglie gialle")&&!s.has("Macchie tonde scure sulle foglie")){
-    add(problems,"Possibile carenza nutrizionale o stress generale");
-    add(advice,"Ingiallimento diffuso può dipendere da nutrizione, acqua, radici o stress stagionale.");
-    add(cures,"Osservare se l’ingiallimento è uniforme o localizzato; valutare analisi terreno/foglia se ricorrente.");
-  }
-  if(s.has("Marciume / carie del legno")){
-    add(problems,"Possibile carie del legno");
-    add(advice,"Cavità, legno molle o marcio richiedono attenzione sulla stabilità della branca.");
-    add(cures,"Evitare tagli casuali; valutare stabilità; intervenire solo con tagli puliti e ragionati.");
-    medium();
-  }
-  if(s.has("Ferite da potatura")){
-    add(problems,"Danno da potatura / ferite da monitorare");
-    add(advice,"Tagli grandi o ferite possono diventare ingresso per patogeni.");
-    add(cures,"Migliorare qualità del taglio; evitare monconi; disinfettare attrezzi se ci sono piante sospette.");
-  }
-  if(s.has("Pianta poco produttiva")){
-    add(problems,"Bassa produttività da valutare");
-    add(advice,"Produzione bassa può dipendere da potatura, alternanza produttiva, nutrizione, acqua o salute generale.");
-    add(cures,"Registrare resa olio annuale e confrontare gli anni; evitare di giudicare da un solo anno.");
-  }
-  if(s.has("Disseccamento rapido sospetto")||answers.qFastDry==="yes"){
-    add(problems,"Disseccamento grave da verificare");
-    add(problems,"Xylella / disseccamento sospetto da escludere con tecnico");
-    add(advice,"Disseccamento rapido e anomalo non va interpretato solo dall’app.");
-    add(cures,"Fare foto complete di chioma, rami, tronco e foglie; non spostare materiale sospetto senza indicazioni tecniche.");
-    add(agro,"Sentire agronomo o servizio fitosanitario se il disseccamento è rapido, diffuso o colpisce più piante.");
-    high();
-  }
+  if(s.has("Macchie tonde scure sulle foglie")||s.has("Foglie macchiate")||answers.qRoundSpots==="yes"){add(problems,"Sospetto occhio di pavone");add(advice,"Macchie fogliari compatibili con problema fungino: controllare foglie sopra e sotto e presenza di caduta fogliare.");add(cures,"Arieggiare la chioma con potatura equilibrata; evitare chiome troppo fitte; valutare trattamento con tecnico se il problema è diffuso.");medium()}
+  if(answers.qRoundSpots==="yes"&&(answers.qLeafFall==="yes"||s.has("Caduta foglie"))){add(problems,"Occhio di pavone più probabile");add(cures,"Raccogliere foto ravvicinate delle foglie e monitorare defogliazione; non fare potature eccessive su piante già stressate.");medium()}
+  if(s.has("Noduli / tumori su rami")||answers.qNodules==="yes"){add(problems,"Sospetta rogna dell’olivo");add(advice,"Noduli o tumori sui rami possono indicare rogna, spesso legata a ferite e tagli.");add(cures,"Disinfettare gli attrezzi; evitare potatura con pioggia o piante bagnate; eliminare con prudenza parti molto colpite se indicato da tecnico.");medium()}
+  if(s.has("Presenza insetti")||s.has("Patina bianca / scudetti su rami")||answers.qInsects==="yes"){add(problems,"Possibile cocciniglia o insetti parassiti");add(advice,"La presenza di scudetti, patine o insetti richiede foto ravvicinate di rami e pagina inferiore delle foglie.");add(cures,"Valutare pulizia della chioma e monitoraggio; trattamento solo dopo riconoscimento preciso dell’insetto.");medium()}
+  if(s.has("Frutti rovinati")||answers.qFruitDamage==="yes"){add(problems,"Possibile mosca dell’olivo o danno su frutto");add(advice,"Frutti bucati o rovinati possono dipendere da insetti o andamento stagionale.");add(cures,"Controllare olive cadute e punture; segnare periodo e zona dell’uliveto.");medium()}
+  if(s.has("Disseccamento da un solo lato")||answers.qOneSideDry==="yes"){add(problems,"Possibile verticilliosi / problema radicale");add(advice,"Il seccume localizzato su una branca o un lato può indicare problema vascolare o radicale.");add(cures,"Segnare la pianta e osservare evoluzione; evitare tagli drastici finché non è chiara la causa.");medium()}
+  if(s.has("Stress idrico")||answers.qWaterStress==="yes"||s.has("Foglie bruciate ai bordi")){add(problems,"Possibile stress idrico");add(advice,"Foglie bruciate, terreno secco e chioma sofferente indicano possibile stress da acqua/caldo.");add(cures,"Evitare potatura pesante; mantenere vegetazione utile; controllare terreno, esposizione e disponibilità idrica.")}
+  if(s.has("Foglie gialle")&&!s.has("Macchie tonde scure sulle foglie")){add(problems,"Possibile carenza nutrizionale o stress generale");add(advice,"Ingiallimento diffuso può dipendere da nutrizione, acqua, radici o stress stagionale.");add(cures,"Osservare se l’ingiallimento è uniforme o localizzato; valutare analisi terreno/foglia se ricorrente.")}
+  if(s.has("Marciume / carie del legno")){add(problems,"Possibile carie del legno");add(advice,"Cavità, legno molle o marcio richiedono attenzione sulla stabilità della branca.");add(cures,"Evitare tagli casuali; valutare stabilità; intervenire solo con tagli puliti e ragionati.");medium()}
+  if(s.has("Ferite da potatura")){add(problems,"Danno da potatura / ferite da monitorare");add(advice,"Tagli grandi o ferite possono diventare ingresso per patogeni.");add(cures,"Migliorare qualità del taglio; evitare monconi; disinfettare attrezzi se ci sono piante sospette.")}
+  if(s.has("Pianta poco produttiva")){add(problems,"Bassa produttività da valutare");add(advice,"Produzione bassa può dipendere da potatura, alternanza produttiva, nutrizione, acqua o salute generale.");add(cures,"Registrare resa olio annuale e confrontare gli anni; evitare di giudicare da un solo anno.")}
+  if(s.has("Disseccamento rapido sospetto")||answers.qFastDry==="yes"){add(problems,"Disseccamento grave da verificare");add(problems,"Xylella / disseccamento sospetto da escludere con tecnico");add(advice,"Disseccamento rapido e anomalo non va interpretato solo dall’app.");add(cures,"Fare foto complete di chioma, rami, tronco e foglie; non spostare materiale sospetto senza indicazioni tecniche.");add(agro,"Sentire agronomo o servizio fitosanitario se il disseccamento è rapido, diffuso o colpisce più piante.");high()}
   if(condition==="Grave"||priority==="Urgente"){high();add(agro,"Priorità alta: chiedere verifica tecnica/agronomica, soprattutto se il problema aumenta o riguarda più piante.")}
   if(priority==="Alta"){medium();add(agro,"Se non migliora o se il sintomo si ripete su molte piante, far controllare da un agronomo.")}
-  if(!problems.length){
-    add(problems,"Nessun sospetto forte dai dati inseriti");
-    add(advice,"Dai sintomi inseriti non emerge un problema chiaro. Salvare foto e ricontrollare nel tempo.");
-    add(cures,"Monitorare la pianta; aggiungere nuove foto se compaiono macchie, seccume, insetti o caduta foglie.");
-  }
+  if(!problems.length){add(problems,"Nessun sospetto forte dai dati inseriti");add(advice,"Dai sintomi inseriti non emerge un problema chiaro. Salvare foto e ricontrollare nel tempo.");add(cures,"Monitorare la pianta; aggiungere nuove foto se compaiono macchie, seccume, insetti o caduta foglie.")}
   if(!agro.length)add(agro,"Agronomo consigliato se il problema peggiora, si diffonde, o se servono trattamenti specifici.");
   return {problems,level,advice:[...new Set(advice)].join(" "),cures:[...new Set(cures)].join(" "),agro:[...new Set(agro)].join(" ")};
 }
@@ -646,7 +641,7 @@ async function addPhoto(id){
 
 function showEditJobForm(id){
   const job=jobs.find(j=>j.id===id);if(!job)return;
-  document.getElementById("modalContent").innerHTML=`<div class="card"><h3>Modifica lavoro</h3><label><span>Cliente</span><input id="eClient" value="${escapeAttr(job.client)}"></label><label><span>Telefono</span><input id="ePhone" value="${escapeAttr(job.phone||"")}"></label><label><span>Luogo</span><input id="ePlace" value="${escapeAttr(job.place||"")}"></label><div class="grid grid-2"><label><span>Data prevista</span><input id="eDate" type="date" value="${job.startDate||todayISO()}"></label><label><span>Totale ulivi</span><input id="eTotalTrees" type="number" value="${job.totalTrees||0}"></label></div><div class="grid grid-2"><label><span>Cultivar / tipo olivo</span><input id="eCultivar" value="${escapeAttr(job.cultivar||"")}"></label><label><span>Età stimata</span><input id="eAge" value="${escapeAttr(job.age||"")}"></label></div><div class="grid grid-2"><label><span>Vigoria</span><input id="eVigor" value="${escapeAttr(job.vigor||"")}"></label><label><span>Forma pianta</span><input id="eShape" value="${escapeAttr(job.shape||"")}"></label></div><div class="grid grid-2"><label><span>Tipo prezzo</span><select id="ePriceMode"><option value="tree" ${job.priceMode==="tree"?"selected":""}>Prezzo a ulivo</option><option value="day" ${job.priceMode==="day"?"selected":""}>Prezzo a giornata</option><option value="fixed" ${job.priceMode==="fixed"?"selected":""}>Prezzo a corpo</option></select></label><label><span>Valore €</span><input id="ePriceValue" type="number" step="0.01" value="${job.priceValue||0}"></label></div><div class="grid grid-2"><label><span>Giorni stimati</span><input id="eEstimatedDays" type="number" value="${job.estimatedDays||0}"></label><label><span>Acconto ricevuto €</span><input id="eDeposit" type="number" step="0.01" value="${job.deposit||0}"></label></div><label><span>Stato</span><select id="eStatus"><option value="preventivo" ${job.status==="preventivo"?"selected":""}>Preventivo</option><option value="attivo" ${job.status==="attivo"?"selected":""}>Attivo</option><option value="finito" ${job.status==="finito"?"selected":""}>Finito</option><option value="pagato" ${job.status==="pagato"?"selected":""}>Pagato</option></select></label><label><span>Tipo lavoro</span><input id="eWorkType" value="${escapeAttr(job.workType||"")}"></label><label><span>Note</span><textarea id="eNotes">${escapeHtml(job.notes||"")}</textarea></label><div class="btn-row"><button class="btn-main" onclick="saveEditJob('${id}')">Salva modifiche</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div></div>`;
+  document.getElementById("modalContent").innerHTML=`<div class="card"><h3>Modifica lavoro</h3><label><span>Cliente</span><input id="eClient" value="${escapeAttr(job.client)}"></label><label><span>Telefono</span><input id="ePhone" value="${escapeAttr(job.phone||"")}"></label><label><span>Luogo</span><input id="ePlace" value="${escapeAttr(job.place||"")}"></label><div class="grid grid-2"><label><span>Data prevista</span><input id="eDate" type="date" value="${job.startDate||todayISO()}"></label><label><span>Totale ulivi</span><input id="eTotalTrees" type="number" value="${job.totalTrees||0}"></label></div><div class="grid grid-2"><label><span>Cultivar / tipo olivo</span><input id="eCultivar" value="${escapeAttr(job.cultivar||"")}"></label><label><span>Età stimata</span><input id="eAge" value="${escapeAttr(job.age||"")}"></label></div><div class="grid grid-2"><label><span>Vigoria</span><input id="eVigor" value="${escapeAttr(job.vigor||"")}"></label><label><span>Forma pianta</span><input id="eShape" value="${escapeAttr(job.shape||"")}"></label></div><div class="grid grid-2"><label><span>Tipo prezzo</span><select id="ePriceMode"><option value="tree" ${job.priceMode==="tree"?"selected":""}>Prezzo a ulivo</option><option value="day" ${job.priceMode==="day"?"selected":""}>Prezzo a giornata</option><option value="fixed" ${job.priceMode==="fixed"?"selected":""}>Prezzo a corpo</option></select></label><label><span>Valore €</span><input id="ePriceValue" type="number" step="0.01" value="${job.priceValue||0}"></label></div><div class="grid grid-2"><label><span>Giorni stimati</span><input id="eEstimatedDays" type="number" value="${job.estimatedDays||0}"></label><label><span>Vecchio campo acconto €</span><input id="eDeposit" type="number" step="0.01" value="${job.deposit||0}"></label></div><label><span>Stato</span><select id="eStatus"><option value="preventivo" ${job.status==="preventivo"?"selected":""}>Preventivo</option><option value="attivo" ${job.status==="attivo"?"selected":""}>Attivo</option><option value="finito" ${job.status==="finito"?"selected":""}>Finito</option><option value="pagato" ${job.status==="pagato"?"selected":""}>Pagato</option></select></label><label><span>Tipo lavoro</span><input id="eWorkType" value="${escapeAttr(job.workType||"")}"></label><label><span>Note</span><textarea id="eNotes">${escapeHtml(job.notes||"")}</textarea></label><div class="btn-row"><button class="btn-main" onclick="saveEditJob('${id}')">Salva modifiche</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div></div>`;
 }
 function saveEditJob(id){
   const job=jobs.find(j=>j.id===id);if(!job)return;
@@ -656,7 +651,7 @@ function saveEditJob(id){
 function changeStatus(id,status){const job=jobs.find(j=>j.id===id);if(!job)return;job.status=status;save();toast("Stato aggiornato");openJob(id)}
 function deleteJob(id){if(!confirm("Vuoi eliminare questo lavoro?"))return;jobs=jobs.filter(j=>j.id!==id);save();closeModal();toast("Lavoro eliminato")}
 function renderAll(){renderHome();renderJobs();renderCalendar();renderStats()}
-function exportBackup(){const data={app:"ApPiero",version:"8.1",exportedAt:new Date().toISOString(),jobs};const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="appiero-v8-1-backup-"+todayISO()+".json";a.click();URL.revokeObjectURL(url);toast("Backup esportato")}
+function exportBackup(){const data={app:"ApPiero",version:"8.2",exportedAt:new Date().toISOString(),jobs};const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="appiero-v8-2-backup-"+todayISO()+".json";a.click();URL.revokeObjectURL(url);toast("Backup esportato")}
 function importBackup(){
   const file=document.getElementById("backupFile").files[0];if(!file){toast("Scegli un file backup");return}
   const reader=new FileReader();
