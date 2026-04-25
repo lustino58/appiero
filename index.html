@@ -3,23 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ApPiero V8.7 - Evoluzione Salute</title>
+  <title>ApPiero V8.8 - Telefono rapido</title>
   <meta name="theme-color" content="#18230f" />
 
   <style>
     :root{
       --bg:#071005;--bg2:#101b0c;--panel:#182610;--panel2:#203018;
       --green:#9bd95a;--green2:#6fa634;--gold:#d6a642;--blue:#44aeea;
-      --red:#d84b3a;--text:#f4f7ef;--muted:#b4beac;--line:rgba(255,255,255,.14);
-      --shadow:0 18px 45px rgba(0,0,0,.42);--radius:24px;
+      --red:#d84b3a;--purple:#9b5cff;--text:#f4f7ef;--muted:#b4beac;
+      --line:rgba(255,255,255,.14);--shadow:0 18px 45px rgba(0,0,0,.42);--radius:24px;
     }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     body{
       margin:0;
       font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:
-        radial-gradient(circle at top left,rgba(155,217,90,.18),transparent 34%),
-        linear-gradient(180deg,#050904,var(--bg));
+      background:radial-gradient(circle at top left,rgba(155,217,90,.18),transparent 34%),linear-gradient(180deg,#050904,var(--bg));
       color:var(--text);
       min-height:100vh;
       padding-bottom:98px;
@@ -51,16 +49,21 @@
       background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025)),linear-gradient(180deg,var(--panel),var(--bg2));
       border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);overflow:hidden;
     }
-    .kpi-label{color:var(--muted);font-size:14px}.kpi-value{font-size:38px;font-weight:950;margin:10px 0 4px}.kpi-small{color:var(--green);font-size:13px}
-    h2{font-size:27px;margin:20px 0 12px;letter-spacing:-.7px}h3{font-size:19px;margin:0 0 12px}
-    .muted{color:var(--muted)}.small{font-size:13px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 10px}
+    .kpi-label{color:var(--muted);font-size:14px}
+    .kpi-value{font-size:38px;font-weight:950;margin:10px 0 4px}
+    .kpi-small{color:var(--green);font-size:13px}
+    h2{font-size:27px;margin:20px 0 12px;letter-spacing:-.7px}
+    h3{font-size:19px;margin:0 0 12px}
+    .muted{color:var(--muted)}.small{font-size:13px}
+    .section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 0 10px}
     .section-head h2{margin:0}
     input,select,textarea{
       width:100%;padding:14px;border-radius:17px;border:1px solid rgba(255,255,255,.16);
       background:rgba(0,0,0,.25);color:var(--text);font-size:16px;outline:none;
     }
     textarea{min-height:96px;resize:vertical}
-    label{display:block;color:var(--muted);font-weight:800;font-size:13px;margin:0 0 12px}label span{display:block;margin-bottom:6px}
+    label{display:block;color:var(--muted);font-weight:800;font-size:13px;margin:0 0 12px}
+    label span{display:block;margin-bottom:6px}
     button{
       border:1px solid rgba(255,255,255,.14);border-radius:17px;padding:13px 15px;
       font-weight:950;font-size:14px;color:var(--text);background:rgba(255,255,255,.08);
@@ -72,6 +75,7 @@
     .btn-blue{background:linear-gradient(145deg,#5fc7ff,#176799)}
     .btn-red{background:linear-gradient(145deg,#ff7762,#92251a)}
     .btn-wa{background:linear-gradient(145deg,#4be071,#118839);color:#071408}
+    .btn-call{background:linear-gradient(145deg,#ffffff,#8fb1c7);color:#071408}
     .btn-ai{background:linear-gradient(145deg,#b777ff,#4c1d95);color:#fff}
     .btn-row{display:flex;gap:9px;flex-wrap:wrap}.btn-full{width:100%}
     .job-title,.client-title{font-size:25px;font-weight:950;margin-bottom:5px}
@@ -85,23 +89,17 @@
     .mini div{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:10px}
     .mini b{display:block;font-size:20px}.mini span{font-size:12px;color:var(--muted)}
     .info-box{
-      background:rgba(0,0,0,.20);
-      border:1px solid rgba(255,255,255,.11);
-      border-radius:18px;
-      padding:12px;
-      margin:10px 0;
-      line-height:1.35;
+      background:rgba(0,0,0,.20);border:1px solid rgba(255,255,255,.11);
+      border-radius:18px;padding:12px;margin:10px 0;line-height:1.35;
     }
     .info-box strong{color:var(--green)}
     .ai-box{
       background:linear-gradient(145deg,rgba(183,119,255,.18),rgba(0,0,0,.18));
-      border:1px solid rgba(183,119,255,.38);
-      border-radius:20px;
-      padding:13px;
-      margin:12px 0;
+      border:1px solid rgba(183,119,255,.38);border-radius:20px;padding:13px;margin:12px 0;
     }
     .money{color:var(--gold)!important}.paid{color:#d7b4ff!important}.due{color:#ffb199!important}.net{color:var(--green)!important}
-    .list{display:grid;gap:12px}.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed rgba(255,255,255,.18);border-radius:22px;background:rgba(255,255,255,.035)}
+    .list{display:grid;gap:12px}
+    .empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed rgba(255,255,255,.18);border-radius:22px;background:rgba(255,255,255,.035)}
     .bottom{
       position:fixed;left:0;right:0;bottom:0;z-index:90;
       display:grid;grid-template-columns:repeat(5,1fr);gap:7px;padding:8px 8px 10px;
@@ -116,14 +114,17 @@
     .modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.modalhead h2{margin:0}
     .close{width:44px;height:44px;border-radius:50%;padding:0}
     .rowbox{border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.18);border-radius:18px;padding:12px;margin-bottom:8px}
-    .health-card{
+    details.health-card{
       border:1px solid rgba(68,174,234,.35);
       background:linear-gradient(145deg,rgba(68,174,234,.13),rgba(0,0,0,.18));
-      border-radius:20px;
-      padding:13px;
-      margin-bottom:10px;
+      border-radius:20px;padding:0;margin-bottom:10px;overflow:hidden;
     }
-    .health-card h3{color:#9edcff;margin-bottom:8px}
+    details.health-card summary{
+      list-style:none;cursor:pointer;padding:14px;font-weight:950;color:#9edcff;font-size:20px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    details.health-card summary::-webkit-details-marker{display:none}
+    .health-inner{padding:13px}
     .health-meta{color:var(--muted);font-size:13px;line-height:1.4;margin-bottom:8px}
     .tag{display:inline-block;margin:4px 5px 4px 0;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);font-size:12px;font-weight:900;color:#ffe08a}
     .tag-blue{color:#9edcff}.tag-red{color:#ffb199}.tag-green{color:#b8ff74}.tag-purple{color:#d7b4ff}
@@ -132,8 +133,10 @@
     .preview{display:none;margin:8px 0 14px;padding:10px;border:1px solid rgba(155,217,90,.45);border-radius:18px;background:rgba(0,0,0,.26)}
     .preview img{width:100%;max-height:260px;object-fit:contain;border-radius:14px;background:#000}
     .checkgrid{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px}@media(min-width:760px){.checkgrid{grid-template-columns:repeat(2,1fr)}}
-    .check{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.11);background:rgba(0,0,0,.2);border-radius:14px;padding:10px;color:var(--text)}.check input{width:auto}
-    .viewer{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.96);display:none;flex-direction:column;padding:12px}.viewer.active{display:flex}.viewer img{width:100%;height:calc(100vh - 90px);object-fit:contain;background:#000;border-radius:14px}
+    .check{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.11);background:rgba(0,0,0,.2);border-radius:14px;padding:10px;color:var(--text)}
+    .check input{width:auto}
+    .viewer{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.96);display:none;flex-direction:column;padding:12px}
+    .viewer.active{display:flex}.viewer img{width:100%;height:calc(100vh - 90px);object-fit:contain;background:#000;border-radius:14px}
     .toast{position:fixed;z-index:400;left:50%;bottom:105px;transform:translateX(-50%);background:#f4ffe9;color:#111d0d;padding:13px 16px;border-radius:17px;font-weight:950;opacity:0;pointer-events:none;box-shadow:0 18px 45px rgba(0,0,0,.45);transition:.25s;text-align:center;max-width:calc(100vw - 28px)}
     .toast.show{opacity:1}
   </style>
@@ -147,7 +150,7 @@
       <div>
         <h1>ApPiero</h1>
         <div class="subtitle">Gestione potatura ulivi</div>
-        <div class="version">V8.7 · evoluzione salute</div>
+        <div class="version">V8.8 · telefono rapido</div>
       </div>
     </div>
     <div class="today" id="todayText">oggi</div>
@@ -173,8 +176,7 @@
     <div class="ai-box">
       <h3>🤖 AI foto olivo — preparazione futura</h3>
       <p class="muted small">
-        La V8.7 prepara la sezione per la futura AI fotografica: salute, cultivar probabile e urgenza.
-        Per ora l’app usa una diagnosi guidata avanzata. La vera AI che guarda la foto arriverà nella V9 con collegamento esterno.
+        La vera AI fotografica arriverà nella V9 con collegamento esterno. Per ora la V8.8 salva foto salute, sintomi, priorità e consigli guidati.
       </p>
     </div>
 
@@ -298,9 +300,7 @@
 
     <div class="card" style="margin-top:12px">
       <h3>Importa backup</h3>
-      <p class="muted small">
-        Quando devi ricaricare il backup, premi qui sotto e cerca il file nella cartella <strong>Download</strong>.
-      </p>
+      <p class="muted small">Quando devi ricaricare il backup, premi qui sotto e cerca il file nella cartella <strong>Download</strong>.</p>
       <input id="backupFile" type="file" accept="application/json" />
       <button class="btn-gold btn-full" style="margin-top:10px" onclick="importBackup()">📥 Importa backup</button>
     </div>
@@ -335,8 +335,8 @@
 <div id="toast" class="toast"></div>
 
 <script>
-const STORAGE_KEY="appiero_v87_jobs";
-const OLD_KEYS=["appiero_v86_jobs","appiero_v85_jobs","appiero_v84_jobs","appiero_v83_jobs","appiero_v82_jobs","appiero_v81_jobs","appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
+const STORAGE_KEY="appiero_v88_jobs";
+const OLD_KEYS=["appiero_v87_jobs","appiero_v86_jobs","appiero_v85_jobs","appiero_v84_jobs","appiero_v83_jobs","appiero_v82_jobs","appiero_v81_jobs","appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
 let jobs=[],jobFilter="all",clientSort="name";
 const euro=new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"});
 
@@ -361,22 +361,12 @@ function normalize(j){
   if(j.deposit&&j.payments.length===0)j.payments.push({id:uid(),date:j.startDate,amount:n(j.deposit),method:"Contanti",type:"Acconto",note:"Acconto iniziale"});
   if(j.photos.length&&!j.photoItems.length)j.photoItems=j.photos.map(src=>({id:uid(),type:"altro",src}));
   j.healthChecks=j.healthChecks.map(h=>({
-    id:h.id||uid(),
-    date:h.date||todayISO(),
-    treeRef:h.treeRef||h.tree||"",
-    photoPart:h.photoPart||h.part||"",
-    condition:h.condition||"Da controllare",
-    priority:h.priority||"Media",
-    symptoms:Array.isArray(h.symptoms)?h.symptoms:[],
-    suggestedProblems:Array.isArray(h.suggestedProblems)?h.suggestedProblems:[],
-    guideLevel:h.guideLevel||"",
-    guideAdvice:h.guideAdvice||"",
-    cureAdvice:h.cureAdvice||"",
-    aiReady:h.aiReady||false,
-    cultivarGuess:h.cultivarGuess||"",
-    cultivarConfidence:h.cultivarConfidence||"",
-    note:h.note||"",
-    photo:h.photo||""
+    id:h.id||uid(),date:h.date||todayISO(),treeRef:h.treeRef||h.tree||"",photoPart:h.photoPart||h.part||"",
+    condition:h.condition||"Da controllare",priority:h.priority||"Media",
+    symptoms:Array.isArray(h.symptoms)?h.symptoms:[],suggestedProblems:Array.isArray(h.suggestedProblems)?h.suggestedProblems:[],
+    guideLevel:h.guideLevel||"",guideAdvice:h.guideAdvice||"",cureAdvice:h.cureAdvice||"",
+    aiReady:h.aiReady||false,cultivarGuess:h.cultivarGuess||"",cultivarConfidence:h.cultivarConfidence||"",
+    note:h.note||"",photo:h.photo||""
   }));
   return j;
 }
@@ -451,9 +441,6 @@ function clearForm(){
 function doneTrees(j){return j.days.reduce((s,d)=>s+n(d.trees),0)}
 function expenses(d){return n(d.expenseFuel)+n(d.expenseFood)+n(d.expenseTools)+n(d.expenseOther)}
 function dayGross(j,d){if(j.priceMode==="tree")return n(d.trees)*n(j.priceValue);if(j.priceMode==="day")return n(d.dayMoney||j.priceValue);if(j.priceMode==="fixed")return j.totalTrees?n(d.trees)*(n(j.priceValue)/n(j.totalTrees)):0;return 0}
-function gross(j){return j.days.reduce((s,d)=>s+dayGross(j,d),0)}
-function jobExpenses(j){return j.days.reduce((s,d)=>s+expenses(d),0)}
-function net(j){return gross(j)-jobExpenses(j)}
 function estimate(j){if(j.priceMode==="tree")return n(j.totalTrees)*n(j.priceValue);if(j.priceMode==="day")return n(j.estimatedDays)*n(j.priceValue);if(j.priceMode==="fixed")return n(j.priceValue);return 0}
 function paid(j){return j.payments.reduce((s,p)=>s+n(p.amount),0)}
 function due(j){return Math.max(0,estimate(j)-paid(j))}
@@ -493,11 +480,12 @@ function jobCard(j){
 
     <div class="btn-row">
       <button class="btn-main" onclick="openJob('${j.id}')">Apri</button>
-      <button class="btn-blue" onclick="showHealth('${j.id}')">🩺 Salute guidata</button>
+      <button class="btn-call" onclick="callClient('${j.id}')">📞 Chiama</button>
+      <button class="btn-wa" onclick="whatsJob('${j.id}')">WhatsApp</button>
+      <button class="btn-blue" onclick="showHealth('${j.id}')">🩺 Salute</button>
       <button class="btn-ai" onclick="showAIFuture('${j.id}')">🤖 AI foto</button>
       <button class="btn-gold" onclick="showOil('${j.id}')">🫒 Olio</button>
       <button class="btn-gold" onclick="showPayment('${j.id}')">💶 Pagamento</button>
-      <button class="btn-wa" onclick="whatsJob('${j.id}')">WhatsApp</button>
     </div>
   </div>`;
 }
@@ -532,13 +520,18 @@ function renderClients(){
     <div class="topline"><div><div class="client-title">${esc(c.name)}</div><div class="muted"><strong>Telefono:</strong> ${esc(c.phone||"non inserito")}</div><div class="muted small"><strong>Luogo:</strong> ${esc([...c.places].join(" · ")||"non indicato")}</div></div><span class="badge b-prev">${c.jobs.length} lavori</span></div>
     <div class="mini"><div><b>${c.trees}</b><span>ulivi</span></div><div><b class="paid">${money(c.paid)}</b><span>incassato</span></div><div><b class="due">${money(c.due)}</b><span>saldo</span></div></div>
     <div class="mini"><div><b>${c.health}</b><span>schede salute</span></div><div><b>${c.hp}</b><span>problemi</span></div><div><b class="money">${c.liters.toFixed(1)} L</b><span>olio</span></div></div>
-    <button class="btn-main" onclick="openClient('${esc(c.key)}')">Apri cliente</button>
+    <div class="btn-row">
+      <button class="btn-main" onclick="openClient('${esc(c.key)}')">Apri cliente</button>
+      <button class="btn-call" onclick="callPhone('${esc(c.phone||"")}')">📞 Chiama</button>
+      <button class="btn-wa" onclick="whatsPhone('${esc(c.phone||"")}','${esc(c.name)}')">WhatsApp</button>
+    </div>
   </div>`).join(""):`<div class="empty">Nessun cliente trovato.</div>`;
 }
 function openClient(key){
   const c=getClients().find(x=>x.key===key);if(!c)return;
   document.getElementById("modalTitle").textContent=c.name;
   document.getElementById("modalBody").innerHTML=`<div class="card"><h3>${esc(c.name)}</h3><p class="muted"><strong>Telefono:</strong> ${esc(c.phone||"non inserito")}</p><p class="muted small"><strong>Luogo:</strong> ${esc([...c.places].join(" · ")||"non indicato")}</p>
+  <div class="btn-row"><button class="btn-call" onclick="callPhone('${esc(c.phone||"")}')">📞 Chiama cliente</button><button class="btn-wa" onclick="whatsPhone('${esc(c.phone||"")}','${esc(c.name)}')">WhatsApp</button></div>
   <div class="mini"><div><b>${c.jobs.length}</b><span>lavori</span></div><div><b>${c.trees}</b><span>ulivi</span></div><div><b class="due">${money(c.due)}</b><span>saldo</span></div></div></div>
   <h2>Lavori cliente</h2>${c.jobs.map(jobCard).join("")}`;
   openModal();
@@ -556,6 +549,11 @@ function openJob(id){
       <div><strong>Data prevista:</strong> ${dateIt(j.startDate)}</div>
       <div><strong>Cultivar:</strong> ${esc(j.cultivar||"non indicata")}</div>
       <div><strong>Tipo lavoro:</strong> ${esc(j.workType)}</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-call" onclick="callClient('${j.id}')">📞 Chiama cliente</button>
+      <button class="btn-wa" onclick="whatsJob('${j.id}')">WhatsApp</button>
     </div>
 
     <div class="mini"><div><b>${j.totalTrees}</b><span>ulivi</span></div><div><b>${doneTrees(j)}</b><span>potati</span></div><div><b>${progress(j)}%</b><span>avanzamento</span></div></div>
@@ -586,31 +584,34 @@ function renderPayments(j){return j.payments.length?j.payments.slice().reverse()
 
 function renderHealth(j){
   if(!j.healthChecks.length)return `<div class="empty">Nessuna scheda salute salvata.</div>`;
-  return j.healthChecks.slice().reverse().map(h=>{
+  return j.healthChecks.slice().reverse().map((h,idx)=>{
     const problemTags=(h.suggestedProblems||[]).map(x=>`<span class="tag tag-red">${esc(x)}</span>`).join("");
     const symptomTags=(h.symptoms||[]).map(x=>`<span class="tag tag-blue">${esc(x)}</span>`).join("");
     const levelClass=h.guideLevel==="Alto"?"tag-red":h.guideLevel==="Medio"?"tag-blue":"tag-green";
-    return `<div class="health-card">
-      <h3>🩺 Scheda salute — ${dateIt(h.date)}</h3>
-      <div class="health-meta">
-        <div><strong>Pianta / zona:</strong> ${esc(h.treeRef||"non indicata")}</div>
-        <div><strong>Parte fotografata:</strong> ${esc(h.photoPart||"non indicata")}</div>
-        <div><strong>Condizione:</strong> ${esc(h.condition||"non indicata")} · <strong>Priorità:</strong> ${esc(h.priority||"non indicata")}</div>
-        <div><strong>Livello guidato:</strong> <span class="tag ${levelClass}">${esc(h.guideLevel||"non indicato")}</span></div>
-        <div><strong>AI foto futura:</strong> <span class="tag tag-purple">${h.aiReady?"foto pronta per AI":"non ancora analizzata"}</span></div>
-        ${h.cultivarGuess?`<div><strong>Cultivar stimata:</strong> ${esc(h.cultivarGuess)} · ${esc(h.cultivarConfidence||"")}</div>`:""}
+    const photoIcon=h.photo?"📷":"";
+    return `<details class="health-card" ${idx===0?"open":""}>
+      <summary>🩺 Scheda salute ${j.healthChecks.length-idx} — ${dateIt(h.date)} ${photoIcon}</summary>
+      <div class="health-inner">
+        <div class="health-meta">
+          <div><strong>Pianta / zona:</strong> ${esc(h.treeRef||"non indicata")}</div>
+          <div><strong>Parte fotografata:</strong> ${esc(h.photoPart||"non indicata")}</div>
+          <div><strong>Condizione:</strong> ${esc(h.condition||"non indicata")} · <strong>Priorità:</strong> ${esc(h.priority||"non indicata")}</div>
+          <div><strong>Livello guidato:</strong> <span class="tag ${levelClass}">${esc(h.guideLevel||"non indicato")}</span></div>
+          <div><strong>AI foto futura:</strong> <span class="tag tag-purple">${h.aiReady?"foto pronta per AI":"non ancora analizzata"}</span></div>
+          ${h.cultivarGuess?`<div><strong>Cultivar stimata:</strong> ${esc(h.cultivarGuess)} · ${esc(h.cultivarConfidence||"")}</div>`:""}
+        </div>
+
+        <div><strong>Sintomi selezionati:</strong><br>${symptomTags || `<span class="muted small">Nessun sintomo selezionato.</span>`}</div>
+        <br>
+        <div><strong>Problemi sospetti:</strong><br>${problemTags || `<span class="muted small">Nessun sospetto forte.</span>`}</div>
+        <br>
+        <div class="info-box"><strong>Consiglio guidato:</strong><br>${esc(h.guideAdvice||"Nessun consiglio registrato.")}</div>
+        <div class="info-box"><strong>Prime cure / controllo:</strong><br>${esc(h.cureAdvice||"Monitorare la pianta e confrontare con tecnico se il problema peggiora.")}</div>
+        <div class="info-box"><strong>Note del potatore:</strong><br>${esc(h.note||"Nessuna nota.")}</div>
+
+        ${h.photo?`<div class="photo-grid"><div class="rowbox"><img class="thumb" src="${h.photo}" onclick="openViewer('${h.photo}','Foto salute')"><button class="btn-blue btn-full" onclick="openViewer('${h.photo}','Foto salute')">Apri foto salute</button></div></div>`:""}
       </div>
-
-      <div><strong>Sintomi selezionati:</strong><br>${symptomTags || `<span class="muted small">Nessun sintomo selezionato.</span>`}</div>
-      <br>
-      <div><strong>Problemi sospetti:</strong><br>${problemTags || `<span class="muted small">Nessun sospetto forte.</span>`}</div>
-      <br>
-      <div class="info-box"><strong>Consiglio guidato:</strong><br>${esc(h.guideAdvice||"Nessun consiglio registrato.")}</div>
-      <div class="info-box"><strong>Prime cure / controllo:</strong><br>${esc(h.cureAdvice||"Monitorare la pianta e confrontare con tecnico se il problema peggiora.")}</div>
-      <div class="info-box"><strong>Note del potatore:</strong><br>${esc(h.note||"Nessuna nota.")}</div>
-
-      ${h.photo?`<div class="photo-grid"><div class="rowbox"><img class="thumb" src="${h.photo}" onclick="openViewer('${h.photo}','Foto salute')"><button class="btn-blue btn-full" onclick="openViewer('${h.photo}','Foto salute')">Apri foto salute</button></div></div>`:""}
-    </div>`;
+    </details>`;
   }).join("");
 }
 function renderOil(j){return j.oilRecords.length?j.oilRecords.slice().reverse().map(o=>`<div class="rowbox"><b>Anno ${o.year}</b><br>Resa ${o.yieldPercent||0}% · Olio ${o.oilLiters||0} L<br><span class="muted small">${esc(o.notes||"")}</span></div>`).join(""):`<div class="empty">Nessuna annata olio.</div>`}
@@ -673,6 +674,7 @@ function showHealth(id){
     <p class="muted small">Analisi guidata di campo. Non sostituisce l’agronomo.</p>
     <div class="info-box">
       <strong>Cliente:</strong> ${esc(j.client)}<br>
+      <strong>Telefono:</strong> ${esc(j.phone||"non inserito")}<br>
       <strong>Luogo:</strong> ${esc(j.place||"non indicato")}<br>
       <strong>Cultivar inserita:</strong> ${esc(j.cultivar||"non indicata")}
     </div>
@@ -713,70 +715,38 @@ function diagnose(sym,cond,pri){
   const med=()=>{if(level==="Basso")level="Medio"};const high=()=>level="Alto";
 
   if(s.has("Macchie tonde scure sulle foglie")||s.has("Foglie macchiate")){
-    add("Sospetto occhio di pavone");
-    adv("Macchie fogliari compatibili con problema fungino. Controllare foglie sopra/sotto e caduta fogliare.");
-    cur("Arieggiare la chioma; evitare chioma troppo fitta; valutare trattamento con tecnico se diffuso.");
-    med();
+    add("Sospetto occhio di pavone");adv("Macchie fogliari compatibili con problema fungino. Controllare foglie sopra/sotto e caduta fogliare.");cur("Arieggiare la chioma; evitare chioma troppo fitta; valutare trattamento con tecnico se diffuso.");med();
   }
   if(s.has("Noduli / tumori su rami")){
-    add("Sospetta rogna dell’olivo");
-    adv("Noduli o tumori sui rami possono indicare rogna, spesso legata a ferite e tagli.");
-    cur("Disinfettare attrezzi; evitare potatura con pioggia o piante bagnate.");
-    med();
+    add("Sospetta rogna dell’olivo");adv("Noduli o tumori sui rami possono indicare rogna, spesso legata a ferite e tagli.");cur("Disinfettare attrezzi; evitare potatura con pioggia o piante bagnate.");med();
   }
   if(s.has("Presenza insetti")||s.has("Patina bianca / scudetti su rami")){
-    add("Possibile cocciniglia o insetti");
-    adv("Presenza di insetti, scudetti o patina richiede controllo ravvicinato.");
-    cur("Fare foto ravvicinate; verificare pagina inferiore foglie e rami.");
-    med();
+    add("Possibile cocciniglia o insetti");adv("Presenza di insetti, scudetti o patina richiede controllo ravvicinato.");cur("Fare foto ravvicinate; verificare pagina inferiore foglie e rami.");med();
   }
   if(s.has("Disseccamento da un solo lato")){
-    add("Possibile verticilliosi / problema radicale");
-    adv("Seccume localizzato su un lato può indicare problema vascolare o radicale.");
-    cur("Segnare la pianta; monitorare evoluzione; evitare tagli drastici prima di capire la causa.");
-    med();
+    add("Possibile verticilliosi / problema radicale");adv("Seccume localizzato su un lato può indicare problema vascolare o radicale.");cur("Segnare la pianta; monitorare evoluzione; evitare tagli drastici prima di capire la causa.");med();
   }
   if(s.has("Stress idrico")||s.has("Foglie gialle")){
-    add("Possibile stress idrico o carenza");
-    adv("Ingiallimento e stress possono dipendere da acqua, nutrizione, radici o stagione.");
-    cur("Evitare potatura pesante su pianta stressata; controllare terreno e vigoria.");
+    add("Possibile stress idrico o carenza");adv("Ingiallimento e stress possono dipendere da acqua, nutrizione, radici o stagione.");cur("Evitare potatura pesante su pianta stressata; controllare terreno e vigoria.");
   }
   if(s.has("Marciume / carie del legno")){
-    add("Possibile carie del legno");
-    adv("Legno marcio o cavità possono indebolire la struttura.");
-    cur("Controllare stabilità della branca e qualità dei tagli.");
-    med();
+    add("Possibile carie del legno");adv("Legno marcio o cavità possono indebolire la struttura.");cur("Controllare stabilità della branca e qualità dei tagli.");med();
   }
   if(s.has("Frutti rovinati")){
-    add("Possibile mosca dell’olivo o danno su frutto");
-    adv("Frutti rovinati o bucati possono dipendere da insetti o andamento stagionale.");
-    cur("Controllare punture sui frutti e olive cadute.");
-    med();
+    add("Possibile mosca dell’olivo o danno su frutto");adv("Frutti rovinati o bucati possono dipendere da insetti o andamento stagionale.");cur("Controllare punture sui frutti e olive cadute.");med();
   }
   if(s.has("Pianta poco produttiva")){
-    add("Bassa produttività da valutare");
-    adv("La bassa produzione può dipendere da alternanza, potatura, nutrizione, acqua o salute generale.");
-    cur("Confrontare produzione anno per anno nella sezione Olio.");
+    add("Bassa produttività da valutare");adv("La bassa produzione può dipendere da alternanza, potatura, nutrizione, acqua o salute generale.");cur("Confrontare produzione anno per anno nella sezione Olio.");
   }
   if(s.has("Chioma troppo fitta")){
-    add("Chioma troppo chiusa");
-    adv("Chioma fitta può favorire umidità e problemi fungini.");
-    cur("Potatura di apertura equilibrata, senza indebolire troppo la pianta.");
+    add("Chioma troppo chiusa");adv("Chioma fitta può favorire umidità e problemi fungini.");cur("Potatura di apertura equilibrata, senza indebolire troppo la pianta.");
   }
   if(s.has("Disseccamento rapido sospetto")){
-    add("Disseccamento grave da verificare");
-    add("Xylella / disseccamento sospetto da escludere con tecnico");
-    adv("Disseccamento rapido e anomalo non va interpretato solo dall’app.");
-    cur("Sentire agronomo o servizio fitosanitario se rapido, diffuso o su più piante.");
-    high();
+    add("Disseccamento grave da verificare");add("Xylella / disseccamento sospetto da escludere con tecnico");adv("Disseccamento rapido e anomalo non va interpretato solo dall’app.");cur("Sentire agronomo o servizio fitosanitario se rapido, diffuso o su più piante.");high();
   }
   if(cond==="Grave"||pri==="Urgente")high();
   if(pri==="Alta")med();
-  if(!problems.length){
-    add("Nessun sospetto forte dai dati inseriti");
-    adv("Dai sintomi inseriti non emerge un problema chiaro.");
-    cur("Monitorare e salvare nuove foto se compaiono sintomi.");
-  }
+  if(!problems.length){add("Nessun sospetto forte dai dati inseriti");adv("Dai sintomi inseriti non emerge un problema chiaro.");cur("Monitorare e salvare nuove foto se compaiono sintomi.")}
   return {problems,level,advice:advice.join(" "),cures:cures.join(" ")};
 }
 async function addHealth(id){
@@ -784,28 +754,17 @@ async function addHealth(id){
   const file=document.getElementById("hPhoto").files[0],photo=await compressFile(file);
   const sym=checked("symptoms"),cond=document.getElementById("hCond").value,pri=document.getElementById("hPri").value,d=diagnose(sym,cond,pri);
   const item={
-    id:uid(),
-    date:document.getElementById("hDate").value||todayISO(),
+    id:uid(),date:document.getElementById("hDate").value||todayISO(),
     treeRef:document.getElementById("hTree").value.trim(),
     photoPart:document.getElementById("hPart").value,
-    condition:cond,
-    priority:pri,
-    symptoms:sym,
-    suggestedProblems:d.problems,
-    guideLevel:d.level,
-    guideAdvice:d.advice,
-    cureAdvice:d.cures,
-    aiReady:!!photo,
-    cultivarGuess:document.getElementById("hCultivarGuess").value,
-    cultivarConfidence:document.getElementById("hCultivarConfidence").value,
-    note:document.getElementById("hNote").value.trim(),
-    photo
+    condition:cond,priority:pri,symptoms:sym,
+    suggestedProblems:d.problems,guideLevel:d.level,guideAdvice:d.advice,cureAdvice:d.cures,
+    aiReady:!!photo,cultivarGuess:document.getElementById("hCultivarGuess").value,cultivarConfidence:document.getElementById("hCultivarConfidence").value,
+    note:document.getElementById("hNote").value.trim(),photo
   };
   j.healthChecks.push(item);
   if(photo)j.photoItems.push({id:uid(),type:"salute",src:photo});
-  save();
-  toast("Analisi salute salvata");
-  openJob(id);
+  save();toast("Analisi salute salvata");openJob(id);
 }
 
 function showAIFuture(id){
@@ -814,12 +773,8 @@ function showAIFuture(id){
   document.getElementById("modalBody").innerHTML=`<div class="card">
     <div class="ai-box">
       <h3>🤖 AI foto olivo — funzione futura</h3>
-      <p class="muted small">
-        Questa schermata prepara ApPiero alla vera intelligenza artificiale fotografica.
-        La vera AI richiederà un collegamento esterno/API, perché GitHub Pages da solo non può analizzare immagini con AI.
-      </p>
+      <p class="muted small">La vera AI richiederà un collegamento esterno/API, perché GitHub Pages da solo non può analizzare immagini con AI.</p>
     </div>
-
     <div class="info-box">
       <strong>Quando sarà attiva, l’AI farà:</strong><br>
       - riconoscimento stato salute olivo<br>
@@ -829,13 +784,6 @@ function showAIFuture(id){
       - consiglio di primo intervento<br>
       - avviso quando serve agronomo
     </div>
-
-    <div class="info-box">
-      <strong>Adesso cosa fare:</strong><br>
-      Usa “Salute guidata”, carica foto chiare di foglie, rami, chioma e frutto.
-      L’app salverà la foto come pronta per futura AI.
-    </div>
-
     <button class="btn-blue btn-full" onclick="showHealth('${id}')">Apri Salute guidata</button>
   </div>`;
   openModal();
@@ -901,11 +849,25 @@ function deleteJob(id){
   save();closeModal();toast("Lavoro eliminato");
 }
 
+function callClient(id){
+  const j=jobs.find(x=>x.id===id);
+  if(!j)return;
+  callPhone(j.phone);
+}
+function callPhone(phone){
+  const p=String(phone||"").trim();
+  if(!p)return toast("Telefono non inserito");
+  window.location.href="tel:"+p;
+}
 function whatsJob(id){
   const j=jobs.find(x=>x.id===id);
-  const p=cleanPhone(j.phone);
-  if(!p)return toast("Telefono mancante");
-  const txt=`Ciao ${j.client}, ti scrivo per il lavoro di potatura ulivi in ${j.place||"oliveto"}.`;
+  if(!j)return;
+  whatsPhone(j.phone,j.client,j.place);
+}
+function whatsPhone(phone,name,place){
+  const p=cleanPhone(phone);
+  if(!p)return toast("Telefono non inserito");
+  const txt=`Ciao ${name||""}, ti scrivo per il lavoro di potatura ulivi${place?(" in "+place):""}.`;
   window.open("https://wa.me/"+p+"?text="+encodeURIComponent(txt),"_blank");
 }
 function cleanPhone(phone){let p=String(phone||"").replace(/[^\d+]/g,"");p=p.replace(/^\+/,"");if(p.startsWith("00"))p=p.slice(2);if(p.startsWith("39"))return p;if(p.startsWith("3"))return"39"+p;if(p.startsWith("0"))return"39"+p;return p}
@@ -916,7 +878,7 @@ function renderHome(){
   document.getElementById("kpiDue").textContent=money(totalDue);
   document.getElementById("kpiMem").textContent=totalKB();
   document.getElementById("homeJobs").innerHTML=jobs.length?jobs.slice(0,4).map(jobCard).join(""):`<div class="empty">Ancora nessun lavoro.</div>`;
-  document.getElementById("memoryInfo").textContent=`Memoria V8.7: circa ${storageKB()} KB. Totale versioni ApPiero: circa ${totalKB()} KB.`;
+  document.getElementById("memoryInfo").textContent=`Memoria V8.8: circa ${storageKB()} KB. Totale versioni ApPiero: circa ${totalKB()} KB.`;
 }
 function renderStats(){
   document.getElementById("sClients").textContent=getClients().length;
@@ -942,7 +904,7 @@ function backupData(includePhotos){
 }
 function exportBackup(includePhotos){
   const fileName=(includePhotos?"BACKUP-APPIERO-COMPLETO-":"BACKUP-APPIERO-LEGGERO-")+todayISO()+".json";
-  const data={app:"ApPiero",version:"8.7",photos:includePhotos,exportedAt:new Date().toISOString(),jobs:backupData(includePhotos)};
+  const data={app:"ApPiero",version:"8.8",photos:includePhotos,exportedAt:new Date().toISOString(),jobs:backupData(includePhotos)};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");
@@ -978,7 +940,7 @@ function importBackup(){
   r.readAsText(file);
 }
 function cleanOld(){
-  if(!confirm("Pulisco vecchie versioni, V8.7 resta. Procedo?"))return;
+  if(!confirm("Pulisco vecchie versioni, V8.8 resta. Procedo?"))return;
   OLD_KEYS.forEach(k=>localStorage.removeItem(k));
   toast("Vecchie versioni pulite");
   renderAll();
