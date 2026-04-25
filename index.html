@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ApPiero V8.5 - Salute rapida</title>
+  <title>ApPiero V8.6 - Salute leggibile</title>
   <meta name="theme-color" content="#18230f" />
   <style>
     :root{
@@ -82,6 +82,15 @@
     @media(max-width:600px){.mini{grid-template-columns:1fr}}
     .mini div{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:10px}
     .mini b{display:block;font-size:20px}.mini span{font-size:12px;color:var(--muted)}
+    .info-box{
+      background:rgba(0,0,0,.20);
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:18px;
+      padding:12px;
+      margin:10px 0;
+      line-height:1.35;
+    }
+    .info-box strong{color:var(--green)}
     .money{color:var(--gold)!important}.paid{color:#d7b4ff!important}.due{color:#ffb199!important}.net{color:var(--green)!important}
     .list{display:grid;gap:12px}.empty{padding:22px;text-align:center;color:var(--muted);border:1px dashed rgba(255,255,255,.18);border-radius:22px;background:rgba(255,255,255,.035)}
     .bottom{
@@ -98,13 +107,23 @@
     .modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.modalhead h2{margin:0}
     .close{width:44px;height:44px;border-radius:50%;padding:0}
     .rowbox{border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.18);border-radius:18px;padding:12px;margin-bottom:8px}
+    .health-card{
+      border:1px solid rgba(68,174,234,.35);
+      background:linear-gradient(145deg,rgba(68,174,234,.13),rgba(0,0,0,.18));
+      border-radius:20px;
+      padding:13px;
+      margin-bottom:10px;
+    }
+    .health-card h3{color:#9edcff;margin-bottom:8px}
+    .health-meta{color:var(--muted);font-size:13px;line-height:1.4;margin-bottom:8px}
+    .tag{display:inline-block;margin:4px 5px 4px 0;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);font-size:12px;font-weight:900;color:#ffe08a}
+    .tag-blue{color:#9edcff}.tag-red{color:#ffb199}.tag-green{color:#b8ff74}
     .photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}@media(min-width:760px){.photo-grid{grid-template-columns:repeat(3,1fr)}}
     .thumb{width:100%;height:120px;object-fit:cover;border-radius:14px;background:#000;border:1px solid rgba(255,255,255,.14)}
     .preview{display:none;margin:8px 0 14px;padding:10px;border:1px solid rgba(155,217,90,.45);border-radius:18px;background:rgba(0,0,0,.26)}
     .preview img{width:100%;max-height:260px;object-fit:contain;border-radius:14px;background:#000}
     .checkgrid{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px}@media(min-width:760px){.checkgrid{grid-template-columns:repeat(2,1fr)}}
     .check{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.11);background:rgba(0,0,0,.2);border-radius:14px;padding:10px;color:var(--text)}.check input{width:auto}
-    .tag{display:inline-block;margin:4px 5px 4px 0;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);font-size:12px;font-weight:900;color:#ffe08a}
     .viewer{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.96);display:none;flex-direction:column;padding:12px}.viewer.active{display:flex}.viewer img{width:100%;height:calc(100vh - 90px);object-fit:contain;background:#000;border-radius:14px}
     .toast{position:fixed;z-index:400;left:50%;bottom:105px;transform:translateX(-50%);background:#f4ffe9;color:#111d0d;padding:13px 16px;border-radius:17px;font-weight:950;opacity:0;pointer-events:none;box-shadow:0 18px 45px rgba(0,0,0,.45);transition:.25s;text-align:center;max-width:calc(100vw - 28px)}
     .toast.show{opacity:1}
@@ -118,7 +137,7 @@
       <div>
         <h1>ApPiero</h1>
         <div class="subtitle">Gestione potatura ulivi</div>
-        <div class="version">V8.5 · salute rapida</div>
+        <div class="version">V8.6 · salute leggibile</div>
       </div>
     </div>
     <div class="today" id="todayText">oggi</div>
@@ -280,8 +299,8 @@
 <div id="toast" class="toast"></div>
 
 <script>
-const STORAGE_KEY="appiero_v85_jobs";
-const OLD_KEYS=["appiero_v84_jobs","appiero_v83_jobs","appiero_v82_jobs","appiero_v81_jobs","appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
+const STORAGE_KEY="appiero_v86_jobs";
+const OLD_KEYS=["appiero_v85_jobs","appiero_v84_jobs","appiero_v83_jobs","appiero_v82_jobs","appiero_v81_jobs","appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
 let jobs=[],jobFilter="all",clientSort="name";
 const euro=new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"});
 
@@ -304,6 +323,20 @@ function normalize(j){
   j.photos=Array.isArray(j.photos)?j.photos:[];j.photoItems=Array.isArray(j.photoItems)?j.photoItems:[];
   if(j.deposit&&j.payments.length===0)j.payments.push({id:uid(),date:j.startDate,amount:n(j.deposit),method:"Contanti",type:"Acconto",note:"Acconto iniziale"});
   if(j.photos.length&&!j.photoItems.length)j.photoItems=j.photos.map(src=>({id:uid(),type:"altro",src}));
+  j.healthChecks=j.healthChecks.map(h=>({
+    id:h.id||uid(),
+    date:h.date||todayISO(),
+    treeRef:h.treeRef||h.tree||"",
+    photoPart:h.photoPart||h.part||"",
+    condition:h.condition||"Da controllare",
+    priority:h.priority||"Media",
+    symptoms:Array.isArray(h.symptoms)?h.symptoms:[],
+    suggestedProblems:Array.isArray(h.suggestedProblems)?h.suggestedProblems:[],
+    guideLevel:h.guideLevel||"",
+    guideAdvice:h.guideAdvice||"",
+    note:h.note||"",
+    photo:h.photo||""
+  }));
   return j;
 }
 function load(){
@@ -391,24 +424,28 @@ function jobCard(j){
     <div class="topline">
       <div>
         <div class="job-title">${esc(j.client)}</div>
-        <div class="muted">${esc(j.place||"Luogo non indicato")}</div>
-        <div class="muted small">${j.phone?("Tel: "+esc(j.phone)):"Telefono non inserito"}</div>
-        <div class="muted small">${dateIt(j.startDate)} · ${esc(j.workType)}</div>
-        <div class="muted small">Cultivar: ${esc(j.cultivar||"non indicata")} · Salute: ${j.healthChecks.length}${hasHealthProblem(j)?" ⚠️":""} · Olio: ${j.oilRecords.length}</div>
+        <div class="muted"><strong>Luogo:</strong> ${esc(j.place||"non indicato")}</div>
+        <div class="muted small"><strong>Telefono:</strong> ${j.phone?esc(j.phone):"non inserito"}</div>
+        <div class="muted small"><strong>Data:</strong> ${dateIt(j.startDate)} · <strong>Lavoro:</strong> ${esc(j.workType)}</div>
+        <div class="muted small"><strong>Cultivar:</strong> ${esc(j.cultivar||"non indicata")} · <strong>Salute:</strong> ${j.healthChecks.length}${hasHealthProblem(j)?" ⚠️":""} · <strong>Olio:</strong> ${j.oilRecords.length}</div>
       </div>
       <span class="badge ${statusClass(j.status)}">${statusText(j.status)}</span>
     </div>
+
     <div class="bar"><span style="width:${p}%"></span></div>
+
     <div class="mini">
+      <div><b>${j.totalTrees}</b><span>ulivi totali</span></div>
       <div><b>${doneTrees(j)}</b><span>potati</span></div>
       <div><b>${Math.max(0,j.totalTrees-doneTrees(j))}</b><span>restanti</span></div>
-      <div><b>${p}%</b><span>avanzamento</span></div>
     </div>
+
     <div class="mini">
+      <div><b>${p}%</b><span>avanzamento</span></div>
       <div><b>${money(estimate(j))}</b><span>preventivo</span></div>
-      <div><b class="paid">${money(paid(j))}</b><span>incassato</span></div>
       <div><b class="due">${money(due(j))}</b><span>saldo</span></div>
     </div>
+
     <div class="btn-row">
       <button class="btn-main" onclick="openJob('${j.id}')">Apri</button>
       <button class="btn-blue" onclick="showHealth('${j.id}')">🩺 Salute guidata</button>
@@ -443,7 +480,7 @@ function renderClients(){
   let list=getClients().filter(c=>!q||[c.name,c.phone,[...c.places].join(" ")].join(" ").toLowerCase().includes(q));
   if(clientSort==="name")list.sort((a,b)=>a.name.localeCompare(b.name));if(clientSort==="due")list.sort((a,b)=>b.due-a.due);if(clientSort==="paid")list.sort((a,b)=>b.paid-a.paid);if(clientSort==="health")list.sort((a,b)=>b.hp-a.hp);
   document.getElementById("clientsList").innerHTML=list.length?list.map(c=>`<div class="client">
-    <div class="topline"><div><div class="client-title">${esc(c.name)}</div><div class="muted">${esc(c.phone||"Telefono non inserito")}</div><div class="muted small">${esc([...c.places].join(" · ")||"Luogo non indicato")}</div></div><span class="badge b-prev">${c.jobs.length} lavori</span></div>
+    <div class="topline"><div><div class="client-title">${esc(c.name)}</div><div class="muted"><strong>Telefono:</strong> ${esc(c.phone||"non inserito")}</div><div class="muted small"><strong>Luogo:</strong> ${esc([...c.places].join(" · ")||"non indicato")}</div></div><span class="badge b-prev">${c.jobs.length} lavori</span></div>
     <div class="mini"><div><b>${c.trees}</b><span>ulivi</span></div><div><b class="paid">${money(c.paid)}</b><span>incassato</span></div><div><b class="due">${money(c.due)}</b><span>saldo</span></div></div>
     <div class="mini"><div><b>${c.health}</b><span>schede salute</span></div><div><b>${c.hp}</b><span>problemi</span></div><div><b class="money">${c.liters.toFixed(1)} L</b><span>olio</span></div></div>
     <button class="btn-main" onclick="openClient('${esc(c.key)}')">Apri cliente</button>
@@ -452,7 +489,7 @@ function renderClients(){
 function openClient(key){
   const c=getClients().find(x=>x.key===key);if(!c)return;
   document.getElementById("modalTitle").textContent=c.name;
-  document.getElementById("modalBody").innerHTML=`<div class="card"><h3>${esc(c.name)}</h3><p class="muted">${esc(c.phone||"Telefono non inserito")}</p><p class="muted small">${esc([...c.places].join(" · ")||"Luogo non indicato")}</p>
+  document.getElementById("modalBody").innerHTML=`<div class="card"><h3>${esc(c.name)}</h3><p class="muted"><strong>Telefono:</strong> ${esc(c.phone||"non inserito")}</p><p class="muted small"><strong>Luogo:</strong> ${esc([...c.places].join(" · ")||"non indicato")}</p>
   <div class="mini"><div><b>${c.jobs.length}</b><span>lavori</span></div><div><b>${c.trees}</b><span>ulivi</span></div><div><b class="due">${money(c.due)}</b><span>saldo</span></div></div></div>
   <h2>Lavori cliente</h2>${c.jobs.map(jobCard).join("")}`;
   openModal();
@@ -462,10 +499,19 @@ function openJob(id){
   const j=jobs.find(x=>x.id===id);if(!j)return;
   document.getElementById("modalTitle").textContent=j.client;
   document.getElementById("modalBody").innerHTML=`<div class="card">
-    <h3>${esc(j.client)}</h3><p class="muted">${esc(j.place||"Luogo non indicato")}</p>
+    <h3>${esc(j.client)}</h3>
+    <div class="info-box">
+      <div><strong>Cliente:</strong> ${esc(j.client)}</div>
+      <div><strong>Telefono:</strong> ${esc(j.phone||"non inserito")}</div>
+      <div><strong>Luogo:</strong> ${esc(j.place||"non indicato")}</div>
+      <div><strong>Data prevista:</strong> ${dateIt(j.startDate)}</div>
+      <div><strong>Cultivar:</strong> ${esc(j.cultivar||"non indicata")}</div>
+      <div><strong>Tipo lavoro:</strong> ${esc(j.workType)}</div>
+    </div>
+
     <div class="mini"><div><b>${j.totalTrees}</b><span>ulivi</span></div><div><b>${doneTrees(j)}</b><span>potati</span></div><div><b>${progress(j)}%</b><span>avanzamento</span></div></div>
     <div class="mini"><div><b>${money(estimate(j))}</b><span>preventivo</span></div><div><b class="paid">${money(paid(j))}</b><span>incassato</span></div><div><b class="due">${money(due(j))}</b><span>saldo</span></div></div>
-    <p class="muted small"><b>Cultivar:</b> ${esc(j.cultivar||"Non indicata")} · <b>Tipo:</b> ${esc(j.workType)}</p>
+
     <p class="muted small">${esc(j.notes||"Nessuna nota")}</p>
     <div class="btn-row">
       <button class="btn-main" onclick="showDay('${j.id}')">➕ Giornata</button>
@@ -487,8 +533,34 @@ function openJob(id){
 function openModal(){document.getElementById("modal").classList.add("active")}
 function closeModal(){document.getElementById("modal").classList.remove("active")}
 function renderPayments(j){return j.payments.length?j.payments.slice().reverse().map(p=>`<div class="rowbox"><b>${dateIt(p.date)}</b> · ${esc(p.type||"Pagamento")}<br><span class="paid">${money(p.amount)}</span> · ${esc(p.method||"")}${p.note?`<br><span class="muted small">${esc(p.note)}</span>`:""}</div>`).join(""):`<div class="empty">Nessun pagamento.</div>`}
-function renderHealth(j){return j.healthChecks.length?j.healthChecks.slice().reverse().map(h=>`<div class="rowbox"><b>${dateIt(h.date)}</b> · ${esc(h.condition)}</div>`).join(""):`<div class="empty">Nessuna scheda salute.</div>`}
-function renderOil(j){return j.oilRecords.length?j.oilRecords.slice().reverse().map(o=>`<div class="rowbox"><b>Anno ${o.year}</b><br>Resa ${o.yieldPercent||0}% · Olio ${o.oilLiters||0} L</div>`).join(""):`<div class="empty">Nessuna annata olio.</div>`}
+
+function renderHealth(j){
+  if(!j.healthChecks.length)return `<div class="empty">Nessuna scheda salute salvata.</div>`;
+  return j.healthChecks.slice().reverse().map(h=>{
+    const problemTags=(h.suggestedProblems||[]).map(x=>`<span class="tag tag-red">${esc(x)}</span>`).join("");
+    const symptomTags=(h.symptoms||[]).map(x=>`<span class="tag tag-blue">${esc(x)}</span>`).join("");
+    const levelClass=h.guideLevel==="Alto"?"tag-red":h.guideLevel==="Medio"?"tag-blue":"tag-green";
+    return `<div class="health-card">
+      <h3>🩺 Scheda salute — ${dateIt(h.date)}</h3>
+      <div class="health-meta">
+        <div><strong>Pianta / zona:</strong> ${esc(h.treeRef||"non indicata")}</div>
+        <div><strong>Parte fotografata:</strong> ${esc(h.photoPart||"non indicata")}</div>
+        <div><strong>Condizione:</strong> ${esc(h.condition||"non indicata")} · <strong>Priorità:</strong> ${esc(h.priority||"non indicata")}</div>
+        <div><strong>Livello guidato:</strong> <span class="tag ${levelClass}">${esc(h.guideLevel||"non indicato")}</span></div>
+      </div>
+
+      <div><strong>Sintomi selezionati:</strong><br>${symptomTags || `<span class="muted small">Nessun sintomo selezionato.</span>`}</div>
+      <br>
+      <div><strong>Problemi sospetti:</strong><br>${problemTags || `<span class="muted small">Nessun sospetto forte.</span>`}</div>
+      <br>
+      <div class="info-box"><strong>Consiglio guidato:</strong><br>${esc(h.guideAdvice||"Nessun consiglio registrato.")}</div>
+      <div class="info-box"><strong>Note del potatore:</strong><br>${esc(h.note||"Nessuna nota.")}</div>
+
+      ${h.photo?`<div class="photo-grid"><div class="rowbox"><img class="thumb" src="${h.photo}" onclick="openViewer('${h.photo}','Foto salute')"><button class="btn-blue btn-full" onclick="openViewer('${h.photo}','Foto salute')">Apri foto salute</button></div></div>`:""}
+    </div>`;
+  }).join("");
+}
+function renderOil(j){return j.oilRecords.length?j.oilRecords.slice().reverse().map(o=>`<div class="rowbox"><b>Anno ${o.year}</b><br>Resa ${o.yieldPercent||0}% · Olio ${o.oilLiters||0} L<br><span class="muted small">${esc(o.notes||"")}</span></div>`).join(""):`<div class="empty">Nessuna annata olio.</div>`}
 function renderDays(j){return j.days.length?j.days.slice().reverse().map(d=>`<div class="rowbox"><b>${dateIt(d.date)}</b><br>${d.trees} ulivi · netto ${money(dayGross(j,d)-expenses(d))}</div>`).join(""):`<div class="empty">Nessuna giornata.</div>`}
 function renderPhotos(j){return j.photoItems.length?`<div class="photo-grid">${j.photoItems.filter(p=>p.src).map(p=>`<div class="rowbox"><img class="thumb" src="${p.src}" onclick="openViewer('${p.src}','Foto')"><button class="btn-blue btn-full" onclick="openViewer('${p.src}','Foto')">Apri foto</button></div>`).join("")}</div>`:`<div class="empty">Nessuna foto.</div>`}
 
@@ -527,9 +599,15 @@ function addDay(id){const j=jobs.find(x=>x.id===id);const trees=n(document.getEl
 function check(label){return `<label class="check"><input type="checkbox" value="${esc(label)}"><span>${esc(label)}</span></label>`}
 function checked(id){return [...document.querySelectorAll("#"+id+" input:checked")].map(x=>x.value)}
 function showHealth(id){
+  const j=jobs.find(x=>x.id===id);if(!j)return;
   document.getElementById("modalTitle").textContent="Salute guidata olivo";
   document.getElementById("modalBody").innerHTML=`<div class="card">
     <p class="muted small">Analisi guidata di campo. Non sostituisce l’agronomo.</p>
+    <div class="info-box">
+      <strong>Cliente:</strong> ${esc(j.client)}<br>
+      <strong>Luogo:</strong> ${esc(j.place||"non indicato")}<br>
+      <strong>Cultivar:</strong> ${esc(j.cultivar||"non indicata")}
+    </div>
     <label><span>Data</span><input id="hDate" type="date" value="${todayISO()}"></label>
     <label><span>Pianta / zona</span><input id="hTree" placeholder="Es. fila 2, pianta 14"></label>
     <label><span>Parte fotografata</span><select id="hPart"><option>Chioma intera</option><option>Foglie</option><option>Rami</option><option>Tronco</option><option>Olive/frutti</option><option>Terreno</option></select></label>
@@ -549,22 +627,41 @@ function diagnose(sym,cond,pri){
   const add=x=>{if(!problems.includes(x))problems.push(x)};
   const adv=x=>{if(!advice.includes(x))advice.push(x)};
   const med=()=>{if(level==="Basso")level="Medio"};const high=()=>level="Alto";
-  if(s.has("Macchie tonde scure sulle foglie")||s.has("Foglie macchiate")){add("Sospetto occhio di pavone");adv("Controllare foglie sopra/sotto e caduta fogliare. Arieggiare la chioma.");med()}
+  if(s.has("Macchie tonde scure sulle foglie")||s.has("Foglie macchiate")){add("Sospetto occhio di pavone");adv("Controllare foglie sopra/sotto e caduta fogliare. Arieggiare la chioma e valutare trattamento con tecnico se il problema è diffuso.");med()}
   if(s.has("Noduli / tumori su rami")){add("Sospetta rogna dell’olivo");adv("Disinfettare attrezzi. Evitare potatura con pioggia o piante bagnate.");med()}
   if(s.has("Presenza insetti")||s.has("Patina bianca / scudetti su rami")){add("Possibile cocciniglia o insetti");adv("Fare foto ravvicinate e verificare pagina inferiore foglie/rami.");med()}
   if(s.has("Disseccamento da un solo lato")){add("Possibile verticilliosi / problema radicale");adv("Segnare la pianta e osservare evoluzione prima di tagli drastici.");med()}
   if(s.has("Stress idrico")||s.has("Foglie gialle")){add("Possibile stress idrico o carenza");adv("Evitare potatura pesante su pianta stressata; controllare terreno e vigoria.")}
   if(s.has("Disseccamento rapido sospetto")){add("Disseccamento grave da verificare");add("Xylella / disseccamento sospetto da escludere con tecnico");adv("Sentire agronomo o servizio fitosanitario se rapido o diffuso.");high()}
+  if(s.has("Marciume / carie del legno")){add("Possibile carie del legno");adv("Controllare stabilità della branca e qualità dei tagli.");med()}
+  if(s.has("Frutti rovinati")){add("Possibile mosca dell’olivo o danno su frutto");adv("Controllare punture sui frutti e olive cadute.");med()}
   if(cond==="Grave"||pri==="Urgente")high();if(pri==="Alta")med();
   if(!problems.length){add("Nessun sospetto forte dai dati inseriti");adv("Monitorare e salvare nuove foto se compaiono sintomi.")}
   return {problems,level,advice:advice.join(" ")};
 }
 async function addHealth(id){
-  const j=jobs.find(x=>x.id===id);const file=document.getElementById("hPhoto").files[0],photo=await compressFile(file);
+  const j=jobs.find(x=>x.id===id);if(!j)return;
+  const file=document.getElementById("hPhoto").files[0],photo=await compressFile(file);
   const sym=checked("symptoms"),cond=document.getElementById("hCond").value,pri=document.getElementById("hPri").value,d=diagnose(sym,cond,pri);
-  j.healthChecks.push({id:uid(),date:document.getElementById("hDate").value||todayISO(),treeRef:document.getElementById("hTree").value.trim(),photoPart:document.getElementById("hPart").value,condition:cond,priority:pri,symptoms:sym,suggestedProblems:d.problems,guideLevel:d.level,guideAdvice:d.advice,note:document.getElementById("hNote").value.trim(),photo});
+  const item={
+    id:uid(),
+    date:document.getElementById("hDate").value||todayISO(),
+    treeRef:document.getElementById("hTree").value.trim(),
+    photoPart:document.getElementById("hPart").value,
+    condition:cond,
+    priority:pri,
+    symptoms:sym,
+    suggestedProblems:d.problems,
+    guideLevel:d.level,
+    guideAdvice:d.advice,
+    note:document.getElementById("hNote").value.trim(),
+    photo
+  };
+  j.healthChecks.push(item);
   if(photo)j.photoItems.push({id:uid(),type:"salute",src:photo});
-  save();toast("Analisi salute salvata");openJob(id);
+  save();
+  toast("Analisi salute salvata");
+  openJob(id);
 }
 
 function showOil(id){
@@ -605,10 +702,10 @@ function whatsJob(id){const j=jobs.find(x=>x.id===id);const p=cleanPhone(j.phone
 function cleanPhone(phone){let p=String(phone||"").replace(/[^\d+]/g,"");p=p.replace(/^\+/,"");if(p.startsWith("00"))p=p.slice(2);if(p.startsWith("39"))return p;if(p.startsWith("3"))return"39"+p;if(p.startsWith("0"))return"39"+p;return p}
 
 function renderHome(){
-  const clients=getClients().length,totalPaid=jobs.reduce((s,j)=>s+paid(j),0),totalDue=jobs.reduce((s,j)=>s+due(j),0);
+  const clients=getClients().length,totalDue=jobs.reduce((s,j)=>s+due(j),0);
   document.getElementById("kpiClients").textContent=clients;document.getElementById("kpiDue").textContent=money(totalDue);document.getElementById("kpiMem").textContent=totalKB();
   document.getElementById("homeJobs").innerHTML=jobs.length?jobs.slice(0,4).map(jobCard).join(""):`<div class="empty">Ancora nessun lavoro.</div>`;
-  document.getElementById("memoryInfo").textContent=`Memoria V8.5: circa ${storageKB()} KB. Totale versioni ApPiero: circa ${totalKB()} KB.`;
+  document.getElementById("memoryInfo").textContent=`Memoria V8.6: circa ${storageKB()} KB. Totale versioni ApPiero: circa ${totalKB()} KB.`;
 }
 function renderStats(){
   document.getElementById("sClients").textContent=getClients().length;
@@ -624,12 +721,12 @@ function backupData(includePhotos){
   return jobs.map(j=>{const x=JSON.parse(JSON.stringify(j));if(!includePhotos){x.photos=[];x.photoItems=(x.photoItems||[]).map(p=>({...p,src:""}));x.days=(x.days||[]).map(d=>({...d,photo:""}));x.healthChecks=(x.healthChecks||[]).map(h=>({...h,photo:""}))}return x});
 }
 function exportBackup(includePhotos){
-  const data={app:"ApPiero",version:"8.5",photos:includePhotos,exportedAt:new Date().toISOString(),jobs:backupData(includePhotos)};
+  const data={app:"ApPiero",version:"8.6",photos:includePhotos,exportedAt:new Date().toISOString(),jobs:backupData(includePhotos)};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
-  a.href=url;a.download=(includePhotos?"appiero-v8-5-backup-completo-":"appiero-v8-5-backup-leggero-")+todayISO()+".json";a.click();URL.revokeObjectURL(url);toast("Backup esportato");
+  a.href=url;a.download=(includePhotos?"appiero-v8-6-backup-completo-":"appiero-v8-6-backup-leggero-")+todayISO()+".json";a.click();URL.revokeObjectURL(url);toast("Backup esportato");
 }
 function importBackup(){const file=document.getElementById("backupFile").files[0];if(!file)return toast("Scegli file backup");const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);if(!Array.isArray(data.jobs))throw new Error();if(!confirm("Sostituire i dati attuali?"))return;jobs=data.jobs.map(normalize);save();toast("Backup importato");showScreen("home")}catch(e){toast("Backup non valido")}};r.readAsText(file)}
-function cleanOld(){if(!confirm("Pulisco vecchie versioni, V8.5 resta. Procedo?"))return;OLD_KEYS.forEach(k=>localStorage.removeItem(k));toast("Vecchie versioni pulite");renderAll()}
+function cleanOld(){if(!confirm("Pulisco vecchie versioni, V8.6 resta. Procedo?"))return;OLD_KEYS.forEach(k=>localStorage.removeItem(k));toast("Vecchie versioni pulite");renderAll()}
 async function lightenPhotos(){if(!confirm("Alleggerisco le foto già salvate. Procedo?"))return;for(const j of jobs){for(const p of j.photoItems){if(p.src)p.src=await recompressDataUrl(p.src)}for(const h of j.healthChecks){if(h.photo)h.photo=await recompressDataUrl(h.photo)}j.photos=j.photoItems.filter(p=>p.src).map(p=>p.src)}save();toast("Foto alleggerite")}
 function clearAll(){if(!confirm("Cancellare tutti i dati?"))return;if(!confirm("Confermi definitivamente?"))return;jobs=[];localStorage.removeItem(STORAGE_KEY);save();toast("Dati cancellati")}
 
