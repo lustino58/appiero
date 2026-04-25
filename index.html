@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ApPiero V8.8 - Telefono rapido</title>
+  <title>ApPiero V8.9 - Zoom Foto</title>
   <meta name="theme-color" content="#18230f" />
 
   <style>
@@ -127,7 +127,7 @@
     .health-inner{padding:13px}
     .health-meta{color:var(--muted);font-size:13px;line-height:1.4;margin-bottom:8px}
     .tag{display:inline-block;margin:4px 5px 4px 0;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15);font-size:12px;font-weight:900;color:#ffe08a}
-    .tag-blue{color:#9edcff}.tag-red{color:#ffb199}.tag-green{color:#b8ff74}.tag-purple{color:#d7b4ff}
+    .tag-blue{color:#9edcff}.tag-red{color:#ffb199}.tag-green{color:#b8ff74}.tag-purple{color:#d7b4ff}.tag-gold{color:#ffe08a}
     .photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}@media(min-width:760px){.photo-grid{grid-template-columns:repeat(3,1fr)}}
     .thumb{width:100%;height:120px;object-fit:cover;border-radius:14px;background:#000;border:1px solid rgba(255,255,255,.14)}
     .preview{display:none;margin:8px 0 14px;padding:10px;border:1px solid rgba(155,217,90,.45);border-radius:18px;background:rgba(0,0,0,.26)}
@@ -135,8 +135,40 @@
     .checkgrid{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:12px}@media(min-width:760px){.checkgrid{grid-template-columns:repeat(2,1fr)}}
     .check{display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.11);background:rgba(0,0,0,.2);border-radius:14px;padding:10px;color:var(--text)}
     .check input{width:auto}
-    .viewer{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.96);display:none;flex-direction:column;padding:12px}
-    .viewer.active{display:flex}.viewer img{width:100%;height:calc(100vh - 90px);object-fit:contain;background:#000;border-radius:14px}
+
+    .viewer{
+      position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.98);
+      display:none;flex-direction:column;padding:10px;overflow:hidden;
+      touch-action:none;
+    }
+    .viewer.active{display:flex}
+    .viewer-bar{
+      display:flex;align-items:center;justify-content:space-between;gap:8px;
+      padding:4px 0 10px;flex-wrap:wrap;
+    }
+    .viewer-title{font-size:18px;font-weight:950;color:#fff}
+    .viewer-tools{display:flex;gap:7px;flex-wrap:wrap}
+    .viewer-tools button{padding:10px 12px;border-radius:14px}
+    .viewer-stage{
+      position:relative;flex:1;overflow:hidden;background:#000;border-radius:18px;
+      border:1px solid rgba(255,255,255,.16);
+      touch-action:none;
+    }
+    .viewer img{
+      position:absolute;left:50%;top:50%;
+      max-width:none;max-height:none;width:auto;height:auto;
+      transform:translate(-50%,-50%) scale(1);
+      transform-origin:center center;
+      user-select:none;-webkit-user-drag:none;
+      touch-action:none;
+      will-change:transform;
+    }
+    .zoom-help{
+      position:absolute;left:12px;right:12px;bottom:12px;
+      background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.16);
+      color:#fff;border-radius:16px;padding:10px;font-size:13px;text-align:center;
+      pointer-events:none;
+    }
     .toast{position:fixed;z-index:400;left:50%;bottom:105px;transform:translateX(-50%);background:#f4ffe9;color:#111d0d;padding:13px 16px;border-radius:17px;font-weight:950;opacity:0;pointer-events:none;box-shadow:0 18px 45px rgba(0,0,0,.45);transition:.25s;text-align:center;max-width:calc(100vw - 28px)}
     .toast.show{opacity:1}
   </style>
@@ -150,7 +182,7 @@
       <div>
         <h1>ApPiero</h1>
         <div class="subtitle">Gestione potatura ulivi</div>
-        <div class="version">V8.8 · telefono rapido</div>
+        <div class="version">V8.9 · zoom foto + licheni</div>
       </div>
     </div>
     <div class="today" id="todayText">oggi</div>
@@ -174,9 +206,9 @@
     </div>
 
     <div class="ai-box">
-      <h3>🤖 AI foto olivo — preparazione futura</h3>
+      <h3>🔍 Zoom foto salute</h3>
       <p class="muted small">
-        La vera AI fotografica arriverà nella V9 con collegamento esterno. Per ora la V8.8 salva foto salute, sintomi, priorità e consigli guidati.
+        V8.9 aggiunge zoom foto con due dita, doppio tap, pulsanti + / - / reset e nuove voci per licheni, muschio e macchie giallo-verdi sui rami.
       </p>
     </div>
 
@@ -320,8 +352,19 @@
 </div>
 
 <div id="viewer" class="viewer">
-  <div class="modalhead"><h2 id="viewerTitle">Foto</h2><button class="btn-red" onclick="closeViewer()">Chiudi</button></div>
-  <img id="viewerImg" src="" />
+  <div class="viewer-bar">
+    <div class="viewer-title" id="viewerTitle">Foto</div>
+    <div class="viewer-tools">
+      <button class="btn-blue" onclick="zoomIn()">＋</button>
+      <button class="btn-blue" onclick="zoomOut()">－</button>
+      <button class="btn-gold" onclick="resetZoom()">Reset</button>
+      <button class="btn-red" onclick="closeViewer()">Chiudi</button>
+    </div>
+  </div>
+  <div id="viewerStage" class="viewer-stage">
+    <img id="viewerImg" src="" />
+    <div class="zoom-help">Due dita per ingrandire · trascina per spostare · doppio tap per zoom</div>
+  </div>
 </div>
 
 <nav class="bottom">
@@ -335,10 +378,15 @@
 <div id="toast" class="toast"></div>
 
 <script>
-const STORAGE_KEY="appiero_v88_jobs";
-const OLD_KEYS=["appiero_v87_jobs","appiero_v86_jobs","appiero_v85_jobs","appiero_v84_jobs","appiero_v83_jobs","appiero_v82_jobs","appiero_v81_jobs","appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
+const STORAGE_KEY="appiero_v89_jobs";
+const OLD_KEYS=["appiero_v88_jobs","appiero_v87_jobs","appiero_v86_jobs","appiero_v85_jobs","appiero_v84_jobs","appiero_v83_jobs","appiero_v82_jobs","appiero_v81_jobs","appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
 let jobs=[],jobFilter="all",clientSort="name";
 const euro=new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"});
+
+let viewerScale=1, viewerX=0, viewerY=0;
+let isDragging=false, dragStartX=0, dragStartY=0, startX=0, startY=0;
+let lastTap=0;
+let pinchStartDist=0, pinchStartScale=1;
 
 function n(x){return Number(x||0)}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
@@ -408,8 +456,57 @@ function preview(input,id){
   const box=document.getElementById(id),file=input.files&&input.files[0];if(!file){box.style.display="none";box.innerHTML="";return}
   const r=new FileReader();r.onload=e=>{box.innerHTML=`<img src="${e.target.result}"><p class="muted small">Anteprima foto caricata.</p>`;box.style.display="block"};r.readAsDataURL(file);
 }
-function openViewer(src,title){if(!src)return toast("Foto non disponibile");document.getElementById("viewerImg").src=src;document.getElementById("viewerTitle").textContent=title||"Foto";document.getElementById("viewer").classList.add("active")}
+
+function applyViewerTransform(){
+  const img=document.getElementById("viewerImg");
+  img.style.transform=`translate(calc(-50% + ${viewerX}px), calc(-50% + ${viewerY}px)) scale(${viewerScale})`;
+}
+function resetZoom(){
+  viewerScale=1;viewerX=0;viewerY=0;applyViewerTransform();
+}
+function zoomIn(){viewerScale=Math.min(6,viewerScale*1.35);applyViewerTransform()}
+function zoomOut(){viewerScale=Math.max(1,viewerScale/1.35);if(viewerScale===1){viewerX=0;viewerY=0}applyViewerTransform()}
+function openViewer(src,title){
+  if(!src)return toast("Foto non disponibile");
+  const img=document.getElementById("viewerImg");
+  img.src=src;
+  document.getElementById("viewerTitle").textContent=title||"Foto";
+  document.getElementById("viewer").classList.add("active");
+  setTimeout(resetZoom,50);
+}
 function closeViewer(){document.getElementById("viewer").classList.remove("active");document.getElementById("viewerImg").src=""}
+function dist(t1,t2){return Math.hypot(t2.clientX-t1.clientX,t2.clientY-t1.clientY)}
+function setupZoom(){
+  const stage=document.getElementById("viewerStage");
+  stage.addEventListener("dblclick",e=>{viewerScale=viewerScale>1?1:2.4;if(viewerScale===1){viewerX=0;viewerY=0}applyViewerTransform()});
+  stage.addEventListener("mousedown",e=>{isDragging=true;dragStartX=e.clientX;dragStartY=e.clientY;startX=viewerX;startY=viewerY});
+  window.addEventListener("mousemove",e=>{if(!isDragging)return;viewerX=startX+(e.clientX-dragStartX);viewerY=startY+(e.clientY-dragStartY);applyViewerTransform()});
+  window.addEventListener("mouseup",()=>{isDragging=false});
+  stage.addEventListener("touchstart",e=>{
+    e.preventDefault();
+    if(e.touches.length===1){
+      const now=Date.now();
+      if(now-lastTap<300){viewerScale=viewerScale>1?1:2.4;if(viewerScale===1){viewerX=0;viewerY=0}applyViewerTransform()}
+      lastTap=now;
+      isDragging=true;dragStartX=e.touches[0].clientX;dragStartY=e.touches[0].clientY;startX=viewerX;startY=viewerY;
+    }
+    if(e.touches.length===2){
+      isDragging=false;pinchStartDist=dist(e.touches[0],e.touches[1]);pinchStartScale=viewerScale;
+    }
+  },{passive:false});
+  stage.addEventListener("touchmove",e=>{
+    e.preventDefault();
+    if(e.touches.length===1&&isDragging){
+      viewerX=startX+(e.touches[0].clientX-dragStartX);viewerY=startY+(e.touches[0].clientY-dragStartY);applyViewerTransform();
+    }
+    if(e.touches.length===2){
+      const d=dist(e.touches[0],e.touches[1]);
+      viewerScale=Math.min(6,Math.max(1,pinchStartScale*(d/pinchStartDist)));
+      applyViewerTransform();
+    }
+  },{passive:false});
+  stage.addEventListener("touchend",()=>{isDragging=false;if(viewerScale===1){viewerX=0;viewerY=0;applyViewerTransform()}});
+}
 
 async function createJob(){
   const client=document.getElementById("fClient").value.trim();if(!client)return toast("Inserisci cliente");
@@ -686,7 +783,7 @@ function showHealth(id){
 
     <label><span>Data</span><input id="hDate" type="date" value="${todayISO()}"></label>
     <label><span>Pianta / zona</span><input id="hTree" placeholder="Es. fila 2, pianta 14"></label>
-    <label><span>Parte fotografata</span><select id="hPart"><option>Chioma intera</option><option>Foglie</option><option>Rami</option><option>Tronco</option><option>Olive/frutti</option><option>Terreno</option></select></label>
+    <label><span>Parte fotografata</span><select id="hPart"><option>Chioma intera</option><option>Foglie</option><option>Rami</option><option>Tronco</option><option>Corteccia</option><option>Olive/frutti</option><option>Terreno</option></select></label>
     <label><span>Condizione generale</span><select id="hCond"><option>Buona</option><option>Media</option><option>Da controllare</option><option>Grave</option></select></label>
     <label><span>Priorità</span><select id="hPri"><option>Bassa</option><option>Media</option><option>Alta</option><option>Urgente</option></select></label>
     <label><span>Cultivar stimata dal potatore</span>
@@ -701,8 +798,9 @@ function showHealth(id){
 
     <h3>Sintomi</h3><div id="symptoms" class="checkgrid">
       ${check("Foglie macchiate")}${check("Macchie tonde scure sulle foglie")}${check("Foglie gialle")}${check("Caduta foglie")}${check("Rami secchi")}${check("Disseccamento da un solo lato")}${check("Noduli / tumori su rami")}${check("Presenza insetti")}${check("Patina bianca / scudetti su rami")}${check("Stress idrico")}${check("Ferite da potatura")}${check("Marciume / carie del legno")}${check("Disseccamento rapido sospetto")}${check("Frutti rovinati")}${check("Pianta poco produttiva")}${check("Chioma troppo fitta")}
+      ${check("Macchie gialle sui rami")}${check("Patina giallo-verde sui rami")}${check("Licheni / muschio sui rami")}${check("Croste sulla corteccia")}${check("Corteccia alterata")}${check("Chioma troppo fitta e umida")}
     </div>
-    <label><span>Note</span><textarea id="hNote" placeholder="Es. foglie con macchie, ramo secco lato nord..."></textarea></label>
+    <label><span>Note</span><textarea id="hNote" placeholder="Es. macchie giallo-verdi sui rami, ramo vivo o secco, chioma fitta..."></textarea></label>
     <button class="btn-main btn-full" onclick="addHealth('${id}')">Salva analisi salute</button>
   </div>`;openModal();
 }
@@ -741,6 +839,25 @@ function diagnose(sym,cond,pri){
   if(s.has("Chioma troppo fitta")){
     add("Chioma troppo chiusa");adv("Chioma fitta può favorire umidità e problemi fungini.");cur("Potatura di apertura equilibrata, senza indebolire troppo la pianta.");
   }
+
+  if(s.has("Macchie gialle sui rami")||s.has("Patina giallo-verde sui rami")||s.has("Licheni / muschio sui rami")||s.has("Croste sulla corteccia")){
+    add("Possibile lichene / muschio / patina superficiale sui rami");
+    adv("La patina giallo-verde sui rami di solito non è una malattia diretta dell’olivo, ma può indicare chioma fitta, umidità persistente, poca aerazione o pianta indebolita.");
+    cur("Arieggiare la chioma con potatura equilibrata. Eliminare rami secchi, incrociati o troppo interni. Controllare se sotto la patina la corteccia è viva, se il ramo è secco, se si sfalda o se ci sono carie.");
+  }
+  if(s.has("Corteccia alterata")){
+    add("Corteccia alterata da controllare");
+    adv("Alterazioni della corteccia vanno valutate insieme a seccume, carie, ferite o perdita di tessuto.");
+    cur("Non grattare o ferire inutilmente la corteccia. Se il ramo è secco o la corteccia si stacca, segnare la pianta e farla controllare.");
+    med();
+  }
+  if(s.has("Chioma troppo fitta e umida")){
+    add("Chioma fitta con umidità persistente");
+    adv("Chioma troppo fitta e umida può favorire patine, licheni, problemi fungini e scarsa aerazione.");
+    cur("Aprire la chioma con tagli equilibrati, togliendo rami interni, secchi e incrociati senza spogliare eccessivamente la pianta.");
+    med();
+  }
+
   if(s.has("Disseccamento rapido sospetto")){
     add("Disseccamento grave da verificare");add("Xylella / disseccamento sospetto da escludere con tecnico");adv("Disseccamento rapido e anomalo non va interpretato solo dall’app.");cur("Sentire agronomo o servizio fitosanitario se rapido, diffuso o su più piante.");high();
   }
@@ -878,7 +995,7 @@ function renderHome(){
   document.getElementById("kpiDue").textContent=money(totalDue);
   document.getElementById("kpiMem").textContent=totalKB();
   document.getElementById("homeJobs").innerHTML=jobs.length?jobs.slice(0,4).map(jobCard).join(""):`<div class="empty">Ancora nessun lavoro.</div>`;
-  document.getElementById("memoryInfo").textContent=`Memoria V8.8: circa ${storageKB()} KB. Totale versioni ApPiero: circa ${totalKB()} KB.`;
+  document.getElementById("memoryInfo").textContent=`Memoria V8.9: circa ${storageKB()} KB. Totale versioni ApPiero: circa ${totalKB()} KB.`;
 }
 function renderStats(){
   document.getElementById("sClients").textContent=getClients().length;
@@ -904,7 +1021,7 @@ function backupData(includePhotos){
 }
 function exportBackup(includePhotos){
   const fileName=(includePhotos?"BACKUP-APPIERO-COMPLETO-":"BACKUP-APPIERO-LEGGERO-")+todayISO()+".json";
-  const data={app:"ApPiero",version:"8.8",photos:includePhotos,exportedAt:new Date().toISOString(),jobs:backupData(includePhotos)};
+  const data={app:"ApPiero",version:"8.9",photos:includePhotos,exportedAt:new Date().toISOString(),jobs:backupData(includePhotos)};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
   const url=URL.createObjectURL(blob);
   const a=document.createElement("a");
@@ -940,7 +1057,7 @@ function importBackup(){
   r.readAsText(file);
 }
 function cleanOld(){
-  if(!confirm("Pulisco vecchie versioni, V8.8 resta. Procedo?"))return;
+  if(!confirm("Pulisco vecchie versioni, V8.9 resta. Procedo?"))return;
   OLD_KEYS.forEach(k=>localStorage.removeItem(k));
   toast("Vecchie versioni pulite");
   renderAll();
@@ -967,6 +1084,7 @@ function clearAll(){
 function init(){
   document.getElementById("todayText").textContent=new Date().toLocaleDateString("it-IT",{weekday:"long",day:"2-digit",month:"long"});
   document.getElementById("fDate").value=todayISO();
+  setupZoom();
   load();
   priceLabel();
 }
