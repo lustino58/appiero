@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>ApPiero V8.2 - Potatura Ulivi</title>
+  <title>ApPiero V8.3 - Potatura Ulivi</title>
   <meta name="theme-color" content="#18230f" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="ApPiero" />
@@ -62,9 +62,9 @@
     .money{color:var(--gold);font-weight:950}.netto{color:var(--green2);font-weight:950}.expense{color:#ffb199;font-weight:950}.paid{color:#d6b2ff;font-weight:950}
     .photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}@media(min-width:760px){.photo-grid{grid-template-columns:repeat(3,1fr)}}
     .photo-card{background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.13);border-radius:18px;padding:8px}
-    .photo-thumb{width:100%;height:130px;object-fit:cover;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:#050805;display:block;margin-bottom:8px}
+    .photo-thumb{width:100%;height:120px;object-fit:cover;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:#050805;display:block;margin-bottom:8px}
     .preview-box{margin:8px 0 14px;display:none;border:1px solid rgba(164,214,94,.45);border-radius:18px;padding:10px;background:rgba(0,0,0,.28)}
-    .preview-box img{width:100%;max-height:320px;object-fit:contain;border-radius:14px;background:#071004;display:block}.preview-box p{margin:8px 0 0;color:var(--green2);font-weight:900;font-size:13px}
+    .preview-box img{width:100%;max-height:260px;object-fit:contain;border-radius:14px;background:#071004;display:block}.preview-box p{margin:8px 0 0;color:var(--green2);font-weight:900;font-size:13px}
     .bottom-nav{position:fixed;z-index:80;bottom:0;left:0;right:0;background:rgba(5,8,4,.92);backdrop-filter:blur(15px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px 10px;gap:7px}
     .nav-btn{padding:9px 4px;font-size:11px;border-radius:15px;background:rgba(255,255,255,.06);color:var(--muted);box-shadow:none}.nav-btn.active{background:linear-gradient(145deg,#a4d65e,#4f7d24);color:#101908}.nav-icon{display:block;font-size:20px;margin-bottom:2px}
     .modal{position:fixed;inset:0;background:rgba(0,0,0,.74);display:none;align-items:flex-end;justify-content:center;z-index:120;padding:12px}.modal.active{display:flex}
@@ -93,7 +93,7 @@
       <div class="brand-title">
         <h1>ApPiero</h1>
         <p>Gestione potatura ulivi</p>
-        <div class="version">V8.2 · pagamenti chiari</div>
+        <div class="version">V8.3 · pulizia memoria</div>
       </div>
     </div>
     <div class="today-pill" id="todayText">Oggi</div>
@@ -104,8 +104,8 @@
   <section id="screen-home" class="screen active">
     <div class="grid grid-3">
       <div class="card kpi"><div class="kpi-label">Ulivi potati oggi</div><div class="kpi-value" id="kpiTodayTrees">0</div><div class="kpi-small" id="kpiTodayJobs">0 giornate registrate</div></div>
-      <div class="card kpi"><div class="kpi-label">Netto oggi</div><div class="kpi-value netto" id="kpiTodayNet">0 €</div><div class="kpi-small" id="kpiTodayExpenses">spese: 0 €</div></div>
       <div class="card kpi"><div class="kpi-label">Da incassare</div><div class="kpi-value expense" id="kpiBalanceDue">0 €</div><div class="kpi-small">saldo lavori aperti</div></div>
+      <div class="card kpi"><div class="kpi-label">Memoria usata</div><div class="kpi-value" id="kpiMemory">0</div><div class="kpi-small">KB circa</div></div>
     </div>
 
     <div class="section-title"><h2>Azioni rapide</h2></div>
@@ -211,10 +211,41 @@
   </section>
 
   <section id="screen-backup" class="screen">
-    <div class="section-title"><h2>Backup dati</h2></div>
-    <div class="card"><h3>Esporta backup</h3><p class="muted small">Scarica un file JSON con tutti i lavori salvati.</p><button class="btn-main btn-full" onclick="exportBackup()">📤 Esporta backup</button></div>
-    <div class="card" style="margin-top:12px;"><h3>Importa backup</h3><p class="muted small">Carica un backup JSON già esportato.</p><input id="backupFile" type="file" accept="application/json" /><button class="btn-gold btn-full" style="margin-top:10px;" onclick="importBackup()">📥 Importa backup</button></div>
-    <div class="card danger-zone" style="margin-top:12px;"><h3>Zona pericolosa</h3><p class="muted small">Cancella tutti i dati salvati su questo telefono/browser.</p><button class="btn-red btn-full" onclick="clearAllData()">🗑 Cancella tutto</button></div>
+    <div class="section-title"><h2>Backup e memoria</h2></div>
+
+    <div class="card">
+      <h3>Memoria ApPiero</h3>
+      <p class="muted small" id="memoryInfo">Calcolo memoria...</p>
+      <div class="btn-row">
+        <button class="btn-main" onclick="cleanOldStorage()">🧹 Pulisci vecchie versioni</button>
+        <button class="btn-gold" onclick="makePhotosLighter()">🖼 Alleggerisci foto salvate</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <h3>Esporta backup completo</h3>
+      <p class="muted small">Scarica un file JSON con tutti i lavori e le foto salvate.</p>
+      <button class="btn-main btn-full" onclick="exportBackup(true)">📤 Esporta backup completo</button>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <h3>Esporta backup leggero</h3>
+      <p class="muted small">Salva tutti i dati ma senza foto. Utile se la memoria è piena.</p>
+      <button class="btn-blue btn-full" onclick="exportBackup(false)">📤 Backup leggero senza foto</button>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <h3>Importa backup</h3>
+      <p class="muted small">Carica un backup JSON già esportato.</p>
+      <input id="backupFile" type="file" accept="application/json" />
+      <button class="btn-gold btn-full" style="margin-top:10px;" onclick="importBackup()">📥 Importa backup</button>
+    </div>
+
+    <div class="card danger-zone" style="margin-top:12px;">
+      <h3>Zona pericolosa</h3>
+      <p class="muted small">Cancella tutti i dati salvati su questo telefono/browser.</p>
+      <button class="btn-red btn-full" onclick="clearAllData()">🗑 Cancella tutto</button>
+    </div>
   </section>
 </main>
 
@@ -222,7 +253,7 @@
 
 <div id="photoViewer" class="photo-viewer"><div class="photo-viewer-head"><div class="photo-viewer-title" id="photoViewerTitle">Foto</div><button class="btn-red" onclick="closePhotoViewer()">Chiudi foto</button></div><img id="photoViewerImg" src="" alt="Foto ingrandita" /></div>
 
-<div id="savingOverlay" class="saving-overlay"><div class="saving-box">Sto salvando e comprimendo la foto...<br>Attendi qualche secondo.</div></div>
+<div id="savingOverlay" class="saving-overlay"><div class="saving-box" id="savingText">Sto salvando e comprimendo la foto...<br>Attendi qualche secondo.</div></div>
 
 <nav class="bottom-nav">
   <button class="nav-btn active" id="nav-home" onclick="showScreen('home')"><span class="nav-icon">🏠</span>Home</button>
@@ -235,8 +266,8 @@
 <div id="toast" class="toast"></div>
 
 <script>
-const STORAGE_KEY="appiero_v82_jobs";
-const OLD_STORAGE_KEYS=["appiero_v81_jobs","appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
+const STORAGE_KEY="appiero_v83_jobs";
+const OLD_STORAGE_KEYS=["appiero_v82_jobs","appiero_v81_jobs","appiero_v8_jobs","appiero_v7_jobs","appiero_v61_jobs","appiero_v6_jobs","appiero_v5_jobs","appiero_v4_jobs","appiero_v3_jobs","appiero_v2_jobs","appiero_v1_jobs"];
 let jobs=[],currentFilter="all",openedJobId=null;
 const euro=new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"});
 
@@ -245,11 +276,13 @@ function formatDate(iso){if(!iso)return"Senza data";const d=new Date(iso+"T12:00
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
 function money(n){return euro.format(Number(n||0))}
 function num(n){return Number(n||0)}
-function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2300)}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)}
 function escapeHtml(str){return String(str||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
 function escapeAttr(str){return escapeHtml(str).replaceAll("\n"," ")}
-function showSaving(show){document.getElementById("savingOverlay").classList.toggle("active",!!show)}
-function safeSetStorage(key,value){try{localStorage.setItem(key,value);return true}catch(e){console.error(e);toast("Memoria piena: fai backup o usa meno foto");return false}}
+function showSaving(show,msg){document.getElementById("savingText").innerHTML=msg||"Sto salvando e comprimendo la foto...<br>Attendi qualche secondo.";document.getElementById("savingOverlay").classList.toggle("active",!!show)}
+function storageKB(){try{return Math.round((localStorage.getItem(STORAGE_KEY)||"").length/1024)}catch(e){return 0}}
+function totalStorageKB(){let t=0;try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith("appiero_"))t+=(localStorage.getItem(k)||"").length}}catch(e){}return Math.round(t/1024)}
+function safeSetStorage(key,value){try{localStorage.setItem(key,value);return true}catch(e){console.error(e);toast("Memoria piena: esporta backup, poi pulisci vecchie versioni o alleggerisci foto");return false}}
 function save(){const ok=safeSetStorage(STORAGE_KEY,JSON.stringify(jobs));if(ok)renderAll()}
 
 function previewFile(input,boxId){
@@ -257,11 +290,11 @@ function previewFile(input,boxId){
   const file=input.files&&input.files[0];
   if(!file){box.style.display="none";box.innerHTML="";return}
   const reader=new FileReader();
-  reader.onload=e=>{box.innerHTML=`<img src="${e.target.result}" alt="Anteprima foto"><p>ANTEPRIMA FOTO CARICATA. Quando salvi, ApPiero la comprime automaticamente.</p>`;box.style.display="block";toast("Foto caricata")};
+  reader.onload=e=>{box.innerHTML=`<img src="${e.target.result}" alt="Anteprima foto"><p>ANTEPRIMA FOTO CARICATA. In V8.3 la foto viene compressa molto di più.</p>`;box.style.display="block";toast("Foto caricata")};
   reader.onerror=()=>{box.innerHTML="<p>Errore: foto non letta. Prova con un'altra foto.</p>";box.style.display="block";toast("Errore caricamento foto")};
   reader.readAsDataURL(file);
 }
-function compressImage(file,maxWidth=900,quality=.68){
+function compressImage(file,maxWidth=560,quality=.45){
   return new Promise((resolve,reject)=>{
     if(!file)return resolve("");
     const reader=new FileReader();
@@ -272,7 +305,7 @@ function compressImage(file,maxWidth=900,quality=.68){
           let width=img.width,height=img.height;
           if(width>maxWidth){height=Math.round(height*(maxWidth/width));width=maxWidth}
           const canvas=document.createElement("canvas");canvas.width=width;canvas.height=height;
-          canvas.getContext("2d").drawImage(img,0,0,width,height);
+          const ctx=canvas.getContext("2d");ctx.drawImage(img,0,0,width,height);
           resolve(canvas.toDataURL("image/jpeg",quality));
         }catch(err){reject(err)}
       };
@@ -283,7 +316,24 @@ function compressImage(file,maxWidth=900,quality=.68){
     reader.readAsDataURL(file);
   });
 }
-async function fileToCompressedDataURL(file){if(!file)return"";try{return await compressImage(file,900,.68)}catch(e){console.error(e);toast("Errore foto: prova a sceglierne un'altra");return""}}
+function recompressDataUrl(dataUrl,maxWidth=520,quality=.42){
+  return new Promise((resolve)=>{
+    if(!dataUrl || !String(dataUrl).startsWith("data:image"))return resolve(dataUrl||"");
+    const img=new Image();
+    img.onload=()=>{
+      try{
+        let width=img.width,height=img.height;
+        if(width>maxWidth){height=Math.round(height*(maxWidth/width));width=maxWidth}
+        const canvas=document.createElement("canvas");canvas.width=width;canvas.height=height;
+        canvas.getContext("2d").drawImage(img,0,0,width,height);
+        resolve(canvas.toDataURL("image/jpeg",quality));
+      }catch(e){resolve(dataUrl)}
+    };
+    img.onerror=()=>resolve(dataUrl);
+    img.src=dataUrl;
+  });
+}
+async function fileToCompressedDataURL(file){if(!file)return"";try{return await compressImage(file,560,.45)}catch(e){console.error(e);toast("Errore foto: prova a sceglierne un'altra");return""}}
 function openPhotoViewer(src,title){if(!src){toast("Foto non disponibile");return}document.getElementById("photoViewerImg").src=src;document.getElementById("photoViewerTitle").textContent=title||"Foto";document.getElementById("photoViewer").classList.add("active")}
 function closePhotoViewer(){document.getElementById("photoViewer").classList.remove("active");document.getElementById("photoViewerImg").src=""}
 
@@ -302,9 +352,7 @@ function openWhatsAppToClient(id,type){
   window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(text),"_blank");
 }
 
-function normalizePayment(p){
-  return {id:p.id||uid(),date:p.date||todayISO(),amount:num(p.amount),method:p.method||"Contanti",type:p.type||"Pagamento",note:p.note||""};
-}
+function normalizePayment(p){return {id:p.id||uid(),date:p.date||todayISO(),amount:num(p.amount),method:p.method||"Contanti",type:p.type||"Pagamento",note:p.note||""}}
 function normalizeJob(job){
   if(!job.deposit)job.deposit=0;if(!job.cultivar)job.cultivar="";if(!job.age)job.age="";if(!job.vigor)job.vigor="";if(!job.shape)job.shape="";
   if(!Array.isArray(job.photos))job.photos=[];if(!Array.isArray(job.photoItems))job.photoItems=[];if(!Array.isArray(job.healthChecks))job.healthChecks=[];if(!Array.isArray(job.days))job.days=[];if(!Array.isArray(job.oilRecords))job.oilRecords=[];
@@ -401,12 +449,14 @@ function renderJobs(){
 function setJobFilter(f){currentFilter=f;renderJobs()}
 
 function renderHome(){
-  const today=todayISO();let todayTrees=0,todayNet=0,todayExpenses=0,todayRows=0;
-  jobs.forEach(job=>job.days.forEach(d=>{if(d.date===today){todayRows++;todayTrees+=num(d.trees);todayNet+=jobDayNet(job,d);todayExpenses+=dayExpenses(d)}}));
+  const today=todayISO();let todayTrees=0,todayNet=0,todayRows=0;
+  jobs.forEach(job=>job.days.forEach(d=>{if(d.date===today){todayRows++;todayTrees+=num(d.trees);todayNet+=jobDayNet(job,d)}}));
   const totalPaid=jobs.reduce((s,j)=>s+jobPaid(j),0),balanceDue=jobs.filter(j=>j.status!=="pagato").reduce((s,j)=>s+jobBalance(j),0);
-  document.getElementById("kpiTodayTrees").textContent=todayTrees;document.getElementById("kpiTodayNet").textContent=money(todayNet);document.getElementById("kpiTodayExpenses").textContent="spese: "+money(todayExpenses);document.getElementById("kpiTodayJobs").textContent=todayRows+" giornate registrate";
-  document.getElementById("kpiActiveJobs").textContent=jobs.filter(j=>j.status==="attivo").length;document.getElementById("kpiHealthProblems").textContent=jobs.filter(jobHasHealthProblem).length;document.getElementById("kpiPaidTotal").textContent=money(totalPaid);document.getElementById("kpiBalanceDue").textContent=money(balanceDue);
+  document.getElementById("kpiTodayTrees").textContent=todayTrees;document.getElementById("kpiTodayJobs").textContent=todayRows+" giornate registrate";
+  document.getElementById("kpiBalanceDue").textContent=money(balanceDue);document.getElementById("kpiMemory").textContent=totalStorageKB();
+  document.getElementById("kpiActiveJobs").textContent=jobs.filter(j=>j.status==="attivo").length;document.getElementById("kpiHealthProblems").textContent=jobs.filter(jobHasHealthProblem).length;document.getElementById("kpiPaidTotal").textContent=money(totalPaid);
   const recent=jobs.slice(0,4);document.getElementById("homeRecentJobs").innerHTML=recent.length?recent.map(renderJobCard).join(""):`<div class="empty">Ancora nessun lavoro. Premi “Nuovo lavoro”.</div>`;
+  updateMemoryInfo();
 }
 function renderCalendar(){
   const events=[];
@@ -434,7 +484,8 @@ function renderPayments(job){
   return list.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")).map(p=>`<div class="pay-row"><b>${formatDate(p.date)}</b> <span class="badge badge-paid">${escapeHtml(p.type)}</span><br>Importo: <strong class="paid">${money(p.amount)}</strong><br>Metodo: <strong>${escapeHtml(p.method)}</strong><br><span class="muted small">${escapeHtml(p.note||"")}</span></div>`).join("");
 }
 function renderPhotos(job){
-  const items=Array.isArray(job.photoItems)?job.photoItems:[];if(!items.length)return`<div class="empty">Nessuna foto salvata.</div>`;
+  const items=Array.isArray(job.photoItems)?job.photoItems:[];
+  if(!items.length)return`<div class="empty">Nessuna foto salvata.</div>`;
   const groups=[["sopralluogo","Foto sopralluogo"],["prima","Foto prima"],["durante","Foto durante"],["dopo","Foto dopo"],["salute","Foto salute olivo"],["altro","Altre foto"]];
   return groups.map(([type,label])=>{const list=items.filter(p=>p.type===type);if(!list.length)return"";return `<div class="photo-section"><h3>${label}</h3><div class="photo-grid">${list.map(p=>`<div class="photo-card"><img class="photo-thumb" src="${p.src}" onclick="openPhotoViewer('${p.src}','${escapeAttr(label)}')"><button class="btn-blue btn-full" onclick="openPhotoViewer('${p.src}','${escapeAttr(label)}')">Apri foto</button></div>`).join("")}</div></div>`}).join("")||`<div class="empty">Nessuna foto salvata.</div>`;
 }
@@ -615,7 +666,7 @@ async function addHealthCheck(id){
   const condition=document.getElementById("hCondition").value,priority=document.getElementById("hPriority").value,guided=calculateGuidedDiagnosis(symptoms,guideAnswers,condition,priority);
   const h={id:uid(),date:document.getElementById("hDate").value||todayISO(),treeRef:document.getElementById("hTreeRef").value.trim(),photoPart:document.getElementById("hPhotoPart").value,condition,priority,symptoms,diseases,guideAnswers,suggestedProblems:guided.problems,guideLevel:guided.level,guideAdvice:guided.advice,cureAdvice:guided.cures,agronomistAdvice:guided.agro,note:document.getElementById("hNote").value.trim(),photo};
   job.healthChecks.push(h);if(photo){job.photos.push(photo);job.photoItems.push({id:uid(),type:"salute",src:photo,createdAt:new Date().toISOString()})}
-  save();showSaving(false);toast(photo?"Analisi salute salvata con foto":"Analisi salvata senza foto");openJob(id);
+  save();showSaving(false);toast(photo?"Analisi salute salvata con foto leggera":"Analisi salvata senza foto");openJob(id);
 }
 function quickHealth(id){openJob(id);setTimeout(()=>showHealthForm(id),50)}
 
@@ -631,12 +682,12 @@ function addOilRecord(id){
 function quickOil(id){openJob(id);setTimeout(()=>showOilForm(id),50)}
 
 function showAddPhotoForm(id){
-  document.getElementById("modalContent").innerHTML=`<div class="card"><h3>Aggiungi foto</h3><label><span>Tipo foto</span><select id="extraPhotoType"><option value="sopralluogo">Sopralluogo</option><option value="prima">Prima</option><option value="durante">Durante</option><option value="dopo">Dopo</option><option value="salute">Salute olivo</option><option value="altro">Altro</option></select></label><label><span>Foto lavoro / terreno / ulivi</span><input id="extraPhoto" type="file" accept="image/*" onchange="previewFile(this,'extraPhotoPreview')"></label><div id="extraPhotoPreview" class="preview-box"></div><div class="btn-row"><button class="btn-main" onclick="addPhoto('${id}')">Salva foto</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div></div>`;
+  document.getElementById("modalContent").innerHTML=`<div class="card"><h3>Aggiungi foto</h3><p class="muted small">In V8.3 le foto vengono salvate più leggere per evitare memoria piena.</p><label><span>Tipo foto</span><select id="extraPhotoType"><option value="sopralluogo">Sopralluogo</option><option value="prima">Prima</option><option value="durante">Durante</option><option value="dopo">Dopo</option><option value="salute">Salute olivo</option><option value="altro">Altro</option></select></label><label><span>Foto lavoro / terreno / ulivi</span><input id="extraPhoto" type="file" accept="image/*" onchange="previewFile(this,'extraPhotoPreview')"></label><div id="extraPhotoPreview" class="preview-box"></div><div class="btn-row"><button class="btn-main" onclick="addPhoto('${id}')">Salva foto</button><button class="btn-soft" onclick="openJob('${id}')">Annulla</button></div></div>`;
 }
 async function addPhoto(id){
   const job=jobs.find(j=>j.id===id);if(!job)return;const file=document.getElementById("extraPhoto").files[0],type=document.getElementById("extraPhotoType").value;if(!file){toast("Scegli una foto");return}
   showSaving(true);const photo=await fileToCompressedDataURL(file);if(photo){job.photos.push(photo);job.photoItems.push({id:uid(),type,src:photo,createdAt:new Date().toISOString()})}
-  save();showSaving(false);toast(photo?"Foto salvata":"Foto non salvata");openJob(id);
+  save();showSaving(false);toast(photo?"Foto leggera salvata":"Foto non salvata");openJob(id);
 }
 
 function showEditJobForm(id){
@@ -651,7 +702,25 @@ function saveEditJob(id){
 function changeStatus(id,status){const job=jobs.find(j=>j.id===id);if(!job)return;job.status=status;save();toast("Stato aggiornato");openJob(id)}
 function deleteJob(id){if(!confirm("Vuoi eliminare questo lavoro?"))return;jobs=jobs.filter(j=>j.id!==id);save();closeModal();toast("Lavoro eliminato")}
 function renderAll(){renderHome();renderJobs();renderCalendar();renderStats()}
-function exportBackup(){const data={app:"ApPiero",version:"8.2",exportedAt:new Date().toISOString(),jobs};const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="appiero-v8-2-backup-"+todayISO()+".json";a.click();URL.revokeObjectURL(url);toast("Backup esportato")}
+
+function cloneForBackup(includePhotos){
+  return jobs.map(j=>{
+    const x=JSON.parse(JSON.stringify(j));
+    if(!includePhotos){
+      x.photos=[];
+      x.photoItems=(x.photoItems||[]).map(p=>({...p,src:""}));
+      x.days=(x.days||[]).map(d=>({...d,photo:""}));
+      x.healthChecks=(x.healthChecks||[]).map(h=>({...h,photo:""}));
+    }
+    return x;
+  });
+}
+function exportBackup(includePhotos=true){
+  const data={app:"ApPiero",version:"8.3",photos:includePhotos,exportedAt:new Date().toISOString(),jobs:cloneForBackup(includePhotos)};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=(includePhotos?"appiero-v8-3-backup-completo-":"appiero-v8-3-backup-leggero-")+todayISO()+".json";a.click();URL.revokeObjectURL(url);
+  toast(includePhotos?"Backup completo esportato":"Backup leggero senza foto esportato");
+}
 function importBackup(){
   const file=document.getElementById("backupFile").files[0];if(!file){toast("Scegli un file backup");return}
   const reader=new FileReader();
@@ -659,7 +728,35 @@ function importBackup(){
   reader.readAsText(file);
 }
 function clearAllData(){if(!confirm("Vuoi cancellare TUTTI i dati di ApPiero?"))return;if(!confirm("Confermi? Questa operazione non si può annullare."))return;jobs=[];localStorage.removeItem(STORAGE_KEY);renderAll();toast("Dati cancellati")}
-function init(){load();document.getElementById("todayText").textContent=new Date().toLocaleDateString("it-IT",{weekday:"long",day:"2-digit",month:"long"});document.getElementById("fDate").value=todayISO();updatePriceLabels();renderAll()}
+function cleanOldStorage(){
+  if(!confirm("Pulisco solo i dati delle vecchie versioni. La V8.3 resta. Procedo?"))return;
+  OLD_STORAGE_KEYS.forEach(k=>localStorage.removeItem(k));
+  toast("Vecchie versioni pulite");
+  updateMemoryInfo();renderAll();
+}
+async function makePhotosLighter(){
+  if(!confirm("Ricomprimo le foto già salvate. Prima è consigliato fare backup completo. Procedo?"))return;
+  showSaving(true,"Sto alleggerendo le foto già salvate...<br>Attendi qualche secondo.");
+  for(const job of jobs){
+    for(const p of (job.photoItems||[])){if(p.src)p.src=await recompressDataUrl(p.src,520,.42)}
+    job.photos=(job.photoItems||[]).filter(p=>p.src).map(p=>p.src);
+    for(const d of (job.days||[])){if(d.photo)d.photo=await recompressDataUrl(d.photo,520,.42)}
+    for(const h of (job.healthChecks||[])){if(h.photo)h.photo=await recompressDataUrl(h.photo,520,.42)}
+  }
+  save();showSaving(false);toast("Foto alleggerite");
+}
+function updateMemoryInfo(){
+  const el=document.getElementById("memoryInfo");
+  if(el)el.textContent=`Memoria V8.3: circa ${storageKB()} KB. Totale vecchie versioni incluse: circa ${totalStorageKB()} KB.`;
+}
+
+function init(){
+  load();
+  document.getElementById("todayText").textContent=new Date().toLocaleDateString("it-IT",{weekday:"long",day:"2-digit",month:"long"});
+  document.getElementById("fDate").value=todayISO();
+  updatePriceLabels();
+  renderAll();
+}
 init();
 </script>
 </body>
